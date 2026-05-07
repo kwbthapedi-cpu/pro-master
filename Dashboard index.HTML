@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro M.A.S.T.E.R — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0a0806;--ink2:#130e08;--ink3:#1c1610;--ink4:#261e14;--ink5:#322818;
+  --amber:#c87820;--amber2:#e8a030;--amber3:#f0b848;--cream:#f0d898;--cream2:#d4b870;
+  --teal:#1e3a58;--teal2:#3a6a90;--chrome:#7a6a58;
+  --b:rgba(200,120,32,0.10);--b2:rgba(200,120,32,0.22);--b3:rgba(200,120,32,0.42);
+  --tx:#e8d4a8;--tx2:#b89860;--tx3:#786040;--tx4:#483820;
+  --live:#40e080;--live-g:rgba(64,224,128,0.12);
+  --err:#ff5050;
+  --mono:'IBM Plex Mono',monospace;--disp:'Syne',sans-serif;--body:'DM Sans',sans-serif;
+}
+html,body{min-height:100%;background:var(--ink);color:var(--tx);font-family:var(--mono);
+  -webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 40% at 50% 0%,rgba(200,120,32,0.07),transparent)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--amber);border-radius:2px;opacity:.5}
+
+/* ── TOPBAR ── */
+#topbar{
+  position:sticky;top:0;z-index:20;
+  background:linear-gradient(180deg,var(--ink2),rgba(13,10,6,0.97));
+  border-bottom:1px solid var(--b2);
+  display:flex;align-items:center;padding:0 20px;gap:14px;height:52px;
+}
+#topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--amber),var(--amber2),transparent)}
+.logo{font-family:var(--disp);font-weight:800;font-size:15px;color:var(--amber2);
+  text-shadow:0 0 20px rgba(232,160,48,0.3);text-decoration:none}
+.logo em{display:block;font-style:normal;font-size:7px;letter-spacing:.22em;color:var(--tx4);font-weight:400;font-family:var(--mono)}
+.sep{width:1px;height:20px;background:var(--b2);flex-shrink:0}
+.nav-links{display:flex;gap:2px;flex:1}
+.nav-link{height:28px;padding:0 12px;border-radius:4px;border:none;background:none;
+  cursor:pointer;font-family:var(--mono);font-size:8px;letter-spacing:.14em;
+  color:var(--tx4);transition:.12s;display:flex;align-items:center;gap:5px;text-decoration:none}
+.nav-link:hover{background:var(--ink4);color:var(--tx3)}
+.nav-link.act{background:rgba(200,120,32,.1);color:var(--amber2)}
+.nav-link .dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* Profile pill */
+.profile-pill{
+  display:flex;align-items:center;gap:8px;margin-left:auto;
+  background:var(--ink3);border:1px solid var(--b2);border-radius:20px;
+  padding:4px 12px 4px 6px;cursor:pointer;transition:.15s;
+}
+.profile-pill:hover{border-color:var(--b3)}
+.pp-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--amber2));
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
+  color:var(--ink);flex-shrink:0}
+.pp-name{font-size:9px;font-weight:600;color:var(--tx)}
+.pp-tier{font-size:7px;color:var(--amber2);letter-spacing:.1em}
+
+/* Dropdown */
+.profile-drop{
+  position:absolute;top:calc(100% + 6px);right:20px;z-index:100;
+  background:var(--ink2);border:1px solid var(--b2);border-radius:6px;
+  min-width:180px;box-shadow:0 12px 40px rgba(0,0,0,.7);
+  display:none;overflow:hidden;
+}
+.profile-drop.open{display:block}
+.pd-item{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;
+  font-size:9px;letter-spacing:.12em;color:var(--tx3);transition:.12s;border:none;
+  background:none;width:100%;text-align:left;font-family:var(--mono)}
+.pd-item:hover{background:var(--ink3);color:var(--tx)}
+.pd-item.danger{color:var(--err)}
+.pd-item.danger:hover{background:rgba(255,80,80,.08)}
+.pd-sep{height:1px;background:var(--b);margin:2px 0}
+
+/* ── LAYOUT ── */
+#shell{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 52px);position:relative;z-index:1}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  background:linear-gradient(180deg,rgba(19,14,8,.97),rgba(13,10,6,.99));
+  border-right:1px solid var(--b2);padding:16px 0;
+  position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;
+}
+.sb-section{margin-bottom:18px}
+.sb-head{font-size:7px;letter-spacing:.22em;color:var(--tx4);padding:0 16px;margin-bottom:5px}
+.sb-item{
+  display:flex;align-items:center;gap:9px;padding:8px 16px;cursor:pointer;
+  transition:.12s;border-left:2px solid transparent;font-size:9px;color:var(--tx3);
+  text-decoration:none;
+}
+.sb-item:hover{background:rgba(200,120,32,.05);color:var(--tx)}
+.sb-item.act{background:rgba(200,120,32,.08);border-left-color:var(--amber);color:var(--amber2)}
+.sb-icon{font-size:13px;width:18px;text-align:center;flex-shrink:0}
+.sb-badge{margin-left:auto;font-size:6px;letter-spacing:.1em;padding:2px 6px;
+  border-radius:3px;background:rgba(200,120,32,.2);color:var(--amber2)}
+.sb-badge.live{background:var(--live-g);color:var(--live)}
+
+/* Artist card in sidebar */
+.artist-card{margin:0 10px 14px;background:var(--ink3);border:1px solid var(--b2);
+  border-radius:6px;padding:14px;text-align:center}
+.ac-avatar{width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--amber),var(--amber2));
+  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;
+  color:var(--ink);margin:0 auto 8px;border:2px solid var(--b2)}
+.ac-name{font-family:var(--disp);font-weight:700;font-size:13px;color:var(--tx);margin-bottom:2px}
+.ac-genre{font-size:8px;color:var(--tx4);letter-spacing:.1em;margin-bottom:8px}
+.ac-tier{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;
+  font-size:7px;letter-spacing:.14em;font-weight:700;
+  background:rgba(200,120,32,.12);color:var(--amber2);border:1px solid var(--b2)}
+.ac-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.ac-stat{background:var(--ink2);border-radius:4px;padding:6px;text-align:center}
+.ac-stat-val{font-family:var(--disp);font-weight:700;font-size:14px;color:var(--tx)}
+.ac-stat-lbl{font-size:6px;letter-spacing:.12em;color:var(--tx4);margin-top:1px}
+
+/* ── MAIN CONTENT ── */
+#content{padding:24px;overflow-x:hidden}
+
+/* Section */
+.section{margin-bottom:28px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-family:var(--disp);font-weight:700;font-size:16px;color:var(--tx)}
+.section-sub{font-size:9px;color:var(--tx4);letter-spacing:.1em;margin-top:2px}
+
+/* Action button */
+.action-btn{
+  height:30px;padding:0 14px;border-radius:4px;border:1px solid var(--b2);
+  background:rgba(200,120,32,.08);cursor:pointer;font-family:var(--mono);
+  font-size:8px;letter-spacing:.14em;color:var(--amber2);transition:.15s;
+  display:flex;align-items:center;gap:5px;
+}
+.action-btn:hover{background:rgba(200,120,32,.16);border-color:var(--b3)}
+.action-btn.primary{background:linear-gradient(135deg,var(--amber),var(--amber2));
+  color:var(--ink);border:none;font-weight:700;box-shadow:0 2px 10px rgba(200,120,32,.3)}
+
+/* Stat cards row */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{
+  background:var(--ink2);border:1px solid var(--b);border-radius:6px;
+  padding:16px;position:relative;overflow:hidden;
+}
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+.sc-amber::after{background:linear-gradient(90deg,var(--amber),var(--amber2))}
+.sc-teal::after{background:linear-gradient(90deg,var(--teal),var(--teal2))}
+.sc-live::after{background:var(--live)}
+.sc-cream::after{background:var(--cream2)}
+.stat-icon{font-size:18px;margin-bottom:8px}
+.stat-lbl{font-size:7px;letter-spacing:.16em;color:var(--tx4);margin-bottom:4px}
+.stat-val{font-family:var(--disp);font-weight:800;font-size:24px;color:var(--tx);line-height:1}
+.stat-sub{font-size:8px;color:var(--tx4);margin-top:3px;font-family:var(--body)}
+
+/* Track list */
+.track-table{width:100%;border-collapse:collapse}
+.track-table th{font-size:7px;letter-spacing:.18em;color:var(--tx4);text-align:left;
+  padding:8px 12px;border-bottom:1px solid var(--b);font-weight:400}
+.track-table td{padding:10px 12px;border-bottom:1px solid var(--b);font-size:10px;
+  color:var(--tx);vertical-align:middle}
+.track-table tr:last-child td{border-bottom:none}
+.track-table tr:hover td{background:rgba(200,120,32,.03)}
+.sub{font-size:8px;color:var(--tx4);margin-top:2px;font-family:var(--body)}
+.isrc-tag{font-size:8px;color:var(--teal2);letter-spacing:.08em;font-family:var(--mono)}
+
+/* Status pill */
+.status{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:3px;font-size:7px;letter-spacing:.1em}
+.status.draft{background:var(--ink4);color:var(--tx4)}
+.status.submitted{background:rgba(200,120,32,.12);color:var(--amber2)}
+.status.live{background:var(--live-g);color:var(--live);border:1px solid rgba(64,224,128,.2)}
+.status.in_review{background:rgba(58,106,144,.15);color:var(--teal2)}
+.status-dot{width:4px;height:4px;border-radius:50%;background:currentColor}
+
+/* Table action */
+.tbl-btn{height:22px;padding:0 8px;border-radius:3px;border:1px solid var(--b);
+  background:none;cursor:pointer;font-family:var(--mono);font-size:7px;letter-spacing:.1em;
+  color:var(--tx4);transition:.12s;margin-right:3px}
+.tbl-btn:hover{border-color:var(--b2);color:var(--amber2)}
+.tbl-btn.submit{border-color:rgba(200,120,32,.3);color:var(--amber2)}
+.tbl-btn.submit:hover{background:rgba(200,120,32,.1)}
+
+/* Empty state */
+.empty-state{text-align:center;padding:40px 20px;
+  background:var(--ink2);border:1px solid var(--b);border-radius:6px}
+.es-icon{font-size:36px;margin-bottom:12px}
+.es-title{font-size:13px;font-weight:600;color:var(--tx2);margin-bottom:6px}
+.es-body{font-family:var(--body);font-size:12px;color:var(--tx4);line-height:1.7;margin-bottom:16px}
+
+/* Profile edit form */
+.edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.edit-field{display:flex;flex-direction:column;gap:5px}
+.edit-field.full{grid-column:1/-1}
+.edit-field label{font-size:7px;letter-spacing:.16em;color:var(--tx4)}
+.edit-field input,.edit-field select,.edit-field textarea{
+  background:var(--ink3);border:1px solid var(--b2);border-radius:4px;
+  padding:9px 12px;color:var(--tx);font-family:var(--mono);font-size:11px;
+  outline:none;transition:.15s;
+}
+.edit-field input:focus,.edit-field select:focus,.edit-field textarea:focus{border-color:var(--amber)}
+.edit-field textarea{resize:vertical;height:70px;font-family:var(--body)}
+.edit-field select option{background:var(--ink3)}
+
+/* Royalty chart */
+.royalty-bar{height:8px;background:var(--ink4);border-radius:4px;overflow:hidden;margin-top:4px}
+.royalty-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--amber),var(--amber2));transition:width .5s ease}
+
+/* ISRC display */
+.isrc-big{
+  background:var(--ink);border:1px solid var(--b2);border-radius:5px;
+  padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:14px;
+}
+.isrc-code{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--teal2);letter-spacing:.14em}
+.isrc-info{font-size:8px;color:var(--tx4);line-height:1.8;font-family:var(--body)}
+
+/* Toast */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:var(--ink3);border:1px solid var(--b2);border-radius:5px;
+  padding:9px 18px;font-size:8px;letter-spacing:.14em;z-index:500;
+  opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;
+  box-shadow:0 8px 32px rgba(0,0,0,.7)}
+#toast.show{opacity:1}
+#toast.ok{color:var(--amber2);border-color:var(--b3)}
+#toast.warn{color:var(--cream2)}
+#toast.err{color:var(--err);border-color:rgba(255,80,80,.3)}
+
+/* Loading */
+.loading{text-align:center;padding:32px;color:var(--tx4);font-size:9px;letter-spacing:.14em}
+.loading::after{content:'';display:inline-block;width:16px;height:16px;border-radius:50%;
+  border:2px solid var(--b2);border-top-color:var(--amber);animation:spin .8s linear infinite;margin-left:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:800px){
+  #shell{grid-template-columns:1fr}
+  #sidebar{display:none}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .edit-grid{grid-template-columns:1fr}
+  .edit-field.full{grid-column:1}
+}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <a href="/" class="logo">Pro M.A.S.T.E.R <em>A MAGNIPROJEKTA VENTURE</em></a>
+  <div class="sep"></div>
+  <div class="nav-links">
+    <a class="nav-link act" href="/dashboard"><div class="dot"></div>DASHBOARD</a>
+    <a class="nav-link" href="/studio"><div class="dot"></div>STUDIO</a>
+    <a class="nav-link" href="/distribution"><div class="dot"></div>DISTRIBUTION</a>
+    <a class="nav-link" href="/platform"><div class="dot"></div>PLATFORM</a>
+  </div>
+  <div style="position:relative">
+    <div class="profile-pill" onclick="toggleDrop()">
+      <div class="pp-av" id="ppAv">—</div>
+      <div><div class="pp-name" id="ppName">Loading...</div>
+        <div class="pp-tier" id="ppTier">FREE</div>
+      </div>
+    </div>
+    <div class="profile-drop" id="profileDrop">
+      <div class="pd-item" onclick="showView('profile')">⚙ Edit Profile</div>
+      <div class="pd-item" onclick="window.location.href='/admin'" id="adminLink" style="display:none">🔐 Admin Panel</div>
+      <div class="pd-sep"></div>
+      <div class="pd-item" onclick="window.location.href='/studio'">🎹 Open Studio</div>
+      <div class="pd-item" onclick="window.location.href='/distribution'">📀 Distribution</div>
+      <div class="pd-sep"></div>
+      <div class="pd-item danger" onclick="signOut()">→ Sign Out</div>
+    </div>
+  </div>
+</div>
+
+<div id="shell">
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="artist-card">
+      <div class="ac-avatar" id="sbAv">—</div>
+      <div class="ac-name" id="sbName">Loading...</div>
+      <div class="ac-genre" id="sbGenre">—</div>
+      <div class="ac-tier" id="sbTier">FREE</div>
+      <div class="ac-stats">
+        <div class="ac-stat"><div class="ac-stat-val" id="sbTracks">0</div><div class="ac-stat-lbl">TRACKS</div></div>
+        <div class="ac-stat"><div class="ac-stat-val" id="sbISRC">0</div><div class="ac-stat-lbl">ISRCs</div></div>
+      </div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-head">MY LABEL</div>
+      <div class="sb-item act" onclick="showView('overview')"><div class="sb-icon">📊</div>Overview</div>
+      <div class="sb-item" onclick="showView('tracks')"><div class="sb-icon">🎵</div>My Tracks <div class="sb-badge" id="sbTrackBadge">0</div></div>
+      <div class="sb-item" onclick="showView('releases')"><div class="sb-icon">📀</div>Releases <div class="sb-badge live" id="sbReleaseBadge">0 LIVE</div></div>
+      <div class="sb-item" onclick="showView('royalties')"><div class="sb-icon">💰</div>Royalties</div>
+      <div class="sb-item" onclick="showView('isrc')"><div class="sb-icon">🔖</div>ISRC Registry</div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-head">STUDIO</div>
+      <a class="sb-item" href="/studio"><div class="sb-icon">🎹</div>Open Studio</a>
+      <a class="sb-item" href="/distribution"><div class="sb-icon">📤</div>Submit Release</a>
+      <a class="sb-item" href="/platform"><div class="sb-icon">👥</div>Artist Roster</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-head">ACCOUNT</div>
+      <div class="sb-item" onclick="showView('profile')"><div class="sb-icon">⚙</div>Edit Profile</div>
+      <div class="sb-item" onclick="showView('upgrade')"><div class="sb-icon">⬆</div>Upgrade Plan</div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content">
+    <div class="loading" id="loadingState">Loading your dashboard</div>
+    <div id="viewContainer" style="display:none"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SB_URL  = 'https://qaunadbaebbkouxgijbg.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhdW5hZGJhZWJia291eGdpamJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NTU2MzEsImV4cCI6MjA4MzQzMTYzMX0.HPIT_0HuJZ_v1JxmvCgl3sr9MfjHTwnTqZqM4i75-k4';
+const sb = supabase.createClient(SB_URL, SB_ANON);
+
+let profile = null;
+let tracks  = [];
+let catalogue = [];
+let currentView = 'overview';
+
+// ── BOOT ──
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = '/auth'; return; }
+
+  // Load profile
+  const { data: prof } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+  if (!prof) { window.location.href = '/auth'; return; }
+  if (!prof.onboarding_complete) { window.location.href = '/onboarding'; return; }
+  profile = prof;
+
+  // Load tracks
+  const { data: tr } = await sb.from('tracks').select('*').eq('profile_id', prof.id).order('created_at', { ascending: false });
+  tracks = tr || [];
+
+  // Load catalogue
+  const { data: cat } = await sb.from('catalogue').select('*').eq('profile_id', prof.id).order('created_at', { ascending: false });
+  catalogue = cat || [];
+
+  populateUI();
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('viewContainer').style.display = 'block';
+  showView('overview');
+})();
+
+function populateUI() {
+  const initials = (profile.artist_name || '?')[0].toUpperCase();
+  const tier     = (profile.tier || 'free').toUpperCase();
+  const liveCount = catalogue.filter(c => c.distribution_status === 'live').length;
+
+  // Topbar
+  document.getElementById('ppAv').textContent    = initials;
+  document.getElementById('ppName').textContent  = profile.artist_name;
+  document.getElementById('ppTier').textContent  = tier;
+
+  // Sidebar
+  document.getElementById('sbAv').textContent    = initials;
+  document.getElementById('sbName').textContent  = profile.artist_name;
+  document.getElementById('sbGenre').textContent = profile.genre || '—';
+  document.getElementById('sbTier').textContent  = tier;
+  document.getElementById('sbTracks').textContent  = tracks.length;
+  document.getElementById('sbISRC').textContent    = profile.isrc_count || 0;
+  document.getElementById('sbTrackBadge').textContent  = tracks.length;
+  document.getElementById('sbReleaseBadge').textContent = liveCount + ' LIVE';
+
+  // Admin link
+  if (profile.is_admin) document.getElementById('adminLink').style.display = 'flex';
+}
+
+// ── VIEWS ──
+function showView(view) {
+  currentView = view;
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('act'));
+  document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('act'));
+
+  const views = { overview: renderOverview, tracks: renderTracks,
+    releases: renderReleases, royalties: renderRoyalties,
+    isrc: renderISRC, profile: renderProfile, upgrade: renderUpgrade };
+
+  const fn = views[view];
+  if (fn) {
+    document.getElementById('viewContainer').innerHTML = fn();
+    // Post-render hooks
+    if (view === 'profile') bindProfileForm();
+  }
+}
+
+// ── OVERVIEW ──
+function renderOverview() {
+  const liveCount    = catalogue.filter(c => c.distribution_status === 'live').length;
+  const totalStreams  = catalogue.reduce((a,c) => a + (c.total_streams || 0), 0);
+  const totalRoyalty = catalogue.reduce((a,c) => a + parseFloat(c.royalties_accrued || 0), 0);
+  const artistShare  = totalRoyalty * 0.85;
+
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Welcome back, ${profile.artist_name} 👋</div>
+        <div class="section-sub">${new Date().toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase()}</div>
+      </div>
+      <a href="/studio" class="action-btn primary">🎹 OPEN STUDIO</a>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card sc-amber">
+        <div class="stat-icon">🎵</div>
+        <div class="stat-lbl">TRACKS RECORDED</div>
+        <div class="stat-val">${tracks.length}</div>
+        <div class="stat-sub">${tracks.length === 0 ? 'Record your first track in the studio' : `Latest: ${tracks[0]?.title || '—'}`}</div>
+      </div>
+      <div class="stat-card sc-live">
+        <div class="stat-icon">📀</div>
+        <div class="stat-lbl">LIVE ON DSPs</div>
+        <div class="stat-val">${liveCount}</div>
+        <div class="stat-sub">${catalogue.length} total in catalogue</div>
+      </div>
+      <div class="stat-card sc-teal">
+        <div class="stat-icon">🎧</div>
+        <div class="stat-lbl">TOTAL STREAMS</div>
+        <div class="stat-val">${totalStreams > 999 ? (totalStreams/1000).toFixed(1)+'K' : totalStreams}</div>
+        <div class="stat-sub">Across all DSPs</div>
+      </div>
+      <div class="stat-card sc-cream">
+        <div class="stat-icon">💰</div>
+        <div class="stat-lbl">YOUR ROYALTIES</div>
+        <div class="stat-val">R${artistShare.toFixed(2)}</div>
+        <div class="stat-sub">85% of net receipts</div>
+      </div>
+    </div>
+
+    ${tracks.length === 0 ? `
+    <div class="empty-state">
+      <div class="es-icon">🎹</div>
+      <div class="es-title">Your studio is ready</div>
+      <div class="es-body">
+        You haven't recorded anything yet. Head into the Pro M.A.S.T.E.R studio,
+        lay down your first track with Billy Black, and submit it to the catalogue.
+        Your ISRC will be auto-generated.
+      </div>
+      <a href="/studio" class="action-btn primary" style="display:inline-flex;text-decoration:none">🎹 RECORD FIRST TRACK</a>
+    </div>` : `
+    <div class="section-head" style="margin-top:8px">
+      <div class="section-title" style="font-size:14px">Recent Tracks</div>
+      <button class="action-btn" onclick="showView('tracks')">VIEW ALL →</button>
+    </div>
+    <div style="background:var(--ink2);border:1px solid var(--b);border-radius:6px;overflow:hidden">
+      <table class="track-table">
+        <thead><tr><th>TRACK</th><th>INSTRUMENT</th><th>ISRC</th><th>STATUS</th><th>RECORDED</th></tr></thead>
+        <tbody>
+          ${tracks.slice(0,5).map(t => `
+          <tr>
+            <td><div style="font-weight:600">${t.title}</div><div class="sub">${t.genre || '—'} · ${t.duration ? t.duration.toFixed(1)+'s' : '—'}</div></td>
+            <td><div style="font-size:9px;color:var(--tx3)">${t.instrument || '—'}</div></td>
+            <td><div class="isrc-tag">${t.isrc || '—'}</div></td>
+            <td>${statusPill(t.isrc ? 'submitted' : 'draft')}</td>
+            <td><div style="font-size:9px;color:var(--tx4)">${new Date(t.created_at).toLocaleDateString('en-ZA')}</div></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`}
+
+    ${profile.tier === 'free' ? `
+    <div style="background:linear-gradient(135deg,rgba(200,120,32,.1),rgba(200,120,32,.06));
+      border:1px solid var(--b3);border-radius:6px;padding:16px;margin-top:16px;
+      display:flex;align-items:center;gap:14px">
+      <div style="font-size:24px">⬆</div>
+      <div style="flex:1">
+        <div style="font-family:var(--disp);font-weight:700;font-size:13px;color:var(--amber2);margin-bottom:3px">Upgrade to distribute your music</div>
+        <div style="font-family:var(--body);font-size:11px;color:var(--tx3);line-height:1.6">
+          Free plan gives you the studio. Artist plan (R900/mo) unlocks Spotify, Apple Music, YouTube and Boomplay distribution — plus 20 ISRCs and mastering FX.
+        </div>
+      </div>
+      <button class="action-btn primary" onclick="showView('upgrade')">UPGRADE →</button>
+    </div>` : ''}
+  `;
+}
+
+// ── TRACKS ──
+function renderTracks() {
+  if (!tracks.length) return `
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">My Tracks</div>
+        <a href="/studio" class="action-btn primary">🎹 RECORD IN STUDIO</a>
+      </div>
+      <div class="empty-state">
+        <div class="es-icon">🎵</div>
+        <div class="es-title">No tracks yet</div>
+        <div class="es-body">Go to the studio, record something, and it will appear here automatically with a generated ISRC.</div>
+        <a href="/studio" class="action-btn primary" style="display:inline-flex;text-decoration:none">OPEN STUDIO →</a>
+      </div>
+    </div>`;
+
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-title">My Tracks</div>
+        <div class="section-sub">${tracks.length} RECORDED · ${catalogue.length} IN CATALOGUE</div>
+      </div>
+      <a href="/studio" class="action-btn primary">🎹 RECORD NEW</a>
+    </div>
+    <div style="background:var(--ink2);border:1px solid var(--b);border-radius:6px;overflow:hidden">
+      <table class="track-table">
+        <thead><tr><th>TRACK</th><th>KEY / BPM</th><th>ISRC</th><th>DURATION</th><th>CATALOGUE</th><th>ACTIONS</th></tr></thead>
+        <tbody>
+          ${tracks.map(t => {
+            const catEntry = catalogue.find(c => c.track_id === t.id);
+            return `
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:9px">
+                  <div style="width:28px;height:28px;border-radius:4px;
+                    background:linear-gradient(135deg,var(--amber),var(--amber2));
+                    display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">🎵</div>
+                  <div>
+                    <div style="font-weight:600">${t.title}</div>
+                    <div class="sub">${t.genre || '—'} · ${t.instrument || '—'}</div>
+                  </div>
+                </div>
+              </td>
+              <td><div style="font-size:9px;color:var(--tx3)">${t.key_sig || '—'}</div><div class="sub">${t.bpm ? t.bpm+' BPM' : '—'}</div></td>
+              <td><div class="isrc-tag">${t.isrc || '—'}</div></td>
+              <td><div style="font-size:10px">${t.duration ? t.duration.toFixed(1)+'s' : '—'}</div></td>
+              <td>${catEntry ? statusPill(catEntry.distribution_status) : statusPill('draft')}</td>
+              <td>
+                ${!catEntry ? `<button class="tbl-btn submit" onclick="submitTrack('${t.id}','${t.title}','${t.isrc||''}')">SUBMIT</button>` : ''}
+                <button class="tbl-btn" onclick="toast('Opening ${t.title}...','ok')">OPEN</button>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── RELEASES ──
+function renderReleases() {
+  const live = catalogue.filter(c => c.distribution_status === 'live');
+  const pending = catalogue.filter(c => ['submitted','in_review'].includes(c.distribution_status));
+  const draft = catalogue.filter(c => c.distribution_status === 'draft');
+
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-title">My Releases</div>
+        <div class="section-sub">${live.length} LIVE · ${pending.length} PENDING · ${draft.length} DRAFT</div>
+      </div>
+      <a href="/distribution" class="action-btn primary">+ SUBMIT RELEASE</a>
+    </div>
+
+    ${!catalogue.length ? `
+    <div class="empty-state">
+      <div class="es-icon">📀</div>
+      <div class="es-title">No releases yet</div>
+      <div class="es-body">Record a track in the studio, then submit it to the distribution portal. Your release gets an ISRC and enters the DSP pipeline.</div>
+      <a href="/distribution" class="action-btn primary" style="display:inline-flex;text-decoration:none">GO TO DISTRIBUTION →</a>
+    </div>` : `
+    <div style="background:var(--ink2);border:1px solid var(--b);border-radius:6px;overflow:hidden">
+      <table class="track-table">
+        <thead><tr><th>RELEASE</th><th>ISRC</th><th>DSPs</th><th>STREAMS</th><th>ROYALTIES (85%)</th><th>STATUS</th></tr></thead>
+        <tbody>
+          ${catalogue.map(c => {
+            const tr = tracks.find(t => t.id === c.track_id);
+            const artistRoyalty = (parseFloat(c.royalties_accrued) * 0.85).toFixed(2);
+            return `
+            <tr>
+              <td>
+                <div style="font-weight:600">${tr?.title || 'Unknown Track'}</div>
+                <div class="sub">${tr?.genre || '—'} · ${tr?.instrument || '—'}</div>
+              </td>
+              <td><div class="isrc-tag">${c.isrc}</div></td>
+              <td><div style="font-size:9px;color:var(--tx3)">${(c.dsps_selected||[]).join(', ') || '—'}</div></td>
+              <td><div style="font-size:11px;font-weight:600;color:${c.total_streams > 0 ? 'var(--live)' : 'var(--tx4)'}">${c.total_streams > 0 ? c.total_streams.toLocaleString() : '—'}</div></td>
+              <td><div style="font-size:11px;font-weight:600;color:var(--amber2)">R${artistRoyalty}</div></td>
+              <td>${statusPill(c.distribution_status)}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`}
+  </div>`;
+}
+
+// ── ROYALTIES ──
+function renderRoyalties() {
+  const totalRoyalty = catalogue.reduce((a,c) => a + parseFloat(c.royalties_accrued || 0), 0);
+  const artistShare  = totalRoyalty * 0.85;
+  const labelFee     = totalRoyalty * 0.15;
+
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">Royalty Dashboard</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card sc-amber">
+        <div class="stat-icon">💰</div>
+        <div class="stat-lbl">YOUR SHARE (85%)</div>
+        <div class="stat-val">R${artistShare.toFixed(2)}</div>
+        <div class="stat-sub">Pending monthly payout</div>
+      </div>
+      <div class="stat-card sc-cream">
+        <div class="stat-icon">🏷</div>
+        <div class="stat-lbl">LABEL FEE (15%)</div>
+        <div class="stat-val">R${labelFee.toFixed(2)}</div>
+        <div class="stat-sub">Pro M.A.S.T.E.R distribution fee</div>
+      </div>
+      <div class="stat-card sc-teal">
+        <div class="stat-icon">🎧</div>
+        <div class="stat-lbl">TOTAL STREAMS</div>
+        <div class="stat-val">${catalogue.reduce((a,c)=>a+(c.total_streams||0),0).toLocaleString()}</div>
+        <div class="stat-sub">Across all DSPs</div>
+      </div>
+      <div class="stat-card sc-live">
+        <div class="stat-icon">📅</div>
+        <div class="stat-lbl">NEXT PAYOUT</div>
+        <div class="stat-val" style="font-size:16px">${new Date(new Date().getFullYear(), new Date().getMonth()+1, 1).toLocaleDateString('en-ZA',{day:'numeric',month:'short'})}</div>
+        <div class="stat-sub">Via Stripe · Min R450</div>
+      </div>
+    </div>
+
+    <div style="background:var(--ink2);border:1px solid var(--b);border-radius:6px;padding:16px;margin-top:4px">
+      <div style="font-size:10px;letter-spacing:.14em;color:var(--tx4);margin-bottom:12px">ROYALTY RATE REFERENCE</div>
+      ${[
+        {dsp:'Spotify',rate:'R0.05–R0.09',note:'Per stream · varies by plan & region'},
+        {dsp:'Apple Music',rate:'R0.13–R0.18',note:'Per stream · higher than Spotify'},
+        {dsp:'YouTube Music',rate:'R0.02–R0.05',note:'Per stream · includes free tier'},
+        {dsp:'Boomplay',rate:'R0.04–R0.07',note:'Per stream · Africa-focused'}
+      ].map(r => `
+        <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--b)">
+          <div style="font-size:10px;font-weight:600;width:120px;color:var(--tx)">${r.dsp}</div>
+          <div style="flex:1">
+            <div style="font-family:var(--disp);font-weight:700;font-size:14px;color:var(--amber2)">${r.rate}</div>
+            <div style="font-size:8px;color:var(--tx4);font-family:var(--body)">${r.note}</div>
+          </div>
+        </div>`).join('')}
+      <div style="margin-top:12px;font-size:9px;color:var(--tx4);font-family:var(--body);line-height:1.8">
+        DSP pays Pro M.A.S.T.E.R → Label retains 15% → Artist receives 85%.<br>
+        For collab tracks: 85% is split further per the royalty split agreement signed at session start.
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── ISRC ──
+function renderISRC() {
+  const myTracks = tracks.filter(t => t.isrc);
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">ISRC Registry</div>
+    </div>
+    <div class="isrc-big">
+      <div>
+        <div style="font-size:7px;letter-spacing:.16em;color:var(--tx4);margin-bottom:4px">YOUR LABEL PREFIX</div>
+        <div class="isrc-code">ZA-MP1</div>
+      </div>
+      <div class="isrc-info">
+        <strong style="color:var(--tx)">ZA</strong> — South Africa &nbsp;·&nbsp;
+        <strong style="color:var(--tx)">MP1</strong> — MagniProjekta / Pro M.A.S.T.E.R<br>
+        ISRCs are auto-generated when you submit a track to distribution.<br>
+        <strong style="color:var(--amber2)">RISA registration pending</strong> — prefix ZA-MP1 reserved.
+      </div>
+    </div>
+    <div style="font-size:10px;color:var(--tx4);margin-bottom:10px;letter-spacing:.12em">
+      YOUR REGISTERED ISRCs (${myTracks.length})
+    </div>
+    ${myTracks.length ? `
+    <div style="background:var(--ink2);border:1px solid var(--b);border-radius:6px;overflow:hidden">
+      <table class="track-table">
+        <thead><tr><th>ISRC</th><th>TRACK</th><th>INSTRUMENT</th><th>REGISTERED</th></tr></thead>
+        <tbody>
+          ${myTracks.map(t => `
+          <tr>
+            <td><div class="isrc-tag" style="font-size:11px;font-weight:700">${t.isrc}</div></td>
+            <td><div style="font-weight:600">${t.title}</div></td>
+            <td><div style="font-size:9px;color:var(--tx3)">${t.instrument || '—'}</div></td>
+            <td><div style="font-size:9px;color:var(--tx4)">${new Date(t.created_at).toLocaleDateString('en-ZA')}</div></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>` : `
+    <div class="empty-state">
+      <div class="es-icon">🔖</div>
+      <div class="es-title">No ISRCs yet</div>
+      <div class="es-body">Record a track and submit it to distribution — your ISRC is generated automatically.</div>
+    </div>`}
+  </div>`;
+}
+
+// ── PROFILE EDIT ──
+function renderProfile() {
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">Edit Profile</div>
+      <button class="action-btn primary" onclick="saveProfile()">SAVE CHANGES</button>
+    </div>
+    <div style="background:var(--ink2);border:1px solid var(--b);border-radius:6px;padding:20px">
+      <div class="edit-grid">
+        <div class="edit-field"><label>FIRST NAME</label><input type="text" id="epFirst" value="${profile.first_name||''}"></div>
+        <div class="edit-field"><label>LAST NAME</label><input type="text" id="epLast" value="${profile.last_name||''}"></div>
+        <div class="edit-field"><label>ARTIST NAME *</label><input type="text" id="epArtist" value="${profile.artist_name||''}"></div>
+        <div class="edit-field"><label>GENRE</label>
+          <select id="epGenre">
+            ${['Afrobeat','Jazz','Amapiano','Kwaito','Gospel','R&B / Soul','Hip-Hop','Electronic','World / Fusion','Neo-Soul','Classical','Other'].map(g =>
+              `<option${profile.genre===g?' selected':''}>${g}</option>`).join('')}
+          </select>
+        </div>
+        <div class="edit-field"><label>COUNTRY</label>
+          <select id="epCountry">
+            ${['South Africa','Nigeria','Ghana','Kenya','Zimbabwe','Botswana','Namibia','Zambia','Tanzania','Senegal','Other Africa','United Kingdom','United States','Other'].map(c =>
+              `<option${profile.country===c?' selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+        <div class="edit-field"><label>EMAIL</label><input type="email" id="epEmail" value="${profile.email||''}" disabled style="opacity:.5;cursor:not-allowed"></div>
+        <div class="edit-field full"><label>BIO</label><textarea id="epBio">${profile.bio||''}</textarea></div>
+      </div>
+    </div>
+    <div style="margin-top:16px;background:var(--ink2);border:1px solid var(--b);border-radius:6px;padding:16px">
+      <div style="font-size:10px;letter-spacing:.14em;color:var(--tx4);margin-bottom:10px">CURRENT PLAN</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-family:var(--disp);font-weight:700;font-size:16px;color:var(--amber2)">${(profile.tier||'free').toUpperCase()}</div>
+          <div style="font-size:9px;color:var(--tx4);margin-top:2px;font-family:var(--body)">
+            Licence signed: ${profile.licence_signed ? '✓ '+new Date(profile.licence_signed_at).toLocaleDateString('en-ZA') : 'Not signed'}
+          </div>
+        </div>
+        <button class="action-btn" onclick="showView('upgrade')">CHANGE PLAN →</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function bindProfileForm() {} // inputs are inline values
+
+async function saveProfile() {
+  const updates = {
+    first_name:  document.getElementById('epFirst')?.value.trim(),
+    last_name:   document.getElementById('epLast')?.value.trim(),
+    artist_name: document.getElementById('epArtist')?.value.trim(),
+    genre:       document.getElementById('epGenre')?.value,
+    country:     document.getElementById('epCountry')?.value,
+    bio:         document.getElementById('epBio')?.value.trim(),
+  };
+  if (!updates.artist_name) { toast('Artist name is required', 'err'); return; }
+  const { error } = await sb.from('profiles').update(updates).eq('id', profile.id);
+  if (error) { toast('Save failed: ' + error.message, 'err'); return; }
+  Object.assign(profile, updates);
+  populateUI();
+  toast('Profile updated ✓', 'ok');
+}
+
+// ── UPGRADE ──
+function renderUpgrade() {
+  const tiers = [
+    { id:'free',    name:'Free',    price:'R0',    period:'/month', features:['Studio access','Billy Black AI','3 downloads/month','1 ISRC'] },
+    { id:'creator', name:'Creator', price:'R180',  period:'/month', features:['6 downloads/month','Cloud save','Verified badge','5 ISRCs'] },
+    { id:'artist',  name:'Artist',  price:'R900',  period:'/month', features:['12 downloads/month','DSP distribution','Mastering FX','20 ISRCs'], popular:true },
+    { id:'pro',     name:'Pro',     price:'R1800', period:'/month', features:['Unlimited downloads','Priority Billy Black','15% label fee','Unlimited ISRCs'] },
+  ];
+  return `
+  <div class="section">
+    <div class="section-head"><div class="section-title">Upgrade Your Plan</div></div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px">
+      ${tiers.map(t => `
+      <div style="background:var(--ink2);border:1px solid ${t.id===profile.tier?'var(--amber2)':'var(--b)'};border-radius:6px;padding:18px;position:relative">
+        ${t.popular ? `<div style="position:absolute;top:12px;right:12px;font-size:6px;letter-spacing:.12em;padding:2px 7px;border-radius:2px;background:rgba(200,120,32,.2);color:var(--amber2)">POPULAR</div>` : ''}
+        ${t.id===profile.tier ? `<div style="position:absolute;top:12px;right:12px;font-size:6px;letter-spacing:.12em;padding:2px 7px;border-radius:2px;background:var(--live-g);color:var(--live)">CURRENT</div>` : ''}
+        <div style="font-family:var(--disp);font-weight:700;font-size:14px;color:var(--tx);margin-bottom:6px">${t.name}</div>
+        <div style="font-family:var(--disp);font-weight:800;font-size:22px;color:var(--amber2)">${t.price}<span style="font-size:10px;color:var(--tx4);font-weight:400">${t.period}</span></div>
+        <div style="margin:10px 0;display:flex;flex-direction:column;gap:4px">
+          ${t.features.map(f => `<div style="font-size:9px;color:var(--tx3);font-family:var(--body);display:flex;align-items:center;gap:5px"><span style="color:var(--amber)">✓</span>${f}</div>`).join('')}
+        </div>
+        ${t.id !== profile.tier ? `<button onclick="requestUpgrade('${t.id}','${t.name}')" style="width:100%;height:32px;border-radius:3px;border:1px solid var(--b2);background:rgba(200,120,32,.08);cursor:pointer;font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:var(--amber2);transition:.15s" onmouseover="this.style.background='rgba(200,120,32,.16)'" onmouseout="this.style.background='rgba(200,120,32,.08)'">SELECT ${t.name.toUpperCase()}</button>` : ''}
+      </div>`).join('')}
+    </div>
+    <div style="background:var(--ink3);border:1px solid var(--b);border-radius:5px;padding:12px;font-size:9px;color:var(--tx4);line-height:1.8;font-family:var(--body)">
+      Paid plans are billed in South African Rand. Stripe integration is coming soon — selecting a plan now reserves your spot and you'll be notified when billing activates. No payment is taken until Stripe is live.
+    </div>
+  </div>`;
+}
+
+async function requestUpgrade(tier, name) {
+  const { error } = await sb.from('profiles').update({ tier }).eq('id', profile.id);
+  if (error) { toast('Could not update plan: ' + error.message, 'err'); return; }
+  profile.tier = tier;
+  populateUI();
+  toast(`Plan set to ${name} ✓ — billing activates when Stripe goes live`, 'ok');
+  showView('upgrade');
+}
+
+// ── SUBMIT TRACK ──
+async function submitTrack(trackId, title, isrc) {
+  if (!isrc) { toast('This track has no ISRC — submit from the distribution portal', 'warn'); return; }
+  const { error } = await sb.from('catalogue').update({
+    distribution_status: 'submitted',
+    submitted_at: new Date().toISOString()
+  }).eq('track_id', trackId).eq('profile_id', profile.id);
+  if (!error) {
+    const cat = catalogue.find(c => c.track_id === trackId);
+    if (cat) cat.distribution_status = 'submitted';
+    toast(`"${title}" submitted to distribution ✓`, 'ok');
+    showView('tracks');
+  } else {
+    toast('Submission failed: ' + error.message, 'err');
+  }
+}
+
+// ── HELPERS ──
+function statusPill(status) {
+  const map = {
+    draft:     'DRAFT',
+    submitted: 'SUBMITTED',
+    in_review: 'IN REVIEW',
+    live:      '● LIVE',
+    removed:   'REMOVED',
+    rejected:  'REJECTED'
+  };
+  return `<span class="status ${status}">${map[status] || status}</span>`;
+}
+
+function toggleDrop() {
+  document.getElementById('profileDrop').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.profile-pill') && !e.target.closest('.profile-drop')) {
+    document.getElementById('profileDrop')?.classList.remove('open');
+  }
+});
+
+async function signOut() {
+  await sb.auth.signOut();
+  window.location.href = '/auth';
+}
+
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => t.className = '', 3500);
+}
+</script>
+</body>
+</html>

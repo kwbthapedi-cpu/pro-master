@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro M.A.S.T.E.R — Phase 5 | Distribution Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#06060c;--ink2:#0c0c16;--ink3:#12121e;--ink4:#181826;--ink5:#20202e;--ink6:#2a2a3e;
+  --b:rgba(255,255,255,0.055);--b2:rgba(255,255,255,0.10);--b3:rgba(255,255,255,0.17);
+  --or:#ff5f1f;--or2:#ff8040;--org:rgba(255,95,31,0.22);
+  --gn:#00ffaa;--gng:rgba(0,255,170,0.13);
+  --cy:#00ccff;--cyg:rgba(0,204,255,0.11);
+  --mg:#ff1a8c;--mgg:rgba(255,26,140,0.11);
+  --yl:#ffc800;--ylg:rgba(255,200,0,0.11);
+  --vi:#9966ff;--vig:rgba(153,102,255,0.11);
+  --rd:#ff3a3a;--rdg:rgba(255,58,58,0.11);
+  --sp:#1db954;--spg:rgba(29,185,84,0.15); /* spotify */
+  --ap:#fc3c44;--apg:rgba(252,60,68,0.12); /* apple */
+  --tx:#d2d2ea;--tm:#606080;--td:#28283e;
+  --mono:'IBM Plex Mono',monospace;--disp:'Syne',sans-serif;--body:'DM Sans',sans-serif;
+  --r:6px;
+}
+html,body{height:100%;background:var(--ink);color:var(--tx);font-family:var(--mono);overflow:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--ink6);border-radius:2px}
+
+/* ── LAYOUT ── */
+#shell{display:grid;grid-template-rows:50px 1fr;height:100vh}
+#topbar{background:var(--ink2);border-bottom:1px solid var(--b);display:flex;align-items:center;padding:0 20px;gap:14px}
+.logo{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--or)}
+.logo em{font-style:normal;font-size:9px;letter-spacing:.2em;color:var(--tm);margin-left:8px;font-weight:400}
+.sep{width:1px;height:20px;background:var(--b2);flex-shrink:0}
+.tb-nav{display:flex;gap:3px}
+.tb-btn{height:28px;padding:0 12px;border-radius:4px;border:none;background:none;cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--tm);transition:.12s;display:flex;align-items:center;gap:6px}
+.tb-btn:hover{background:var(--ink4);color:var(--tx)}
+.tb-btn.act{background:var(--ink4);color:var(--or)}
+.tb-btn .dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* DSP status pills */
+.dsp-pills{margin-left:auto;display:flex;gap:8px}
+.dsp-pill{display:flex;align-items:center;gap:6px;background:var(--ink3);border:1px solid var(--b);border-radius:20px;padding:3px 10px;font-size:8px;letter-spacing:.12em}
+.dp-dot{width:5px;height:5px;border-radius:50%}
+.dp-dot.sp{background:var(--sp);box-shadow:0 0 5px var(--sp)}
+.dp-dot.ap{background:var(--ap);box-shadow:0 0 5px var(--ap)}
+.dp-dot.off{background:var(--td)}
+
+#body{display:grid;grid-template-columns:220px 1fr;overflow:hidden;height:100%}
+
+/* ── SIDEBAR ── */
+#sidebar{background:var(--ink2);border-right:1px solid var(--b);display:flex;flex-direction:column;overflow-y:auto;padding:16px 0}
+.sb-sec{margin-bottom:18px}
+.sb-head{font-size:7px;letter-spacing:.22em;color:var(--td);padding:0 16px;margin-bottom:6px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 16px;cursor:pointer;transition:.12s;border-left:2px solid transparent;font-size:10px;color:var(--tm)}
+.sb-item:hover{background:var(--ink3);color:var(--tx)}
+.sb-item.act{background:var(--ink3);border-left-color:var(--or);color:var(--or)}
+.sb-icon{font-size:13px;width:18px;text-align:center;flex-shrink:0}
+.sb-badge{margin-left:auto;font-size:7px;letter-spacing:.1em;padding:2px 6px;border-radius:3px;background:var(--org);color:var(--or)}
+.sb-badge.gn{background:var(--gng);color:var(--gn)}
+.sb-badge.yl{background:var(--ylg);color:var(--yl)}
+
+/* ── MAIN ── */
+#main{flex:1;overflow-y:auto;padding:28px 32px;display:flex;flex-direction:column;gap:20px}
+
+/* ── COMPONENTS ── */
+.card{background:var(--ink2);border:1px solid var(--b);border-radius:var(--r);overflow:hidden}
+.card-head{padding:14px 18px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:10px;letter-spacing:.18em;color:var(--tm)}
+.card-body{padding:18px}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat{background:var(--ink2);border:1px solid var(--b);border-radius:var(--r);padding:18px;position:relative;overflow:hidden;cursor:default;transition:.15s}
+.stat:hover{border-color:var(--b2)}
+.stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+.stat.or::after{background:linear-gradient(90deg,var(--or),var(--or2))}
+.stat.gn::after{background:var(--gn)}
+.stat.sp::after{background:var(--sp)}
+.stat.ap::after{background:var(--ap)}
+.stat.vi::after{background:var(--vi)}
+.stat-ico{font-size:20px;margin-bottom:10px}
+.stat-lbl{font-size:8px;letter-spacing:.18em;color:var(--tm);margin-bottom:5px}
+.stat-val{font-family:var(--disp);font-weight:800;font-size:28px;color:var(--tx)}
+.stat-sub{font-size:8px;color:var(--tm);margin-top:4px;font-family:var(--body)}
+.stat-delta{font-size:9px;margin-top:6px}
+.delta-up{color:var(--gn)}
+.delta-dn{color:var(--rd)}
+
+/* ── CATALOGUE TABLE ── */
+.table{width:100%;border-collapse:collapse}
+.table th{font-size:8px;letter-spacing:.18em;color:var(--td);text-align:left;padding:8px 12px;border-bottom:1px solid var(--b);font-weight:400}
+.table td{padding:10px 12px;border-bottom:1px solid var(--b);font-size:10px;color:var(--tx);vertical-align:middle}
+.table tr:last-child td{border-bottom:none}
+.table tr:hover td{background:var(--ink3)}
+.sub{font-size:8px;color:var(--tm);margin-top:2px;font-family:var(--body)}
+
+/* DSP badges */
+.dsp-badge{display:inline-flex;align-items:center;gap:4px;font-size:7px;letter-spacing:.1em;padding:2px 7px;border-radius:3px;font-weight:700;margin-right:3px}
+.dsp-sp{background:var(--spg);color:var(--sp);border:1px solid rgba(29,185,84,.25)}
+.dsp-ap{background:var(--apg);color:var(--ap);border:1px solid rgba(252,60,68,.25)}
+.dsp-yt{background:rgba(255,0,0,.1);color:#ff4444;border:1px solid rgba(255,0,0,.2)}
+.dsp-bz{background:rgba(100,100,255,.1);color:#8888ff;border:1px solid rgba(100,100,255,.2)}
+.dsp-td{background:rgba(255,255,255,.05);color:var(--td)}
+
+/* Status pill */
+.status-p{display:inline-flex;align-items:center;gap:4px;font-size:8px;letter-spacing:.1em;padding:3px 8px;border-radius:3px}
+.s-live{background:var(--gng);color:var(--gn);border:1px solid rgba(0,255,170,.2)}
+.s-review{background:var(--ylg);color:var(--yl);border:1px solid rgba(255,200,0,.2)}
+.s-draft{background:var(--ink5);color:var(--tm);border:1px solid var(--b)}
+.s-removed{background:var(--rdg);color:var(--rd);border:1px solid rgba(255,58,58,.2)}
+
+/* action btn */
+.a-btn{height:24px;padding:0 10px;border-radius:3px;border:1px solid var(--b);background:none;cursor:pointer;font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--tm);transition:.12s}
+.a-btn:hover{border-color:var(--b2);color:var(--tx)}
+.a-btn.or{border-color:rgba(255,95,31,.3);color:var(--or)}
+.a-btn.or:hover{background:var(--org)}
+.a-btn.gn{border-color:rgba(0,255,170,.3);color:var(--gn)}
+.a-btn.gn:hover{background:var(--gng)}
+.a-btn.sp{border-color:rgba(29,185,84,.3);color:var(--sp)}
+.a-btn.sp:hover{background:var(--spg)}
+
+/* ── SUBMIT FORM ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:8px;letter-spacing:.15em;color:var(--tm)}
+.field input,.field select,.field textarea{background:var(--ink3);border:1px solid var(--b2);border-radius:4px;padding:9px 12px;color:var(--tx);font-family:var(--mono);font-size:11px;outline:none;transition:.15s;resize:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--or)}
+.field select option{background:var(--ink3)}
+.field-full{grid-column:1/-1}
+
+/* DSP selector */
+.dsp-sel{display:flex;gap:8px;flex-wrap:wrap}
+.dsp-toggle{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--ink3);border:1px solid var(--b);border-radius:5px;cursor:pointer;transition:.15s;user-select:none}
+.dsp-toggle:hover{border-color:var(--b2)}
+.dsp-toggle.on-sp{border-color:rgba(29,185,84,.4);background:var(--spg)}
+.dsp-toggle.on-ap{border-color:rgba(252,60,68,.4);background:var(--apg)}
+.dsp-toggle.on-yt{border-color:rgba(255,0,0,.3);background:rgba(255,0,0,.07)}
+.dsp-toggle.on-bz{border-color:rgba(100,100,255,.3);background:rgba(100,100,255,.07)}
+.dsp-logo{font-size:18px}
+.dsp-name{font-size:10px;font-weight:600}
+.dsp-check{width:14px;height:14px;border-radius:3px;border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:8px;transition:.15s;margin-left:auto}
+.on-sp .dsp-check,.on-ap .dsp-check,.on-yt .dsp-check,.on-bz .dsp-check{background:var(--gn);border-color:var(--gn);color:var(--ink)}
+
+/* ── ISRC BLOCK ── */
+.isrc-display{background:var(--ink);border:1px solid var(--b2);border-radius:5px;padding:14px;display:flex;align-items:center;gap:14px}
+.isrc-code{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--cy);letter-spacing:.15em}
+.isrc-breakdown{display:flex;gap:0;font-size:9px;letter-spacing:.08em}
+.isrc-part{padding:4px 8px;background:var(--ink3);border:1px solid var(--b)}
+.isrc-part:first-child{border-radius:3px 0 0 3px}
+.isrc-part:last-child{border-radius:0 3px 3px 0}
+.isrc-part .ip-val{color:var(--cy);font-weight:700;display:block;font-size:11px}
+.isrc-part .ip-lbl{color:var(--td);display:block;font-size:7px;margin-top:2px}
+
+/* ── ROYALTIES ── */
+.royalty-card{background:var(--ink3);border:1px solid var(--b);border-radius:var(--r);padding:16px;display:flex;gap:14px;align-items:center;cursor:pointer;transition:.15s}
+.royalty-card:hover{border-color:var(--b2)}
+.rc-art{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.rc-info{flex:1}
+.rc-name{font-size:11px;font-weight:600}
+.rc-track{font-size:9px;color:var(--tm);margin-top:2px;font-family:var(--body)}
+.rc-bar{height:3px;background:var(--ink5);border-radius:2px;margin-top:6px;overflow:hidden}
+.rc-fill{height:100%;border-radius:2px;transition:width .6s ease}
+.rc-amount{text-align:right}
+.rc-val{font-family:var(--disp);font-weight:700;font-size:16px}
+.rc-period{font-size:8px;color:var(--tm);letter-spacing:.1em}
+.rc-split{font-size:8px;color:var(--tm);margin-top:2px}
+
+/* ── SYNC LICENSING ── */
+.sync-card{background:var(--ink3);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;transition:.15s;cursor:pointer}
+.sync-card:hover{border-color:var(--b2);transform:translateY(-2px)}
+.sc-thumb{height:80px;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative}
+.sc-type{position:absolute;top:8px;left:8px;font-size:7px;letter-spacing:.14em;padding:3px 8px;border-radius:3px;font-weight:700}
+.sc-body{padding:14px}
+.sc-title{font-size:11px;font-weight:600;margin-bottom:4px}
+.sc-brief{font-family:var(--body);font-size:10px;color:var(--tm);line-height:1.5;margin-bottom:10px}
+.sc-footer{display:flex;align-items:center;justify-content:space-between}
+.sc-fee{font-family:var(--disp);font-weight:700;font-size:14px;color:var(--gn)}
+.sc-deadline{font-size:8px;color:var(--tm);letter-spacing:.08em}
+
+/* ── PROGRESS STEPPER ── */
+.stepper{display:flex;gap:0;margin-bottom:20px}
+.step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative}
+.step::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:1px;background:var(--b2);z-index:0}
+.step:last-child::after{display:none}
+.step-num{width:26px;height:26px;border-radius:50%;border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;position:relative;z-index:1;background:var(--ink3);transition:.2s}
+.step.done .step-num{background:var(--gn);border-color:var(--gn);color:var(--ink)}
+.step.active .step-num{background:var(--or);border-color:var(--or);color:#fff;box-shadow:0 0 12px var(--org)}
+.step-label{font-size:8px;letter-spacing:.1em;color:var(--tm);margin-top:6px;text-align:center}
+
+/* ── WAVEFORM MINI ── */
+.wave-mini{height:28px;display:block;border-radius:3px;overflow:hidden}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink3);border:1px solid var(--b3);border-radius:5px;padding:10px 20px;font-size:9px;letter-spacing:.14em;z-index:200;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+#toast.show{opacity:1}
+#toast.ok{color:var(--gn);border-color:rgba(0,255,170,.3)}
+#toast.warn{color:var(--yl);border-color:rgba(255,200,0,.3)}
+#toast.err{color:var(--or);border-color:rgba(255,95,31,.3)}
+
+/* upload zone */
+.upload-zone{border:2px dashed var(--b2);border-radius:var(--r);padding:28px;text-align:center;cursor:pointer;transition:.2s;background:var(--ink3)}
+.upload-zone:hover{border-color:var(--or);background:rgba(255,95,31,.04)}
+.uz-icon{font-size:32px;margin-bottom:8px}
+.uz-txt{font-size:11px;color:var(--tm);font-family:var(--body);line-height:1.7}
+.uz-types{font-size:9px;color:var(--td);margin-top:5px;letter-spacing:.08em}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="shell">
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="logo">Pro M.A.S.T.E.R <em>PHASE 5 — DISTRIBUTION</em></div>
+  <div class="sep"></div>
+  <div class="tb-nav">
+    <button class="tb-btn act" data-v="catalogue" onclick="go('catalogue')"><div class="dot"></div>CATALOGUE</button>
+    <button class="tb-btn" data-v="submit" onclick="go('submit')"><div class="dot"></div>SUBMIT RELEASE</button>
+    <button class="tb-btn" data-v="royalties" onclick="go('royalties')"><div class="dot"></div>ROYALTIES</button>
+    <button class="tb-btn" data-v="sync" onclick="go('sync')"><div class="dot"></div>SYNC LICENSING</button>
+    <button class="tb-btn" data-v="isrc" onclick="go('isrc')"><div class="dot"></div>ISRC REGISTRY</button>
+    <button class="tb-btn" data-v="analytics" onclick="go('analytics')"><div class="dot"></div>ANALYTICS</button>
+  </div>
+  <div class="dsp-pills">
+    <div class="dsp-pill"><div class="dp-dot sp"></div>SPOTIFY API READY</div>
+    <div class="dsp-pill"><div class="dp-dot ap"></div>APPLE MUSIC API READY</div>
+    <div class="dsp-pill"><div class="dp-dot off"></div>DISTROKID NOT LINKED</div>
+  </div>
+</div>
+
+<div id="body">
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sb-sec">
+    <div class="sb-head">DISTRIBUTION</div>
+    <div class="sb-item act" onclick="go('catalogue')"><div class="sb-icon">📀</div>Catalogue</div>
+    <div class="sb-item" onclick="go('submit')"><div class="sb-icon">📤</div>Submit Release</div>
+    <div class="sb-item" onclick="go('isrc')"><div class="sb-icon">🔖</div>ISRC Registry</div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-head">REVENUE</div>
+    <div class="sb-item" onclick="go('royalties')"><div class="sb-icon">💰</div>Royalties <div class="sb-badge gn">$2,847</div></div>
+    <div class="sb-item" onclick="go('analytics')"><div class="sb-icon">📊</div>Stream Analytics</div>
+    <div class="sb-item" onclick="go('sync')"><div class="sb-icon">🎬</div>Sync Licensing <div class="sb-badge yl">4</div></div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-head">DSP STATUS</div>
+    <div class="sb-item"><div class="sb-icon">🟢</div>Spotify — 7 live</div>
+    <div class="sb-item"><div class="sb-icon">🔴</div>Apple Music — 5 live</div>
+    <div class="sb-item"><div class="sb-icon">▶</div>YouTube Music — 3 live</div>
+    <div class="sb-item"><div class="sb-icon">🎵</div>Boomplay — 4 live</div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-head">LEGAL</div>
+    <div class="sb-item"><div class="sb-icon">📋</div>Split Agreements</div>
+    <div class="sb-item"><div class="sb-icon">📜</div>Dist. Licences</div>
+    <div class="sb-item"><div class="sb-icon">🏢</div>RISA Registration</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main"></div>
+</div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// DATA
+// ══════════════════════════════════
+const CATALOGUE = [
+  { id:'TRK001',title:'Night Drive',artist:'K. Thapedi',isrc:'ZA-MP1-26-00001',duration:'4:12',key:'A Min',bpm:92,genre:'Jazz / Electronic',status:'live',dsps:['sp','ap','yt'],streams:12840,royalty:38.52,uploaded:'2026-03-01',grad:'#ff5f1f,#ff1a8c' },
+  { id:'TRK002',title:'Kora Dreams',artist:'K. Thapedi',isrc:'ZA-MP1-26-00002',duration:'3:44',key:'G Maj',bpm:115,genre:'Afrobeat / World',status:'live',dsps:['sp','ap'],streams:8204,royalty:24.61,uploaded:'2026-03-05',grad:'#ffc800,#ff5f1f' },
+  { id:'TRK003',title:'Lagos Wave',artist:'Chisom Okafor',isrc:'ZA-MP1-26-00003',duration:'2:58',key:'D Min',bpm:128,genre:'Afrobeats / Trap',status:'review',dsps:[],streams:0,royalty:0,uploaded:'2026-03-20',grad:'#9966ff,#ff1a8c' },
+  { id:'TRK004',title:'Dawn Ritual',artist:'Amara Diallo',isrc:'ZA-MP1-26-00004',duration:'5:33',key:'F Maj',bpm:78,genre:'Afrobeat / Jazz',status:'live',dsps:['sp','ap','yt','bz'],streams:21300,royalty:63.90,uploaded:'2026-02-20',grad:'#00ffaa,#00ccff' },
+  { id:'TRK005',title:'Midnight Protocol',artist:'BlackJack',isrc:'ZA-MP1-26-00005',duration:'6:14',key:'C Min',bpm:140,genre:'Electronic',status:'live',dsps:['sp','ap','yt'],streams:48720,royalty:146.16,uploaded:'2026-02-15',grad:'#9966ff,#3a1a6a' },
+  { id:'TRK006',title:'Alexandria',artist:'Tariq Mansour',isrc:'ZA-MP1-26-00006',duration:'4:48',key:'D Min',bpm:88,genre:'Oud / Neo-Classical',status:'live',dsps:['sp','ap'],streams:6100,royalty:18.30,uploaded:'2026-03-10',grad:'#ffc800,#9966ff' },
+  { id:'TRK007',title:'Concrete Garden',artist:'Sam Adesanya',isrc:'ZA-MP1-26-00007',duration:'3:22',key:'E Min',bpm:145,genre:'Grime / Electronic',status:'live',dsps:['sp','ap','yt'],streams:15640,royalty:46.92,uploaded:'2026-03-12',grad:'#00ccff,#1a3a5a' },
+  { id:'TRK008',title:'Hangang Bridge',artist:'Yuna Park',isrc:'ZA-MP1-26-00008',duration:'3:55',key:'B♭ Maj',bpm:95,genre:'K-Indie / Synth',status:'review',dsps:[],streams:0,royalty:0,uploaded:'2026-03-22',grad:'#ff1a8c,#9966ff' },
+  { id:'TRK009',title:'Carioca',artist:'Marco Ferreira',isrc:'ZA-MP1-26-00009',duration:'4:02',key:'G Maj',bpm:110,genre:'Bossa / Electronic',status:'draft',dsps:[],streams:0,royalty:0,uploaded:'2026-03-25',grad:'#00ffaa,#1a5a2a' },
+  { id:'TRK010',title:'Sakura Protocol',artist:'Kenji Watanabe',isrc:'ZA-MP1-26-00010',duration:'5:18',key:'D Maj',bpm:85,genre:'Jazz / Ambient',status:'live',dsps:['sp'],streams:3920,royalty:11.76,uploaded:'2026-03-18',grad:'#ff5f1f,#ffc800' },
+  { id:'TRK011',title:'Raga Electric',artist:'Ravi Shankar Jr',isrc:'ZA-MP1-26-00011',duration:'7:44',key:'A Min',bpm:72,genre:'Fusion / Classical',status:'live',dsps:['sp','ap'],streams:9870,royalty:29.61,uploaded:'2026-03-11',grad:'#ff1a8c,#ff5f1f' },
+  { id:'TRK012',title:'Golden Hour',artist:'Lena Osei',isrc:'ZA-MP1-26-00012',duration:'3:38',key:'C Maj',bpm:102,genre:'Highlife / R&B',status:'draft',dsps:[],streams:0,royalty:0,uploaded:'2026-03-28',grad:'#ffc800,#00ffaa' },
+];
+
+const ISRC_PREFIX = 'ZA-MP1-26-';
+let nextISRC = 13;
+
+// DSP selection state for submit form
+let dspSel = { sp:false, ap:false, yt:false, bz:false };
+let submitStep = 1;
+
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => t.className = '', 3500);
+}
+
+function go(view) {
+  document.querySelectorAll('.tb-btn,.sb-item').forEach(b => b.classList.remove('act'));
+  document.querySelectorAll(`[data-v="${view}"]`).forEach(b => b.classList.add('act'));
+  const m = document.getElementById('main');
+  ({catalogue,submit,royalties,sync,isrc,analytics})[view]?.(m);
+}
+
+// ══════════════════════════════════
+// CATALOGUE
+// ══════════════════════════════════
+function catalogue(main) {
+  const totalStreams = CATALOGUE.reduce((a,t)=>a+t.streams,0);
+  const totalRoy = CATALOGUE.reduce((a,t)=>a+t.royalty,0);
+  const live = CATALOGUE.filter(t=>t.status==='live').length;
+
+  main.innerHTML = `
+  <div>
+    <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Music Catalogue</div>
+    <div style="font-family:var(--body);color:var(--tm);font-size:12px;margin-bottom:22px">Pro M.A.S.T.E.R Record Label · ${CATALOGUE.length} tracks · ${live} live on DSPs</div>
+    <div class="stats-row" style="margin-bottom:20px">
+      <div class="stat or"><div class="stat-ico">📀</div><div class="stat-lbl">TOTAL TRACKS</div><div class="stat-val">${CATALOGUE.length}</div><div class="stat-sub">${live} live · ${CATALOGUE.filter(t=>t.status==='review').length} in review</div></div>
+      <div class="stat sp"><div class="stat-ico">🎵</div><div class="stat-lbl">TOTAL STREAMS</div><div class="stat-val">${(totalStreams/1000).toFixed(1)}K</div><div class="stat-sub">Across all DSPs this month</div><div class="stat-delta delta-up">↑ +23% vs last month</div></div>
+      <div class="stat gn"><div class="stat-ico">💰</div><div class="stat-lbl">ROYALTIES ACCRUED</div><div class="stat-val">$${totalRoy.toFixed(2)}</div><div class="stat-sub">Pending payout via Stripe</div></div>
+      <div class="stat vi"><div class="stat-ico">🌍</div><div class="stat-lbl">ACTIVE DSPs</div><div class="stat-val">4</div><div class="stat-sub">Spotify · Apple · YouTube · Boomplay</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">ALL RELEASES</div>
+      <div style="display:flex;gap:6px">
+        <button class="a-btn" onclick="filterCat('all')">ALL</button>
+        <button class="a-btn gn" onclick="filterCat('live')">LIVE</button>
+        <button class="a-btn" style="color:var(--yl);border-color:rgba(255,200,0,.3)" onclick="filterCat('review')">IN REVIEW</button>
+        <button class="a-btn" onclick="filterCat('draft')">DRAFT</button>
+        <button class="a-btn or" onclick="go('submit')">+ NEW RELEASE</button>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <table class="table" id="catTable">
+        <thead><tr>
+          <th>TRACK</th><th>ISRC</th><th>ARTIST</th><th>KEY / BPM</th>
+          <th>DSPs</th><th>STATUS</th><th>STREAMS</th><th>ROYALTY</th><th>ACTIONS</th>
+        </tr></thead>
+        <tbody>${CATALOGUE.map(t=>`
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:32px;height:32px;border-radius:4px;background:linear-gradient(135deg,${t.grad});display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🎵</div>
+                <div>
+                  <div style="font-weight:600">${t.title}</div>
+                  <div class="sub">${t.genre} · ${t.duration}</div>
+                </div>
+              </div>
+            </td>
+            <td><div style="font-family:var(--mono);font-size:9px;color:var(--cy);letter-spacing:.08em">${t.isrc}</div></td>
+            <td><div style="font-size:10px">${t.artist}</div></td>
+            <td><div style="font-size:9px;color:var(--tm)">${t.key}</div><div class="sub">${t.bpm} BPM</div></td>
+            <td><div style="display:flex;gap:3px;flex-wrap:wrap">
+              ${t.dsps.includes('sp')?'<span class="dsp-badge dsp-sp">SPF</span>':''}
+              ${t.dsps.includes('ap')?'<span class="dsp-badge dsp-ap">APL</span>':''}
+              ${t.dsps.includes('yt')?'<span class="dsp-badge dsp-yt">YTM</span>':''}
+              ${t.dsps.includes('bz')?'<span class="dsp-badge dsp-bz">BMY</span>':''}
+              ${t.dsps.length===0?'<span class="dsp-badge dsp-td">NONE</span>':''}
+            </div></td>
+            <td><span class="status-p s-${t.status}">${t.status==='live'?'● LIVE':t.status==='review'?'⏳ REVIEW':'○ DRAFT'}</span></td>
+            <td><div style="font-size:11px;color:${t.streams>0?'var(--gn)':'var(--td)'}">${t.streams>0?(t.streams/1000).toFixed(1)+'K':'—'}</div></td>
+            <td><div style="font-size:11px;color:${t.royalty>0?'var(--gn)':'var(--td)'};font-weight:600">${t.royalty>0?'$'+t.royalty.toFixed(2):'—'}</div></td>
+            <td><div style="display:flex;gap:4px">
+              ${t.status==='draft'?`<button class="a-btn or" onclick="submitTrack('${t.id}')">SUBMIT</button>`:''}
+              ${t.status==='live'?`<button class="a-btn" onclick="toast('Opening ${t.title} on Spotify...','ok')">OPEN ↗</button>`:''}
+              <button class="a-btn" onclick="takedown('${t.id}','${t.title}')">✕</button>
+            </div></td>
+          </tr>
+        `).join('')}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function filterCat(f) {
+  const rows = document.querySelectorAll('#catTable tbody tr');
+  rows.forEach(r => {
+    const status = r.querySelector('.status-p');
+    if (!status) return;
+    const txt = status.textContent.toLowerCase();
+    r.style.display = f==='all'||txt.includes(f)?'':'none';
+  });
+}
+
+function submitTrack(id) {
+  toast(`Moving track ${id} to submission queue...`, 'warn');
+  setTimeout(() => toast('Track submitted for DSP review ✓', 'ok'), 1500);
+}
+
+function takedown(id, title) {
+  toast(`Takedown request initiated for "${title}"`, 'warn');
+}
+
+// ══════════════════════════════════
+// SUBMIT RELEASE
+// ══════════════════════════════════
+function submit(main) {
+  main.innerHTML = `
+  <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Submit New Release</div>
+  <div style="font-family:var(--body);color:var(--tm);font-size:12px;margin-bottom:24px">Distribute to Spotify, Apple Music, YouTube Music, and Boomplay through Pro M.A.S.T.E.R</div>
+
+  <div class="stepper">
+    ${['AUDIO FILE','TRACK INFO','DSP SELECT','LICENSING','CONFIRM'].map((s,i)=>`
+      <div class="step ${submitStep>i+1?'done':submitStep===i+1?'active':''}">
+        <div class="step-num">${submitStep>i+1?'✓':i+1}</div>
+        <div class="step-label">${s}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <div id="submitContent"></div>`;
+  renderSubmitStep();
+}
+
+function renderSubmitStep() {
+  const c = document.getElementById('submitContent');
+  if (!c) return;
+
+  if (submitStep === 1) {
+    c.innerHTML = `
+    <div class="card">
+      <div class="card-head"><div class="card-title">UPLOAD AUDIO FILE</div></div>
+      <div class="card-body">
+        <div class="upload-zone" onclick="document.getElementById('audioInput').click()">
+          <div class="uz-icon">🎵</div>
+          <div class="uz-txt"><strong>Click to upload</strong> your master audio file<br>Pro M.A.S.T.E.R will use the session recording from your last studio session</div>
+          <div class="uz-types">WAV 44.1kHz/24-bit or higher · FLAC · AIFF · Max 500MB</div>
+        </div>
+        <input type="file" id="audioInput" accept=".wav,.flac,.aiff,.mp3" style="display:none" onchange="handleAudioUpload(this.files[0])">
+        <div id="audioPreview"></div>
+        <div style="margin-top:16px;background:var(--ink3);border:1px solid var(--b);border-radius:5px;padding:12px">
+          <div style="font-size:9px;letter-spacing:.14em;color:var(--tm);margin-bottom:8px">OR USE FROM STUDIO</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            ${CATALOGUE.filter(t=>t.status==='draft').map(t=>`
+              <div onclick="selectStudioTrack('${t.id}','${t.title}')"
+                style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--ink4);border:1px solid var(--b);border-radius:4px;cursor:pointer;transition:.12s"
+                onmouseover="this.style.borderColor='var(--or)'" onmouseout="this.style.borderColor='var(--b)'">
+                <div style="width:28px;height:28px;border-radius:3px;background:linear-gradient(135deg,${t.grad});flex-shrink:0"></div>
+                <div style="flex:1">
+                  <div style="font-size:10px;font-weight:600">${t.title}</div>
+                  <div style="font-size:8px;color:var(--tm)">${t.genre} · ${t.duration} · ${t.key}</div>
+                </div>
+                <div style="font-size:9px;color:var(--or)">SELECT →</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button style="height:40px;padding:0 24px;border-radius:5px;border:none;background:linear-gradient(135deg,var(--or),var(--or2));color:var(--ink);cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.16em;font-weight:700;margin-top:0;opacity:.4;pointer-events:none" id="step1Next" onclick="submitStep=2;submit(document.getElementById('main'))">CONTINUE →</button>`;
+
+  } else if (submitStep === 2) {
+    c.innerHTML = `
+    <div class="card">
+      <div class="card-head"><div class="card-title">TRACK INFORMATION</div></div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="field"><label>TRACK TITLE</label><input id="ti-title" placeholder="Track title" autofocus></div>
+          <div class="field"><label>ARTIST NAME</label><input id="ti-artist" value="K. Thapedi" placeholder="Primary artist"></div>
+          <div class="field"><label>FEATURING (optional)</label><input id="ti-feat" placeholder="ft. Artist Name"></div>
+          <div class="field"><label>GENRE</label>
+            <select id="ti-genre">
+              ${['Jazz','Afrobeats','Electronic','R&B / Soul','Amapiano','Kwaito','Gospel','Classical','Hip-Hop','World','Other'].map(g=>`<option>${g}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field"><label>KEY SIGNATURE</label>
+            <select id="ti-key">${['C Maj','G Maj','D Maj','A Maj','F Maj','B♭ Maj','E♭ Maj','A Min','E Min','D Min','B Min','C Min'].map(k=>`<option>${k}</option>`).join('')}</select>
+          </div>
+          <div class="field"><label>BPM</label><input id="ti-bpm" type="number" placeholder="120" min="40" max="240"></div>
+          <div class="field field-full"><label>RELEASE DATE</label><input id="ti-date" type="date" value="${new Date(Date.now()+14*864e5).toISOString().split('T')[0]}"></div>
+          <div class="field field-full"><label>COMPOSER / SONGWRITER</label><input id="ti-composer" value="K. Thapedi" placeholder="Composer full name"></div>
+          <div class="field field-full"><label>LYRICS (optional — paste if track has vocals)</label><textarea id="ti-lyrics" rows="3" placeholder="Optional lyrics for DSP display..."></textarea></div>
+          <div class="field field-full">
+            <label>EXPLICIT CONTENT</label>
+            <div style="display:flex;gap:10px;margin-top:2px">
+              ${['Clean','Explicit'].map(e=>`
+                <div onclick="this.parentNode.querySelectorAll('div').forEach(d=>d.classList.remove('sel'));this.classList.add('sel')"
+                  style="padding:8px 16px;background:var(--ink3);border:1px solid var(--b);border-radius:4px;cursor:pointer;font-size:10px;transition:.15s"
+                  class="${e==='Clean'?'sel':''}"
+                  onmouseover="this.style.borderColor='var(--b2)'" onmouseout="">${e}</div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:0">
+      <button style="height:40px;padding:0 20px;border-radius:5px;border:1px solid var(--b);background:var(--ink3);cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--tm);transition:.15s" onclick="submitStep=1;submit(document.getElementById('main'))">← BACK</button>
+      <button style="height:40px;padding:0 24px;border-radius:5px;border:none;background:linear-gradient(135deg,var(--or),var(--or2));color:var(--ink);cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.16em;font-weight:700" onclick="submitStep=3;submit(document.getElementById('main'))">CONTINUE →</button>
+    </div>`;
+
+  } else if (submitStep === 3) {
+    c.innerHTML = `
+    <div class="card">
+      <div class="card-head"><div class="card-title">SELECT DISTRIBUTION PLATFORMS</div></div>
+      <div class="card-body">
+        <div style="font-family:var(--body);font-size:12px;color:var(--tm);margin-bottom:18px;line-height:1.7">Choose which platforms to distribute to. Pro M.A.S.T.E.R handles submission, metadata formatting, and delivery for each platform.</div>
+        <div class="dsp-sel">
+          ${[
+            {id:'sp',logo:'🎵',name:'Spotify',note:'Global · 602M users',cls:'on-sp'},
+            {id:'ap',logo:'🎶',name:'Apple Music',note:'Global · 100M subscribers',cls:'on-ap'},
+            {id:'yt',logo:'▶',name:'YouTube Music',note:'Global · 80M subscribers',cls:'on-yt'},
+            {id:'bz',logo:'🎵',name:'Boomplay',note:'Africa · 100M users',cls:'on-bz'},
+          ].map(d=>`
+            <div class="dsp-toggle ${dspSel[d.id]?d.cls:''}" id="dtog-${d.id}" onclick="toggleDSP('${d.id}','${d.cls}')">
+              <div class="dsp-logo">${d.logo}</div>
+              <div>
+                <div class="dsp-name">${d.name}</div>
+                <div style="font-size:8px;color:var(--tm);font-family:var(--body)">${d.note}</div>
+              </div>
+              <div class="dsp-check">${dspSel[d.id]?'✓':''}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div style="margin-top:16px;background:var(--ink3);border:1px solid var(--b);border-radius:5px;padding:14px">
+          <div style="font-size:9px;letter-spacing:.14em;color:var(--tm);margin-bottom:8px">DISTRIBUTION TIMELINE</div>
+          ${[
+            {dsp:'Spotify',days:'3–5 business days',note:'After metadata review'},
+            {dsp:'Apple Music',days:'5–7 business days',note:'After content review'},
+            {dsp:'YouTube Music',days:'2–3 business days',note:'Automatic delivery'},
+            {dsp:'Boomplay',days:'7–10 business days',note:'After regional review'},
+          ].map(t=>`
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--b);font-size:9px">
+              <div style="color:var(--tx)">${t.dsp}</div>
+              <div style="color:var(--yl)">${t.days}</div>
+              <div style="color:var(--tm)">${t.note}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:0">
+      <button style="height:40px;padding:0 20px;border-radius:5px;border:1px solid var(--b);background:var(--ink3);cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--tm)" onclick="submitStep=2;submit(document.getElementById('main'))">← BACK</button>
+      <button style="height:40px;padding:0 24px;border-radius:5px;border:none;background:linear-gradient(135deg,var(--or),var(--or2));color:var(--ink);cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.16em;font-weight:700" onclick="submitStep=4;submit(document.getElementById('main'))">CONTINUE →</button>
+    </div>`;
+
+  } else if (submitStep === 4) {
+    c.innerHTML = `
+    <div class="card">
+      <div class="card-head"><div class="card-title">DISTRIBUTION LICENCE AGREEMENT</div></div>
+      <div class="card-body">
+        <div style="background:var(--ink3);border:1px solid var(--b2);border-radius:5px;padding:16px;font-family:var(--body);font-size:11px;color:var(--tm);line-height:1.9;max-height:200px;overflow-y:auto;margin-bottom:16px">
+          <strong style="color:var(--tx);display:block;margin-bottom:8px">PRO M.A.S.T.E.R DISTRIBUTION LICENCE AGREEMENT</strong>
+          By submitting this release, I (the Artist) hereby grant to Pro M.A.S.T.E.R Record Label, a venture under MagniProjekta, a <strong style="color:var(--tx)">worldwide, non-exclusive, royalty-bearing licence</strong> to distribute, reproduce, and make available the master recording identified above to the selected Digital Service Providers (DSPs).<br><br>
+          <strong style="color:var(--tx)">Artist warrants and represents that:</strong><br>
+          1. The Artist owns or controls 100% of the copyright in the master recording and the underlying musical composition;<br>
+          2. The recording does not infringe upon the intellectual property rights of any third party;<br>
+          3. All samples, if any, have been cleared and licensed appropriately;<br>
+          4. The Artist has the authority to grant this licence and is not in breach of any exclusive agreement with any other label or distributor;<br>
+          5. All co-writers and collaborators have been identified and their royalty splits agreed upon prior to submission.<br><br>
+          <strong style="color:var(--tx)">Royalty terms:</strong><br>
+          Pro M.A.S.T.E.R shall retain <strong style="color:var(--or)">15%</strong> of net receipts from DSP streams as the label distribution fee. The remaining <strong style="color:var(--gn)">85%</strong> shall be remitted to the Artist on a monthly basis via the Stripe payout system, subject to a minimum payout threshold of $25.00.<br><br>
+          This licence shall remain in effect for an initial term of <strong style="color:var(--tx)">2 years</strong>, automatically renewable unless terminated with 60 days written notice. Upon termination, Pro M.A.S.T.E.R shall initiate takedown from all DSPs within 30 days.<br><br>
+          This agreement is governed by the laws of the Republic of South Africa and applicable international copyright conventions.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${[
+            {id:'lic1',txt:'I have read and agree to the Distribution Licence Agreement above'},
+            {id:'lic2',txt:'I confirm I own all rights to this recording and the underlying composition'},
+            {id:'lic3',txt:'I confirm all samples (if any) have been cleared'},
+            {id:'lic4',txt:'I agree to the 85/15 royalty split with Pro M.A.S.T.E.R'},
+          ].map(ch=>`
+            <div style="display:flex;align-items:flex-start;gap:10px;cursor:pointer" onclick="toggleLicCheck('${ch.id}')">
+              <div id="${ch.id}" style="width:16px;height:16px;border-radius:3px;border:1px solid var(--b2);background:var(--ink3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;transition:.15s;margin-top:2px"></div>
+              <div style="font-family:var(--body);font-size:11px;color:var(--tm);line-height:1.5">${ch.txt}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:0">
+      <button style="height:40px;padding:0 20px;border-radius:5px;border:1px solid var(--b);background:var(--ink3);cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--tm)" onclick="submitStep=3;submit(document.getElementById('main'))">← BACK</button>
+      <button style="height:40px;padding:0 24px;border-radius:5px;border:none;background:linear-gradient(135deg,var(--or),var(--or2));color:var(--ink);cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.16em;font-weight:700" onclick="submitStep=5;submit(document.getElementById('main'))">SIGN & CONTINUE →</button>
+    </div>`;
+
+  } else if (submitStep === 5) {
+    const newISRC = ISRC_PREFIX + String(nextISRC).padStart(5,'0');
+    c.innerHTML = `
+    <div class="card" style="text-align:center">
+      <div class="card-body">
+        <div style="font-size:52px;margin-bottom:16px">🎉</div>
+        <div style="font-family:var(--disp);font-weight:800;font-size:20px;margin-bottom:8px">Release Submitted!</div>
+        <div style="font-family:var(--body);font-size:13px;color:var(--tm);margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7">
+          Your track has been submitted to Pro M.A.S.T.E.R for distribution. An ISRC has been automatically generated and your track is now in the DSP review queue.
+        </div>
+        <div class="isrc-display" style="justify-content:center;margin-bottom:20px">
+          <div>
+            <div style="font-size:8px;letter-spacing:.15em;color:var(--tm);margin-bottom:6px">ISRC ASSIGNED</div>
+            <div class="isrc-code">${newISRC}</div>
+          </div>
+          <div class="isrc-breakdown" style="margin-left:16px">
+            <div class="isrc-part"><div class="ip-val">ZA</div><div class="ip-lbl">COUNTRY</div></div>
+            <div class="isrc-part"><div class="ip-val">MP1</div><div class="ip-lbl">LABEL CODE</div></div>
+            <div class="isrc-part"><div class="ip-val">26</div><div class="ip-lbl">YEAR</div></div>
+            <div class="isrc-part"><div class="ip-val">${String(nextISRC).padStart(5,'0')}</div><div class="ip-lbl">DESIGNATION</div></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+          <div style="background:var(--gng);border:1px solid rgba(0,255,170,.2);border-radius:5px;padding:12px 16px">
+            <div style="font-size:8px;letter-spacing:.12em;color:var(--gn);margin-bottom:4px">DISTRIBUTION STATUS</div>
+            <div style="font-size:11px;color:var(--tx)">⏳ In DSP review queue</div>
+          </div>
+          <div style="background:var(--cyg);border:1px solid rgba(0,204,255,.2);border-radius:5px;padding:12px 16px">
+            <div style="font-size:8px;letter-spacing:.12em;color:var(--cy);margin-bottom:4px">EXPECTED LIVE DATE</div>
+            <div style="font-size:11px;color:var(--tx)">${new Date(Date.now()+7*864e5).toLocaleDateString('en-ZA')}</div>
+          </div>
+          <div style="background:var(--spg);border:1px solid rgba(29,185,84,.2);border-radius:5px;padding:12px 16px">
+            <div style="font-size:8px;letter-spacing:.12em;color:var(--sp);margin-bottom:4px">ROYALTY RATE</div>
+            <div style="font-size:11px;color:var(--tx)">Artist 85% / Label 15%</div>
+          </div>
+        </div>
+        <button style="height:40px;padding:0 28px;border-radius:5px;border:none;background:linear-gradient(135deg,var(--or),var(--or2));color:var(--ink);cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.16em;font-weight:700" onclick="submitStep=1;dspSel={sp:false,ap:false,yt:false,bz:false};go('catalogue')">VIEW CATALOGUE →</button>
+      </div>
+    </div>`;
+    nextISRC++;
+  }
+}
+
+function toggleDSP(id, cls) {
+  dspSel[id] = !dspSel[id];
+  const el = document.getElementById(`dtog-${id}`);
+  if (!el) return;
+  el.className = `dsp-toggle ${dspSel[id]?cls:''}`;
+  const check = el.querySelector('.dsp-check');
+  if (check) check.textContent = dspSel[id]?'✓':'';
+}
+
+function toggleLicCheck(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isChecked = el.textContent === '✓';
+  el.textContent = isChecked?'':'✓';
+  el.style.background = isChecked?'var(--ink3)':'var(--or)';
+  el.style.borderColor = isChecked?'var(--b2)':'var(--or)';
+  el.style.color = isChecked?'':'var(--ink)';
+}
+
+function handleAudioUpload(file) {
+  if (!file) return;
+  const prev = document.getElementById('audioPreview');
+  if (prev) {
+    prev.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;background:var(--gng);border:1px solid rgba(0,255,170,.2);border-radius:5px;padding:12px;margin-top:10px">
+        <div style="font-size:20px">🎵</div>
+        <div style="flex:1"><div style="font-size:10px;color:var(--gn);font-weight:600">${file.name}</div><div style="font-size:8px;color:var(--tm)">${(file.size/1048576).toFixed(2)} MB</div></div>
+        <div style="font-size:8px;color:var(--gn)">READY ✓</div>
+      </div>`;
+  }
+  const btn = document.getElementById('step1Next');
+  if (btn) { btn.style.opacity='1'; btn.style.pointerEvents='auto'; }
+}
+
+function selectStudioTrack(id, title) {
+  const prev = document.getElementById('audioPreview');
+  if (prev) {
+    prev.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;background:var(--gng);border:1px solid rgba(0,255,170,.2);border-radius:5px;padding:12px;margin-top:10px">
+        <div style="font-size:20px">🎵</div>
+        <div style="flex:1"><div style="font-size:10px;color:var(--gn);font-weight:600">${title}</div><div style="font-size:8px;color:var(--tm)">Studio recording selected</div></div>
+        <div style="font-size:8px;color:var(--gn)">SELECTED ✓</div>
+      </div>`;
+  }
+  const btn = document.getElementById('step1Next');
+  if (btn) { btn.style.opacity='1'; btn.style.pointerEvents='auto'; }
+}
+
+// ══════════════════════════════════
+// ROYALTIES
+// ══════════════════════════════════
+function royalties(main) {
+  const royData = CATALOGUE.filter(t=>t.royalty>0).sort((a,b)=>b.royalty-a.royalty);
+  const total = royData.reduce((a,t)=>a+t.royalty,0);
+  const labelFee = total * 0.15;
+  const artistPayout = total * 0.85;
+
+  main.innerHTML = `
+  <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Royalty Dashboard</div>
+  <div style="font-family:var(--body);color:var(--tm);font-size:12px;margin-bottom:22px">Current period: March 2026 · Payouts processed via Stripe on the 1st of each month</div>
+
+  <div class="stats-row" style="margin-bottom:20px">
+    <div class="stat gn"><div class="stat-ico">💰</div><div class="stat-lbl">TOTAL ACCRUED</div><div class="stat-val">$${total.toFixed(2)}</div><div class="stat-sub">Across all DSPs this month</div></div>
+    <div class="stat or"><div class="stat-ico">🏷</div><div class="stat-lbl">LABEL FEE (15%)</div><div class="stat-val">$${labelFee.toFixed(2)}</div><div class="stat-sub">Pro M.A.S.T.E.R distribution fee</div></div>
+    <div class="stat sp"><div class="stat-ico">🎤</div><div class="stat-lbl">ARTIST PAYOUTS (85%)</div><div class="stat-val">$${artistPayout.toFixed(2)}</div><div class="stat-sub">Distributed to ${royData.length} artists</div></div>
+    <div class="stat vi"><div class="stat-ico">📅</div><div class="stat-lbl">NEXT PAYOUT</div><div class="stat-val">Apr 1</div><div class="stat-sub">Stripe auto-transfer · Min $25</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">ROYALTIES BY TRACK</div>
+        <button class="a-btn gn" onclick="toast('Payout initiated · Stripe processing...','ok')">REQUEST PAYOUT</button>
+      </div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+        ${royData.map(t => {
+          const artistAmt = t.royalty * 0.85;
+          const pct = (t.royalty / royData[0].royalty) * 100;
+          const grad = t.grad.split(',');
+          return `
+          <div class="royalty-card">
+            <div class="rc-art" style="background:linear-gradient(135deg,${t.grad})">${t.artist[0]}</div>
+            <div class="rc-info">
+              <div class="rc-name">${t.title}</div>
+              <div class="rc-track">${t.artist} · ${(t.streams/1000).toFixed(1)}K streams</div>
+              <div class="rc-bar"><div class="rc-fill" style="width:${pct}%;background:linear-gradient(90deg,${t.grad})"></div></div>
+            </div>
+            <div class="rc-amount">
+              <div class="rc-val" style="color:var(--gn)">$${artistAmt.toFixed(2)}</div>
+              <div class="rc-period">ARTIST (85%)</div>
+              <div class="rc-split">Label: $${(t.royalty*0.15).toFixed(2)}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-title">ROYALTY RATE REFERENCE</div></div>
+      <div class="card-body">
+        <div style="font-family:var(--body);font-size:12px;color:var(--tm);line-height:1.8;margin-bottom:16px">
+          DSP royalty rates vary. These are approximate per-stream rates used for projection:
+        </div>
+        ${[
+          {dsp:'Spotify',rate:'$0.003–$0.005',note:'Per stream · varies by country & plan'},
+          {dsp:'Apple Music',rate:'$0.007–$0.01',note:'Per stream · higher than Spotify'},
+          {dsp:'YouTube Music',rate:'$0.001–$0.003',note:'Per stream · includes free tier'},
+          {dsp:'Boomplay',rate:'$0.002–$0.004',note:'Per stream · Africa-focused'},
+        ].map(r => `
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--b)">
+            <div style="font-size:10px;font-weight:600;width:120px;color:var(--tx)">${r.dsp}</div>
+            <div style="flex:1">
+              <div style="font-family:var(--disp);font-size:14px;font-weight:700;color:var(--gn)">${r.rate}</div>
+              <div style="font-size:8px;color:var(--tm);font-family:var(--body)">${r.note}</div>
+            </div>
+          </div>
+        `).join('')}
+        <div style="margin-top:14px;background:var(--ink3);border:1px solid var(--b);border-radius:5px;padding:12px">
+          <div style="font-size:9px;color:var(--tm);font-family:var(--body);line-height:1.8">
+            <strong style="color:var(--tx)">Split breakdown:</strong><br>
+            DSP pays Pro M.A.S.T.E.R → Label retains 15% → Artist receives 85%<br>
+            For collab tracks: 85% is split further per the royalty split agreement signed at session start.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════
+// SYNC LICENSING
+// ══════════════════════════════════
+function sync(main) {
+  const opportunities = [
+    {type:'FILM',emoji:'🎬',title:'South African Feature Film — Score',brief:'Director seeking authentic Afrobeat/Jazz fusion for a 90-min drama set in Johannesburg. Need 3–5 tracks, atmospheric and rhythmic.',fee:'R45,000',deadline:'OPEN',status:'new',col:'#ff5f1f'},
+    {type:'TV SERIES',emoji:'📺',title:'Pan-African Documentary — Season 2',brief:'Music supervisor needs world music tracks from African artists for 6-episode docuseries. Kora, Mbira, and traditional instrumentation preferred.',fee:'$8,500',deadline:'Apr 30, 2026',status:'new',col:'#9966ff'},
+    {type:'ADVERTISING',emoji:'📱',title:'Global Tech Brand — Social Campaign',brief:'Agency looking for upbeat, modern Afrobeats tracks for a 30-second social media campaign. Must be clean, commercially licensed.',fee:'$22,000',deadline:'Apr 15, 2026',status:'new',col:'#00ffaa'},
+    {type:'GAME',emoji:'🎮',title:'Open World RPG — Ambient Soundtrack',brief:'Game studio looking for ambient, textural tracks for an open-world RPG set in a fictional African city. Electronic and traditional fusion.',fee:'$35,000',deadline:'May 31, 2026',status:'reviewing',col:'#ffc800'},
+  ];
+
+  main.innerHTML = `
+  <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Sync Licensing Portal</div>
+  <div style="font-family:var(--body);color:var(--tm);font-size:12px;margin-bottom:22px">Film, TV, advertising, and game placement opportunities for Pro M.A.S.T.E.R catalogue</div>
+
+  <div class="stats-row" style="margin-bottom:20px">
+    <div class="stat or"><div class="stat-ico">🎬</div><div class="stat-lbl">OPEN BRIEFS</div><div class="stat-val">4</div><div class="stat-sub">Active sync opportunities</div></div>
+    <div class="stat gn"><div class="stat-ico">💰</div><div class="stat-lbl">TOTAL VALUE</div><div class="stat-val">$110K+</div><div class="stat-sub">Across all open briefs</div></div>
+    <div class="stat vi"><div class="stat-ico">✅</div><div class="stat-lbl">PLACEMENTS CLOSED</div><div class="stat-val">0</div><div class="stat-sub">Pre-launch · Phase 5 activates this</div></div>
+    <div class="stat sp"><div class="stat-ico">📋</div><div class="stat-lbl">SYNC SPLIT</div><div class="stat-val">70/30</div><div class="stat-sub">Artist 70% / Label 30% on sync</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:20px">
+    ${opportunities.map(op=>`
+      <div class="sync-card">
+        <div class="sc-thumb" style="background:linear-gradient(135deg,${op.col}22,${op.col}11)">
+          <div style="font-size:48px">${op.emoji}</div>
+          <div class="sc-type" style="background:${op.col}22;color:${op.col}">${op.type}</div>
+          ${op.status==='new'?`<div style="position:absolute;top:8px;right:8px;font-size:7px;letter-spacing:.14em;padding:3px 8px;border-radius:3px;background:var(--gng);color:var(--gn)">NEW</div>`:`<div style="position:absolute;top:8px;right:8px;font-size:7px;letter-spacing:.14em;padding:3px 8px;border-radius:3px;background:var(--ylg);color:var(--yl)">IN REVIEW</div>`}
+        </div>
+        <div class="sc-body">
+          <div class="sc-title">${op.title}</div>
+          <div class="sc-brief">${op.brief}</div>
+          <div class="sc-footer">
+            <div>
+              <div class="sc-fee">${op.fee}</div>
+              <div style="font-size:7px;color:var(--tm);letter-spacing:.1em">PLACEMENT FEE</div>
+            </div>
+            <div style="text-align:right">
+              <div class="sc-deadline" style="color:${op.deadline==='OPEN'?'var(--gn)':'var(--yl)'}">
+                ${op.deadline==='OPEN'?'● OPEN BRIEF':'⏱ DUE '+op.deadline}
+              </div>
+              <button class="a-btn or" style="margin-top:6px" onclick="pitchSync('${op.title}')">PITCH TRACKS →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('')}
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-title">HOW SYNC LICENSING WORKS ON PRO M.A.S.T.E.R</div></div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+        ${[
+          {n:'01',icon:'📋',title:'Brief Posted',desc:'Music supervisor or agency posts a brief. Pro M.A.S.T.E.R reviews for legitimacy before publishing to artist portal.'},
+          {n:'02',icon:'🎵',title:'Artists Pitch',desc:'Artists with relevant tracks submit them for consideration. Label curates pitches from the catalogue.'},
+          {n:'03',icon:'🤝',title:'Placement Agreed',desc:'Music supervisor selects a track. Pro M.A.S.T.E.R negotiates the sync licence on the artist\'s behalf.'},
+          {n:'04',icon:'💰',title:'Payment & Split',desc:'Placement fee paid to Pro M.A.S.T.E.R. Artist receives 70%, label retains 30%. All documented on-platform.'},
+        ].map(s=>`
+          <div style="background:var(--ink3);border:1px solid var(--b);border-radius:6px;padding:14px">
+            <div style="font-size:8px;letter-spacing:.14em;color:var(--or);margin-bottom:10px">${s.n}</div>
+            <div style="font-size:20px;margin-bottom:8px">${s.icon}</div>
+            <div style="font-size:11px;font-weight:600;margin-bottom:6px;color:var(--tx)">${s.title}</div>
+            <div style="font-family:var(--body);font-size:10px;color:var(--tm);line-height:1.6">${s.desc}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function pitchSync(title) {
+  toast(`Pitch form opening for: "${title.substring(0,30)}..."`, 'warn');
+  setTimeout(() => toast('Select tracks to pitch from your catalogue', 'ok'), 1500);
+}
+
+// ══════════════════════════════════
+// ISRC REGISTRY
+// ══════════════════════════════════
+function isrc(main) {
+  main.innerHTML = `
+  <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">ISRC Registry</div>
+  <div style="font-family:var(--body);color:var(--tm);font-size:12px;margin-bottom:22px">International Standard Recording Codes · Pro M.A.S.T.E.R label prefix: ZA-MP1</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+    <div class="card">
+      <div class="card-head"><div class="card-title">LABEL ISRC PREFIX</div></div>
+      <div class="card-body">
+        <div class="isrc-display" style="margin-bottom:16px">
+          <div>
+            <div style="font-size:8px;letter-spacing:.15em;color:var(--tm);margin-bottom:6px">LABEL PREFIX</div>
+            <div class="isrc-code">ZA-MP1</div>
+          </div>
+          <div class="isrc-breakdown" style="margin-left:16px">
+            <div class="isrc-part"><div class="ip-val">ZA</div><div class="ip-lbl">COUNTRY (SA)</div></div>
+            <div class="isrc-part"><div class="ip-val">MP1</div><div class="ip-lbl">REGISTRANT</div></div>
+          </div>
+        </div>
+        <div style="font-family:var(--body);font-size:11px;color:var(--tm);line-height:1.8;background:var(--ink3);border:1px solid var(--b);border-radius:5px;padding:12px">
+          <strong style="color:var(--tx)">About ISRC:</strong><br>
+          The ISRC (International Standard Recording Code) is the unique identifier for each sound recording. Every track distributed through Pro M.A.S.T.E.R receives an ISRC automatically. The prefix ZA-MP1 is registered under MagniProjekta/Pro M.A.S.T.E.R with RISA (Recording Industry of South Africa).<br><br>
+          <strong style="color:var(--or)">⚠ Registration required:</strong> Register with RISA at risa.co.za before going live. Process: 2–4 weeks.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">GENERATE NEW ISRC</div>
+        <button class="a-btn gn" onclick="generateISRC()">GENERATE</button>
+      </div>
+      <div class="card-body">
+        <div id="isrcGenOutput" style="background:var(--ink3);border:1px solid var(--b);border-radius:5px;padding:20px;text-align:center;margin-bottom:14px">
+          <div style="font-size:9px;letter-spacing:.14em;color:var(--td);margin-bottom:8px">CLICK GENERATE TO CREATE ISRC</div>
+          <div style="font-family:var(--mono);font-size:24px;font-weight:700;color:var(--td);letter-spacing:.15em">ZA-MP1-26-?????</div>
+        </div>
+        <div style="font-size:9px;color:var(--tm);font-family:var(--body);line-height:1.8">
+          ISRCs are auto-generated on track submission. Manual generation is for pre-registered catalogue being migrated into the platform.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-title">ALL REGISTERED ISRCs (${CATALOGUE.length})</div></div>
+    <div class="card-body" style="padding:0">
+      <table class="table">
+        <thead><tr><th>ISRC</th><th>TRACK</th><th>ARTIST</th><th>YEAR</th><th>DSPs</th><th>STATUS</th></tr></thead>
+        <tbody>
+          ${CATALOGUE.map(t=>`
+            <tr>
+              <td><div style="font-family:var(--mono);font-size:11px;color:var(--cy);letter-spacing:.1em;font-weight:600">${t.isrc}</div></td>
+              <td><div style="font-weight:600">${t.title}</div><div class="sub">${t.genre} · ${t.duration}</div></td>
+              <td>${t.artist}</td>
+              <td><div style="font-size:9px;color:var(--tm)">2026</div></td>
+              <td><div style="display:flex;gap:3px">
+                ${t.dsps.includes('sp')?'<span class="dsp-badge dsp-sp">SPF</span>':''}
+                ${t.dsps.includes('ap')?'<span class="dsp-badge dsp-ap">APL</span>':''}
+                ${t.dsps.includes('yt')?'<span class="dsp-badge dsp-yt">YTM</span>':''}
+                ${t.dsps.includes('bz')?'<span class="dsp-badge dsp-bz">BMY</span>':''}
+                ${!t.dsps.length?'<span class="dsp-badge dsp-td">—</span>':''}
+              </div></td>
+              <td><span class="status-p s-${t.status}">${t.status==='live'?'● LIVE':t.status==='review'?'⏳ REVIEW':'○ DRAFT'}</span></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function generateISRC() {
+  const code = `ZA-MP1-26-${String(nextISRC++).padStart(5,'0')}`;
+  const el = document.getElementById('isrcGenOutput');
+  if (el) {
+    el.innerHTML = `
+      <div style="font-size:8px;letter-spacing:.15em;color:var(--gn);margin-bottom:8px">ISRC GENERATED</div>
+      <div class="isrc-code">${code}</div>
+      <button class="a-btn gn" style="margin-top:12px" onclick="navigator.clipboard?.writeText('${code}');toast('ISRC copied: ${code}','ok')">COPY</button>`;
+  }
+}
+
+// ══════════════════════════════════
+// ANALYTICS
+// ══════════════════════════════════
+function analytics(main) {
+  const months = ['Oct','Nov','Dec','Jan','Feb','Mar'];
+  const streamData = [2100,4800,8200,12400,21800,36520];
+  const maxStream = Math.max(...streamData);
+
+  main.innerHTML = `
+  <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Stream Analytics</div>
+  <div style="font-family:var(--body);color:var(--tm);font-size:12px;margin-bottom:22px">Catalogue performance across all DSPs · Updated daily</div>
+
+  <div class="stats-row" style="margin-bottom:20px">
+    <div class="stat sp"><div class="stat-ico">📈</div><div class="stat-lbl">STREAMS THIS MONTH</div><div class="stat-val">36.5K</div><div class="stat-delta delta-up">↑ +67% vs Feb</div></div>
+    <div class="stat gn"><div class="stat-ico">👂</div><div class="stat-lbl">UNIQUE LISTENERS</div><div class="stat-val">12.4K</div><div class="stat-delta delta-up">↑ +48% vs Feb</div></div>
+    <div class="stat or"><div class="stat-ico">🌍</div><div class="stat-lbl">TOP MARKET</div><div class="stat-val">ZA</div><div class="stat-sub">South Africa · 34% of streams</div></div>
+    <div class="stat vi"><div class="stat-ico">💿</div><div class="stat-lbl">SAVES / FOLLOWS</div><div class="stat-val">2,847</div><div class="stat-delta delta-up">↑ +112% vs Feb</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+    <div class="card">
+      <div class="card-head"><div class="card-title">MONTHLY STREAM GROWTH</div></div>
+      <div class="card-body">
+        <div style="display:flex;align-items:flex-end;gap:12px;height:140px;padding-bottom:24px;position:relative">
+          ${streamData.map((v,i)=>`
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end">
+              <div style="font-size:8px;color:var(--tm)">${(v/1000).toFixed(1)}K</div>
+              <div style="width:100%;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--or),var(--or2));
+                height:${(v/maxStream)*100}%;transition:height .5s ease;cursor:pointer;min-height:4px;
+                box-shadow:0 0 ${i===streamData.length-1?12:0}px var(--org)"
+                title="${v.toLocaleString()} streams"
+                onmouseover="this.style.filter='brightness(1.2)'" onmouseout="this.style.filter=''"></div>
+              <div style="font-size:8px;color:var(--td);letter-spacing:.08em">${months[i]}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-title">TOP MARKETS</div></div>
+      <div class="card-body">
+        ${[
+          {country:'South Africa',pct:34,flag:'🇿🇦',streams:'12.4K'},
+          {country:'Nigeria',pct:18,flag:'🇳🇬',streams:'6.6K'},
+          {country:'United Kingdom',pct:14,flag:'🇬🇧',streams:'5.1K'},
+          {country:'United States',pct:12,flag:'🇺🇸',streams:'4.4K'},
+          {country:'Ghana',pct:8,flag:'🇬🇭',streams:'2.9K'},
+          {country:'Kenya',pct:6,flag:'🇰🇪',streams:'2.2K'},
+          {country:'Other',pct:8,flag:'🌍',streams:'2.9K'},
+        ].map(m=>`
+          <div style="margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <div style="font-size:10px;color:var(--tx)">${m.flag} ${m.country}</div>
+              <div style="font-size:9px;color:var(--tm)">${m.streams} · ${m.pct}%</div>
+            </div>
+            <div style="height:3px;background:var(--ink5);border-radius:2px;overflow:hidden">
+              <div style="height:100%;width:${m.pct}%;background:var(--or);border-radius:2px"></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-title">TOP PERFORMING TRACKS</div></div>
+    <div class="card-body" style="padding:0">
+      <table class="table">
+        <thead><tr><th>#</th><th>TRACK</th><th>ARTIST</th><th>STREAMS</th><th>SAVES</th><th>TOP MARKET</th><th>TREND</th></tr></thead>
+        <tbody>
+          ${CATALOGUE.filter(t=>t.streams>0).sort((a,b)=>b.streams-a.streams).map((t,i)=>`
+            <tr>
+              <td><div style="font-family:var(--disp);font-weight:700;font-size:14px;color:${i===0?'var(--or)':'var(--td)'}">${i+1}</div></td>
+              <td><div style="font-weight:600">${t.title}</div><div class="sub">${t.genre}</div></td>
+              <td>${t.artist}</td>
+              <td><div style="font-size:12px;font-weight:600;color:var(--gn)">${t.streams.toLocaleString()}</div></td>
+              <td><div style="font-size:10px;color:var(--cy)">${Math.round(t.streams*0.08).toLocaleString()}</div></td>
+              <td><div style="font-size:9px;color:var(--tm)">🇿🇦 South Africa</div></td>
+              <td><div style="color:var(--gn);font-size:12px">↑</div></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════
+// BOOT
+// ══════════════════════════════════
+go('catalogue');
+</script>
+</body>
+</html>

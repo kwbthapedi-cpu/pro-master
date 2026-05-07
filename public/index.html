@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pro Master - A professional static HTML site powered by Vercel">
+    <meta name="theme-color" content="#2563eb">
+    <title>Pro Master | Professional Solutions</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">Pro Master</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container hero-content">
+            <h1>Welcome to Pro Master</h1>
+            <p>Build and deploy professional static websites on Vercel with confidence</p>
+            <button class="cta-button">Get Started</button>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>Pro Master is a professional static site template optimized for Vercel deployment. Built with clean HTML, modern CSS, and best practices for performance and SEO.</p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>⚡ Fast Performance</h3>
+                    <p>Optimized for speed with automatic CDN caching and edge deployment</p>
+                </div>
+                <div class="service-card">
+                    <h3>🔒 Security</h3>
+                    <p>Built-in security headers and HTTPS enforcement across all pages</p>
+                </div>
+                <div class="service-card">
+                    <h3>📱 Responsive</h3>
+                    <p>Mobile-first design that works perfectly on all devices and screen sizes</p>
+                </div>
+                <div class="service-card">
+                    <h3>♿ Accessible</h3>
+                    <p>WCAG compliant with semantic HTML and keyboard navigation support</p>
+                </div>
+                <div class="service-card">
+                    <h3>🚀 Deployment</h3>
+                    <p>One-click deployment to Vercel with automatic previews and rollbacks</p>
+                </div>
+                <div class="service-card">
+                    <h3>📊 Analytics</h3>
+                    <p>Real-time insights and performance monitoring through Vercel dashboard</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Get In Touch</h2>
+            <p>Have questions? We'd love to hear from you.</p>
+            <a href="mailto:contact@example.com" class="contact-button">Send Email</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Pro Master. Deployed on Vercel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target?.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // CTA Button click handler
+        document.querySelector('.cta-button').addEventListener('click', () => {
+            alert('Thank you for your interest! Check out the documentation to get started.');
+        });
+    </script>
+</body>
+</html>

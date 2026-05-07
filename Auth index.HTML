@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro M.A.S.T.E.R — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0a0806;--ink2:#130e08;--ink3:#1c1610;--ink4:#261e14;
+  --amber:#c87820;--amber2:#e8a030;--amber3:#f0b848;--cream:#f0d898;
+  --teal:#1e3a58;--teal2:#3a6a90;
+  --b:rgba(200,120,32,0.12);--b2:rgba(200,120,32,0.25);--b3:rgba(200,120,32,0.45);
+  --tx:#e8d4a8;--tx2:#b89860;--tx3:#786040;--tx4:#483820;
+  --live:#40e080;--err:#ff5050;
+  --mono:'IBM Plex Mono',monospace;--disp:'Syne',sans-serif;--body:'DM Sans',sans-serif;
+}
+html,body{min-height:100%;background:var(--ink);color:var(--tx);font-family:var(--mono);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;-webkit-font-smoothing:antialiased}
+
+/* Background texture */
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(200,120,32,0.08),transparent),
+             radial-gradient(ellipse 60% 40% at 50% 100%,rgba(30,58,88,0.1),transparent);
+  pointer-events:none}
+body::after{content:'';position:fixed;inset:0;z-index:0;opacity:.025;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,1) 3px,rgba(0,0,0,1) 4px)}
+
+/* Card */
+.card{
+  position:relative;z-index:1;
+  width:100%;max-width:440px;
+  background:linear-gradient(180deg,var(--ink2),var(--ink));
+  border:1px solid var(--b2);border-radius:10px;
+  padding:36px 32px;
+  box-shadow:0 32px 80px rgba(0,0,0,.8),0 0 0 1px var(--b);
+}
+
+/* Header */
+.card-logo{font-family:var(--disp);font-weight:800;font-size:22px;color:var(--amber2);
+  text-align:center;margin-bottom:4px;letter-spacing:.02em;
+  text-shadow:0 0 24px rgba(232,160,48,0.35)}
+.card-sub{font-size:8px;letter-spacing:.25em;color:var(--tx4);text-align:center;
+  margin-bottom:28px;font-family:var(--mono)}
+
+/* Tab switcher */
+.tabs{display:flex;gap:0;border:1px solid var(--b2);border-radius:5px;overflow:hidden;margin-bottom:24px}
+.tab{flex:1;padding:9px;font-family:var(--mono);font-size:8px;letter-spacing:.16em;
+  cursor:pointer;border:none;background:none;color:var(--tx4);transition:.15s;text-align:center}
+.tab:hover{color:var(--tx3);background:rgba(200,120,32,.05)}
+.tab.act{background:rgba(200,120,32,.12);color:var(--amber2);border-bottom:2px solid var(--amber)}
+
+/* Form */
+.form{display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:7px;letter-spacing:.18em;color:var(--tx4)}
+.field input,.field select{
+  background:var(--ink3);border:1px solid var(--b2);border-radius:4px;
+  padding:10px 13px;color:var(--tx);font-family:var(--mono);font-size:12px;
+  outline:none;transition:.15s;width:100%;
+}
+.field input:focus,.field select:focus{border-color:var(--amber)}
+.field input::placeholder{color:var(--tx4)}
+.field select option{background:var(--ink3)}
+
+/* Two col */
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* Password toggle */
+.pw-wrap{position:relative}
+.pw-wrap input{padding-right:36px}
+.pw-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--tx4);font-size:14px;
+  transition:.15s;padding:2px}
+.pw-eye:hover{color:var(--amber2)}
+
+/* Submit button */
+.btn-submit{
+  width:100%;height:44px;border-radius:5px;border:none;
+  background:linear-gradient(135deg,var(--amber),var(--amber2));
+  color:var(--ink);font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  font-weight:700;cursor:pointer;transition:.15s;margin-top:4px;
+  box-shadow:0 4px 20px rgba(200,120,32,.4);
+}
+.btn-submit:hover{background:linear-gradient(135deg,var(--amber2),var(--amber3));
+  box-shadow:0 6px 24px rgba(200,120,32,.55)}
+.btn-submit:active{transform:scale(.98)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* Links */
+.link-row{text-align:center;margin-top:6px}
+.link-btn{background:none;border:none;cursor:pointer;font-family:var(--mono);
+  font-size:8px;letter-spacing:.12em;color:var(--tx4);transition:.15s;text-decoration:underline}
+.link-btn:hover{color:var(--amber2)}
+
+/* Message boxes */
+.msg{border-radius:4px;padding:10px 13px;font-size:10px;line-height:1.6;
+  font-family:var(--body);display:none;margin-bottom:2px}
+.msg.show{display:block}
+.msg.ok{background:rgba(64,224,128,.1);border:1px solid rgba(64,224,128,.25);color:var(--live)}
+.msg.err{background:rgba(255,80,80,.1);border:1px solid rgba(255,80,80,.25);color:var(--err)}
+.msg.info{background:rgba(200,120,32,.1);border:1px solid var(--b2);color:var(--amber2)}
+
+/* Divider */
+.divider{display:flex;align-items:center;gap:10px;margin:4px 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--b)}
+.divider span{font-size:8px;color:var(--tx4);letter-spacing:.12em}
+
+/* Password strength */
+.pw-strength{height:3px;border-radius:2px;background:var(--ink4);margin-top:4px;overflow:hidden;transition:.3s}
+.pw-strength-fill{height:100%;border-radius:2px;transition:all .3s}
+
+/* Terms */
+.terms{display:flex;align-items:flex-start;gap:9px;cursor:pointer}
+.terms input[type=checkbox]{width:14px;height:14px;flex-shrink:0;accent-color:var(--amber);margin-top:2px;cursor:pointer}
+.terms label{font-family:var(--body);font-size:10px;color:var(--tx3);line-height:1.5;cursor:pointer}
+.terms a{color:var(--amber2);text-decoration:none}
+.terms a:hover{text-decoration:underline}
+
+/* Confirmation screen */
+.confirm-screen{text-align:center;display:none}
+.confirm-screen.show{display:block}
+.confirm-icon{font-size:52px;margin-bottom:16px}
+.confirm-title{font-family:var(--disp);font-weight:800;font-size:18px;color:var(--amber2);margin-bottom:8px}
+.confirm-body{font-family:var(--body);font-size:12px;color:var(--tx3);line-height:1.8;margin-bottom:20px}
+.confirm-email{font-family:var(--mono);font-size:11px;color:var(--teal2);
+  background:var(--ink3);border:1px solid var(--b2);border-radius:4px;
+  padding:8px 12px;margin:10px 0;display:inline-block}
+.resend-btn{background:none;border:1px solid var(--b2);border-radius:4px;
+  padding:8px 16px;cursor:pointer;font-family:var(--mono);font-size:8px;letter-spacing:.14em;
+  color:var(--tx4);transition:.15s}
+.resend-btn:hover{border-color:var(--amber);color:var(--amber2)}
+
+/* Footer */
+.card-footer{text-align:center;margin-top:20px;font-size:8px;letter-spacing:.1em;color:var(--tx4)}
+.card-footer a{color:var(--tx3);text-decoration:none}
+.card-footer a:hover{color:var(--amber2)}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-logo">Pro M.A.S.T.E.R</div>
+  <div class="card-sub">A MAGNIPROJEKTA VENTURE</div>
+
+  <!-- TABS -->
+  <div class="tabs" id="tabs">
+    <button class="tab act" onclick="showTab('login')">SIGN IN</button>
+    <button class="tab" onclick="showTab('register')">CREATE ACCOUNT</button>
+    <button class="tab" onclick="showTab('reset')">RESET PASSWORD</button>
+  </div>
+
+  <!-- MESSAGES -->
+  <div class="msg" id="msgBox"></div>
+
+  <!-- LOGIN FORM -->
+  <div id="loginForm">
+    <div class="form">
+      <div class="field">
+        <label>EMAIL ADDRESS</label>
+        <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>PASSWORD</label>
+        <div class="pw-wrap">
+          <input type="password" id="loginPw" placeholder="Your password" autocomplete="current-password">
+          <button type="button" class="pw-eye" onclick="togglePw('loginPw',this)">👁</button>
+        </div>
+      </div>
+      <button class="btn-submit" id="loginBtn" onclick="handleLogin()">SIGN IN →</button>
+      <div class="link-row">
+        <button class="link-btn" onclick="showTab('reset')">Forgot your password?</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER FORM -->
+  <div id="registerForm" style="display:none">
+    <div class="form">
+      <div class="row-2">
+        <div class="field">
+          <label>FIRST NAME</label>
+          <input type="text" id="regFirst" placeholder="First name" autocomplete="given-name">
+        </div>
+        <div class="field">
+          <label>LAST NAME</label>
+          <input type="text" id="regLast" placeholder="Last name" autocomplete="family-name">
+        </div>
+      </div>
+      <div class="field">
+        <label>ARTIST NAME</label>
+        <input type="text" id="regArtist" placeholder="How the world will know you">
+      </div>
+      <div class="field">
+        <label>EMAIL ADDRESS</label>
+        <input type="email" id="regEmail" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>PASSWORD</label>
+        <div class="pw-wrap">
+          <input type="password" id="regPw" placeholder="Min. 8 characters" autocomplete="new-password"
+            oninput="checkPwStrength(this.value)">
+          <button type="button" class="pw-eye" onclick="togglePw('regPw',this)">👁</button>
+        </div>
+        <div class="pw-strength" id="pwStrength"><div class="pw-strength-fill" id="pwFill"></div></div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>COUNTRY</label>
+          <select id="regCountry">
+            <option>South Africa</option><option>Nigeria</option><option>Ghana</option>
+            <option>Kenya</option><option>Zimbabwe</option><option>Botswana</option>
+            <option>Namibia</option><option>Zambia</option><option>Tanzania</option>
+            <option>Uganda</option><option>Senegal</option><option>Other Africa</option>
+            <option>United Kingdom</option><option>United States</option><option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>PRIMARY GENRE</label>
+          <select id="regGenre">
+            <option>Afrobeat</option><option>Jazz</option><option>Amapiano</option>
+            <option>Kwaito</option><option>Gospel</option><option>R&B / Soul</option>
+            <option>Hip-Hop</option><option>Electronic</option><option>World / Fusion</option>
+            <option>Classical</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="divider"><span>AGREEMENT</span></div>
+
+      <div class="terms">
+        <input type="checkbox" id="termsPlatform">
+        <label for="termsPlatform">
+          I agree to the <a href="#" onclick="showTerms('platform')">Platform Terms of Service</a>
+          and <a href="#" onclick="showTerms('licence')">Artist Licence Agreement</a>
+        </label>
+      </div>
+      <div class="terms">
+        <input type="checkbox" id="termsNonExclusive">
+        <label for="termsNonExclusive">
+          I confirm I am <strong style="color:var(--tx)">not exclusively signed</strong> to another record label
+          and have the right to distribute my music through Pro M.A.S.T.E.R
+        </label>
+      </div>
+      <div class="terms">
+        <input type="checkbox" id="termsAge">
+        <label for="termsAge">I confirm I am 18 years or older</label>
+      </div>
+
+      <button class="btn-submit" id="registerBtn" onclick="handleRegister()">CREATE ACCOUNT →</button>
+    </div>
+  </div>
+
+  <!-- RESET FORM -->
+  <div id="resetForm" style="display:none">
+    <div class="form">
+      <div class="field">
+        <label>YOUR EMAIL ADDRESS</label>
+        <input type="email" id="resetEmail" placeholder="your@email.com">
+      </div>
+      <button class="btn-submit" onclick="handleReset()">SEND RESET LINK →</button>
+      <div class="link-row">
+        <button class="link-btn" onclick="showTab('login')">← Back to sign in</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL CONFIRMATION SCREEN -->
+  <div class="confirm-screen" id="confirmScreen">
+    <div class="confirm-icon">📬</div>
+    <div class="confirm-title">Check your inbox</div>
+    <div class="confirm-body">
+      We've sent a confirmation link to
+      <div class="confirm-email" id="confirmEmailDisplay">—</div>
+      Click the link in the email to activate your Pro M.A.S.T.E.R account.
+      After confirming, you'll complete your artist profile.
+    </div>
+    <button class="resend-btn" onclick="resendConfirmation()">Resend confirmation email</button>
+  </div>
+</div>
+
+<div class="card-footer">
+  <a href="/">← Back to Pro M.A.S.T.E.R</a> &nbsp;·&nbsp;
+  MagniProjekta · Pretoria, South Africa
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SB_URL  = 'https://qaunadbaebbkouxgijbg.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhdW5hZGJhZWJia291eGdpamJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NTU2MzEsImV4cCI6MjA4MzQzMTYzMX0.HPIT_0HuJZ_v1JxmvCgl3sr9MfjHTwnTqZqM4i75-k4';
+const sb = supabase.createClient(SB_URL, SB_ANON);
+
+let pendingEmail = '';
+
+// ── Check if already logged in ──
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    // Already logged in — go to dashboard
+    const profile = await getProfile(session.user.id);
+    if (!profile?.onboarding_complete) {
+      window.location.href = '/onboarding';
+    } else {
+      window.location.href = '/dashboard';
+    }
+  }
+  // Check if this is an email confirmation callback
+  const hash = window.location.hash;
+  if (hash.includes('access_token') || hash.includes('type=signup')) {
+    const { data, error } = await sb.auth.getSession();
+    if (data?.session) {
+      showMsg('Email confirmed! Setting up your profile...', 'ok');
+      setTimeout(() => window.location.href = '/onboarding', 1500);
+    }
+  }
+})();
+
+async function getProfile(userId) {
+  const { data } = await sb.from('profiles').select('*').eq('id', userId).single();
+  return data;
+}
+
+// ── TAB SWITCHING ──
+function showTab(tab) {
+  document.getElementById('loginForm').style.display    = tab === 'login'    ? '' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? '' : 'none';
+  document.getElementById('resetForm').style.display    = tab === 'reset'    ? '' : 'none';
+  document.getElementById('confirmScreen').classList.remove('show');
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('act', ['login','register','reset'][i] === tab);
+  });
+  clearMsg();
+}
+
+// ── MESSAGES ──
+function showMsg(msg, type='ok') {
+  const box = document.getElementById('msgBox');
+  box.textContent = msg;
+  box.className = 'msg show ' + type;
+}
+function clearMsg() {
+  const box = document.getElementById('msgBox');
+  box.className = 'msg';
+}
+
+// ── PASSWORD ──
+function togglePw(id, btn) {
+  const inp = document.getElementById(id);
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+function checkPwStrength(pw) {
+  const fill = document.getElementById('pwFill');
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  const colors = ['#ff5050','#ff8040','#ffc800','#40e080'];
+  const widths  = ['25%','50%','75%','100%'];
+  fill.style.width      = score > 0 ? widths[score-1] : '0';
+  fill.style.background = score > 0 ? colors[score-1] : 'transparent';
+}
+
+// ── LOGIN ──
+async function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pw    = document.getElementById('loginPw').value;
+  if (!email || !pw) { showMsg('Enter your email and password', 'err'); return; }
+
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'SIGNING IN...';
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
+
+  if (error) {
+    showMsg(
+      error.message.includes('Invalid') ? 'Incorrect email or password.' :
+      error.message.includes('confirmed') ? 'Please confirm your email first. Check your inbox.' :
+      error.message, 'err'
+    );
+    btn.disabled = false; btn.textContent = 'SIGN IN →';
+    return;
+  }
+
+  showMsg('Welcome back! Loading your studio...', 'ok');
+  const profile = await getProfile(data.user.id);
+  setTimeout(() => {
+    if (!profile?.onboarding_complete) {
+      window.location.href = '/onboarding';
+    } else {
+      window.location.href = '/dashboard';
+    }
+  }, 800);
+}
+
+// Enter key on login
+document.getElementById('loginPw').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleLogin();
+});
+
+// ── REGISTER ──
+async function handleRegister() {
+  const first   = document.getElementById('regFirst').value.trim();
+  const last    = document.getElementById('regLast').value.trim();
+  const artist  = document.getElementById('regArtist').value.trim();
+  const email   = document.getElementById('regEmail').value.trim();
+  const pw      = document.getElementById('regPw').value;
+  const country = document.getElementById('regCountry').value;
+  const genre   = document.getElementById('regGenre').value;
+
+  // Validation
+  if (!first || !artist || !email) { showMsg('Please fill in all required fields', 'err'); return; }
+  if (pw.length < 8) { showMsg('Password must be at least 8 characters', 'err'); return; }
+  if (!document.getElementById('termsPlatform').checked) { showMsg('You must agree to the Terms of Service', 'err'); return; }
+  if (!document.getElementById('termsNonExclusive').checked) { showMsg('You must confirm you are not exclusively signed elsewhere', 'err'); return; }
+  if (!document.getElementById('termsAge').checked) { showMsg('You must confirm you are 18 or older', 'err'); return; }
+
+  const btn = document.getElementById('registerBtn');
+  btn.disabled = true; btn.textContent = 'CREATING ACCOUNT...';
+
+  const { data, error } = await sb.auth.signUp({
+    email,
+    password: pw,
+    options: {
+      data: {
+        artist_name: artist,
+        first_name: first,
+        last_name: last,
+        country,
+        genre,
+      },
+      emailRedirectTo: `${window.location.origin}/auth`
+    }
+  });
+
+  if (error) {
+    showMsg(
+      error.message.includes('already registered') ? 'This email is already registered. Try signing in.' :
+      error.message, 'err'
+    );
+    btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
+    return;
+  }
+
+  pendingEmail = email;
+
+  // Also update profile with name fields (trigger creates basic profile)
+  if (data.user) {
+    await sb.from('profiles').upsert({
+      id: data.user.id,
+      email,
+      artist_name: artist,
+      first_name: first,
+      last_name: last,
+      country,
+      genre,
+      tier: 'free',
+      licence_signed: true,
+      licence_signed_at: new Date().toISOString(),
+    }, { onConflict: 'id' });
+  }
+
+  // Show confirmation screen
+  document.getElementById('tabs').style.display = 'none';
+  document.getElementById('registerForm').style.display = 'none';
+  document.getElementById('confirmEmailDisplay').textContent = email;
+  document.getElementById('confirmScreen').classList.add('show');
+}
+
+// ── RESET PASSWORD ──
+async function handleReset() {
+  const email = document.getElementById('resetEmail').value.trim();
+  if (!email) { showMsg('Enter your email address', 'err'); return; }
+
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/auth`
+  });
+
+  if (error) { showMsg(error.message, 'err'); return; }
+  showMsg(`Reset link sent to ${email} — check your inbox`, 'ok');
+}
+
+// ── RESEND CONFIRMATION ──
+async function resendConfirmation() {
+  if (!pendingEmail) return;
+  const { error } = await sb.auth.resend({ type: 'signup', email: pendingEmail });
+  if (!error) showMsg('Confirmation email resent!', 'ok');
+}
+
+// ── TERMS MODAL (simple) ──
+function showTerms(type) {
+  const terms = {
+    platform: 'Pro M.A.S.T.E.R Platform Terms: By registering, you agree to use the platform lawfully, maintain ownership of your original music, and comply with South African copyright law and applicable international conventions.',
+    licence: 'Artist Licence Agreement: You grant Pro M.A.S.T.E.R a non-exclusive, worldwide, royalty-bearing licence to distribute your recordings. You retain 85% of net streaming royalties. Distribution fee: 15%. Initial term: 2 years. 60-day written notice to terminate.'
+  };
+  alert(terms[type]);
+  return false;
+}
+</script>
+</body>
+</html>

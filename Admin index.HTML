@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro M.A.S.T.E.R — Phase 4 | Backend + Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#07070e;--ink2:#0d0d18;--ink3:#131320;--ink4:#191928;--ink5:#212134;
+  --b:rgba(255,255,255,0.055);--b2:rgba(255,255,255,0.10);--b3:rgba(255,255,255,0.17);
+  --or:#ff5f1f;--or2:#ff8040;--org:rgba(255,95,31,0.22);
+  --gn:#00ffaa;--gng:rgba(0,255,170,0.12);
+  --cy:#00ccff;--cyg:rgba(0,204,255,0.10);
+  --mg:#ff1a8c;--mgg:rgba(255,26,140,0.10);
+  --yl:#ffc800;--ylg:rgba(255,200,0,0.10);
+  --vi:#9966ff;--vig:rgba(153,102,255,0.10);
+  --rd:#ff3333;--rdg:rgba(255,51,51,0.10);
+  --tx:#d4d4ec;--tm:#606080;--td:#2a2a44;
+  --mono:'IBM Plex Mono',monospace;--disp:'Syne',sans-serif;--body:'DM Sans',sans-serif;
+}
+html,body{height:100%;background:var(--ink);color:var(--tx);font-family:var(--mono);overflow:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--ink5);border-radius:2px}
+
+/* ── SHELL ── */
+#shell{display:grid;grid-template-rows:48px 1fr;height:100vh}
+#topbar{
+  background:var(--ink2);border-bottom:1px solid var(--b);
+  display:flex;align-items:center;padding:0 20px;gap:14px
+}
+.logo{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--or)}
+.logo em{font-style:normal;font-size:9px;letter-spacing:.2em;color:var(--tm);margin-left:8px;font-weight:400}
+.sep{width:1px;height:20px;background:var(--b2);flex-shrink:0}
+
+.tb-nav{display:flex;gap:3px}
+.tb-btn{
+  height:28px;padding:0 12px;border-radius:4px;border:none;background:none;
+  cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.12em;
+  color:var(--tm);transition:.12s;display:flex;align-items:center;gap:6px
+}
+.tb-btn:hover{background:var(--ink4);color:var(--tx)}
+.tb-btn.act{background:var(--ink4);color:var(--or)}
+.tb-btn .dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+.tb-status{display:flex;align-items:center;gap:6px;margin-left:auto}
+.status-pill{
+  display:flex;align-items:center;gap:5px;background:var(--ink3);
+  border:1px solid var(--b);border-radius:20px;padding:3px 10px;
+  font-size:8px;letter-spacing:.12em;color:var(--tm)
+}
+.sp-dot{width:5px;height:5px;border-radius:50%}
+.sp-dot.on{background:var(--gn);box-shadow:0 0 5px var(--gn)}
+.sp-dot.off{background:var(--td)}
+.sp-dot.warn{background:var(--yl);box-shadow:0 0 5px var(--yl)}
+
+#body{overflow:hidden;display:flex;height:100%}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:220px;flex-shrink:0;background:var(--ink2);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;overflow-y:auto;padding:16px 0
+}
+.sb-section{margin-bottom:20px}
+.sb-head{font-size:7px;letter-spacing:.22em;color:var(--td);padding:0 16px;margin-bottom:6px}
+.sb-item{
+  display:flex;align-items:center;gap:9px;padding:8px 16px;
+  cursor:pointer;transition:.12s;border-left:2px solid transparent;font-size:10px;color:var(--tm)
+}
+.sb-item:hover{background:var(--ink3);color:var(--tx)}
+.sb-item.act{background:var(--ink3);border-left-color:var(--or);color:var(--or)}
+.sb-icon{font-size:13px;width:18px;text-align:center;flex-shrink:0}
+.sb-badge{
+  margin-left:auto;font-size:7px;letter-spacing:.1em;padding:2px 6px;border-radius:3px;
+  background:var(--org);color:var(--or);font-weight:700
+}
+.sb-badge.gn{background:var(--gng);color:var(--gn)}
+.sb-badge.rd{background:var(--rdg);color:var(--rd)}
+
+/* ── MAIN ── */
+#main{flex:1;overflow-y:auto;padding:28px 32px;display:flex;flex-direction:column;gap:24px}
+
+/* ── CARDS ── */
+.card{background:var(--ink2);border:1px solid var(--b);border-radius:8px;overflow:hidden}
+.card-head{
+  padding:14px 18px;border-bottom:1px solid var(--b);
+  display:flex;align-items:center;justify-content:space-between
+}
+.card-title{font-size:10px;letter-spacing:.18em;color:var(--tm)}
+.card-body{padding:18px}
+
+/* ── STAT CARDS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat-card{
+  background:var(--ink2);border:1px solid var(--b);border-radius:8px;
+  padding:18px;position:relative;overflow:hidden;transition:.15s
+}
+.stat-card:hover{border-color:var(--b2)}
+.stat-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;border-radius:0 0 8px 8px
+}
+.stat-card.or::after{background:linear-gradient(90deg,var(--or),var(--or2))}
+.stat-card.gn::after{background:var(--gn)}
+.stat-card.cy::after{background:var(--cy)}
+.stat-card.vi::after{background:var(--vi)}
+.sc-icon{font-size:22px;margin-bottom:10px}
+.sc-label{font-size:8px;letter-spacing:.18em;color:var(--tm);margin-bottom:6px}
+.sc-val{font-family:var(--disp);font-weight:800;font-size:26px;color:var(--tx)}
+.sc-sub{font-size:8px;color:var(--tm);margin-top:4px;font-family:var(--body)}
+.sc-delta{font-size:9px;margin-top:6px}
+.sc-delta.up{color:var(--gn)}
+.sc-delta.dn{color:var(--rd)}
+
+/* ── TABLES ── */
+.table{width:100%;border-collapse:collapse}
+.table th{
+  font-size:8px;letter-spacing:.18em;color:var(--td);text-align:left;
+  padding:8px 12px;border-bottom:1px solid var(--b);font-weight:400
+}
+.table td{
+  padding:10px 12px;border-bottom:1px solid var(--b);
+  font-size:10px;color:var(--tx);vertical-align:middle
+}
+.table tr:last-child td{border-bottom:none}
+.table tr:hover td{background:var(--ink3)}
+.table td .sub{font-size:8px;color:var(--tm);margin-top:2px;font-family:var(--body)}
+
+/* tier pill */
+.t-pill{
+  display:inline-block;font-size:7px;letter-spacing:.14em;padding:2px 7px;border-radius:3px;font-weight:700
+}
+.t-free{background:var(--ink5);color:var(--tm)}
+.t-creator{background:var(--cyg);color:var(--cy);border:1px solid rgba(0,204,255,.2)}
+.t-artist{background:var(--ylg);color:var(--yl);border:1px solid rgba(255,200,0,.2)}
+.t-pro{background:var(--gng);color:var(--gn);border:1px solid rgba(0,255,170,.2)}
+.t-member{background:linear-gradient(135deg,var(--org),var(--vig));color:var(--or2);border:1px solid rgba(255,95,31,.2)}
+
+/* verify status */
+.v-badge{display:inline-flex;align-items:center;gap:4px;font-size:8px}
+.v-badge.ok{color:var(--gn)}
+.v-badge.pend{color:var(--yl)}
+.v-badge.no{color:var(--td)}
+
+/* action btns */
+.act-btn{
+  height:22px;padding:0 8px;border-radius:3px;border:1px solid var(--b);
+  background:none;cursor:pointer;font-family:var(--mono);font-size:7px;
+  letter-spacing:.1em;color:var(--tm);transition:.12s
+}
+.act-btn:hover{border-color:var(--b2);color:var(--tx)}
+.act-btn.or{border-color:rgba(255,95,31,.3);color:var(--or)}
+.act-btn.or:hover{background:var(--org)}
+.act-btn.gn{border-color:rgba(0,255,170,.3);color:var(--gn)}
+.act-btn.gn:hover{background:var(--gng)}
+.act-btn.rd{border-color:rgba(255,51,51,.3);color:var(--rd)}
+.act-btn.rd:hover{background:var(--rdg)}
+
+/* ── BACKEND CONFIG PANEL ── */
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.config-service{
+  background:var(--ink3);border:1px solid var(--b);border-radius:7px;padding:16px;
+  display:flex;flex-direction:column;gap:10px;transition:.15s
+}
+.config-service:hover{border-color:var(--b2)}
+.cs-header{display:flex;align-items:center;gap:10px}
+.cs-icon{font-size:22px;flex-shrink:0}
+.cs-name{font-family:var(--disp);font-weight:700;font-size:13px}
+.cs-desc{font-size:9px;color:var(--tm);font-family:var(--body);line-height:1.6}
+.cs-status{display:flex;align-items:center;gap:6px;font-size:8px;letter-spacing:.12em}
+.cs-fields{display:flex;flex-direction:column;gap:6px}
+.cs-field label{font-size:7px;letter-spacing:.15em;color:var(--td);display:block;margin-bottom:3px}
+.cs-field input{
+  width:100%;background:var(--ink4);border:1px solid var(--b);border-radius:3px;
+  padding:7px 10px;color:var(--tx);font-family:var(--mono);font-size:10px;outline:none;transition:.15s
+}
+.cs-field input:focus{border-color:var(--or)}
+.cs-field input.connected{border-color:rgba(0,255,170,.3);color:var(--gn)}
+.cs-btn{
+  height:30px;border-radius:4px;border:none;cursor:pointer;
+  font-family:var(--mono);font-size:9px;letter-spacing:.14em;font-weight:700;transition:.15s
+}
+.cs-btn.test{background:var(--ink4);border:1px solid var(--b2);color:var(--tm)}
+.cs-btn.test:hover{border-color:var(--or);color:var(--or)}
+.cs-btn.connect{background:linear-gradient(135deg,var(--or),var(--or2));color:var(--ink)}
+.cs-btn.connect:hover{transform:translateY(-1px);box-shadow:0 4px 16px var(--org)}
+
+/* ── SCHEMA VIEWER ── */
+.schema-tables{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.schema-table{
+  background:var(--ink3);border:1px solid var(--b);border-radius:6px;overflow:hidden
+}
+.st-head{
+  padding:10px 12px;border-bottom:1px solid var(--b);
+  font-size:9px;letter-spacing:.16em;color:var(--cy);
+  display:flex;align-items:center;gap:7px
+}
+.st-head::before{content:'▤';font-size:11px;opacity:.6}
+.st-rows{padding:8px 0}
+.st-row{
+  display:flex;gap:8px;align-items:center;padding:5px 12px;
+  font-size:9px;transition:.1s
+}
+.st-row:hover{background:var(--ink4)}
+.st-col{color:var(--tx);flex:1}
+.st-type{color:var(--td);font-size:8px;font-style:italic}
+.st-pk{color:var(--yl);font-size:7px;letter-spacing:.1em}
+.st-fk{color:var(--vi);font-size:7px;letter-spacing:.1em}
+.st-nn{color:var(--tm);font-size:7px}
+
+/* ── REALTIME COLLAB ARCHITECTURE ── */
+.arch-flow{display:flex;align-items:center;gap:0;overflow-x:auto;padding:8px 0}
+.arch-node{
+  background:var(--ink3);border:1px solid var(--b);border-radius:6px;
+  padding:14px 16px;flex-shrink:0;min-width:140px;text-align:center;
+  transition:.15s
+}
+.arch-node:hover{border-color:var(--b2);transform:translateY(-2px)}
+.an-icon{font-size:22px;margin-bottom:6px}
+.an-name{font-size:9px;font-weight:600;color:var(--tx)}
+.an-tech{font-size:7px;letter-spacing:.1em;color:var(--tm);margin-top:3px}
+.arch-arrow{
+  display:flex;align-items:center;padding:0 8px;flex-shrink:0;
+  font-size:18px;color:var(--td)
+}
+.arch-arrow.or{color:var(--or)}
+.arch-arrow.gn{color:var(--gn)}
+
+/* ── DEPLOYMENT CHECKLIST ── */
+.check-list{display:flex;flex-direction:column;gap:6px}
+.check-item{
+  display:flex;align-items:flex-start;gap:12px;padding:12px 14px;
+  background:var(--ink3);border:1px solid var(--b);border-radius:6px;
+  cursor:pointer;transition:.15s
+}
+.check-item:hover{border-color:var(--b2)}
+.check-item.done{border-color:rgba(0,255,170,.2);background:rgba(0,255,170,.04)}
+.check-item.warn{border-color:rgba(255,200,0,.2);background:rgba(255,200,0,.03)}
+.check-item.block{border-color:rgba(255,51,51,.2);background:rgba(255,51,51,.03)}
+.ci-check{
+  width:18px;height:18px;border-radius:4px;border:1px solid var(--b2);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:10px;transition:.15s;margin-top:1px
+}
+.check-item.done .ci-check{background:var(--gn);border-color:var(--gn);color:var(--ink)}
+.check-item.warn .ci-check{background:var(--yl);border-color:var(--yl);color:var(--ink)}
+.check-item.block .ci-check{background:var(--rd);border-color:var(--rd);color:#fff}
+.ci-body{flex:1}
+.ci-title{font-size:11px;font-weight:600;color:var(--tx);margin-bottom:3px}
+.ci-desc{font-family:var(--body);font-size:11px;color:var(--tm);line-height:1.5}
+.ci-tag{
+  font-size:7px;letter-spacing:.15em;padding:2px 7px;border-radius:3px;
+  margin-left:auto;flex-shrink:0;align-self:flex-start;margin-top:2px
+}
+.ci-tag.legal{background:var(--mgg);color:var(--mg)}
+.ci-tag.tech{background:var(--cyg);color:var(--cy)}
+.ci-tag.business{background:var(--ylg);color:var(--yl)}
+.ci-tag.done{background:var(--gng);color:var(--gn)}
+
+/* ── REVENUE ── */
+.rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.rev-chart{height:120px;position:relative}
+.rev-bars{display:flex;align-items:flex-end;gap:6px;height:100%}
+.rev-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.rev-bar{
+  width:100%;border-radius:3px 3px 0 0;transition:height .5s ease;
+  background:linear-gradient(180deg,var(--or),var(--or2));
+  position:relative;
+}
+.rev-bar:hover::after{
+  content:attr(data-val);position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+  font-size:8px;color:var(--or);white-space:nowrap;
+}
+.rev-bar-label{font-size:7px;color:var(--tm);letter-spacing:.06em}
+
+/* ── WEBSOCKET MONITOR ── */
+.ws-monitor{
+  background:var(--ink);border:1px solid var(--b);border-radius:5px;
+  font-family:var(--mono);font-size:10px;padding:12px;height:160px;
+  overflow-y:auto;display:flex;flex-direction:column;gap:4px
+}
+.ws-line{display:flex;gap:10px;animation:wsFade .3s ease}
+@keyframes wsFade{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:none}}
+.ws-time{color:var(--td);flex-shrink:0;font-size:9px}
+.ws-type{flex-shrink:0;font-size:8px;padding:1px 5px;border-radius:2px}
+.ws-type.conn{background:var(--gng);color:var(--gn)}
+.ws-type.msg{background:var(--cyg);color:var(--cy)}
+.ws-type.sync{background:var(--vig);color:var(--vi)}
+.ws-type.disc{background:var(--rdg);color:var(--rd)}
+.ws-content{color:var(--tm);font-size:9px;flex:1}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--ink3);border:1px solid var(--b3);border-radius:5px;
+  padding:10px 20px;font-size:9px;letter-spacing:.14em;
+  z-index:200;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;
+  box-shadow:0 8px 32px rgba(0,0,0,.6)
+}
+#toast.show{opacity:1}
+#toast.ok{color:var(--gn);border-color:rgba(0,255,170,.3)}
+#toast.warn{color:var(--yl);border-color:rgba(255,200,0,.3)}
+#toast.err{color:var(--or);border-color:rgba(255,95,31,.3)}
+
+/* Code block */
+.code-block{
+  background:var(--ink);border:1px solid var(--b);border-radius:5px;
+  padding:14px;font-size:10px;line-height:1.7;overflow-x:auto;
+  color:var(--tm);font-family:var(--mono)
+}
+.code-block .kw{color:var(--vi)}
+.code-block .str{color:var(--gn)}
+.code-block .fn{color:var(--cy)}
+.code-block .cm{color:var(--td)}
+.code-block .num{color:var(--yl)}
+.code-block .var{color:var(--or)}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<div id="shell">
+<div id="topbar">
+  <div class="logo">Pro M.A.S.T.E.R <em>PHASE 4 — BACKEND</em></div>
+  <div class="sep"></div>
+  <div class="tb-nav">
+    <button class="tb-btn act" data-v="overview" onclick="go('overview')"><div class="dot"></div>OVERVIEW</button>
+    <button class="tb-btn" data-v="users" onclick="go('users')"><div class="dot"></div>ARTISTS</button>
+    <button class="tb-btn" data-v="backend" onclick="go('backend')"><div class="dot"></div>BACKEND CONFIG</button>
+    <button class="tb-btn" data-v="schema" onclick="go('schema')"><div class="dot"></div>DATABASE</button>
+    <button class="tb-btn" data-v="realtime" onclick="go('realtime')"><div class="dot"></div>REALTIME</button>
+    <button class="tb-btn" data-v="revenue" onclick="go('revenue')"><div class="dot"></div>REVENUE</button>
+    <button class="tb-btn" data-v="deploy" onclick="go('deploy')"><div class="dot"></div>DEPLOY</button>
+  </div>
+  <div class="tb-status">
+    <div class="status-pill"><div class="sp-dot warn"></div>SUPABASE NOT CONNECTED</div>
+    <div class="status-pill"><div class="sp-dot warn"></div>STRIPE NOT CONNECTED</div>
+    <div class="status-pill"><div class="sp-dot off"></div>WEBSOCKET OFFLINE</div>
+  </div>
+</div>
+
+<div id="body">
+<div id="sidebar">
+  <div class="sb-section">
+    <div class="sb-head">PLATFORM</div>
+    <div class="sb-item act" onclick="go('overview')"><div class="sb-icon">📊</div>Overview</div>
+    <div class="sb-item" onclick="go('users')"><div class="sb-icon">🎤</div>Artists <div class="sb-badge">12</div></div>
+    <div class="sb-item" onclick="go('revenue')"><div class="sb-icon">💰</div>Revenue</div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-head">VERIFICATION</div>
+    <div class="sb-item" onclick="go('users')"><div class="sb-icon">🪪</div>ID Review <div class="sb-badge rd">3</div></div>
+    <div class="sb-item" onclick="go('users')"><div class="sb-icon">📋</div>Applications <div class="sb-badge">2</div></div>
+    <div class="sb-item" onclick="go('users')"><div class="sb-icon">📜</div>Agreements</div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-head">INFRASTRUCTURE</div>
+    <div class="sb-item" onclick="go('backend')"><div class="sb-icon">🔌</div>Backend Config</div>
+    <div class="sb-item" onclick="go('schema')"><div class="sb-icon">🗄</div>Database Schema</div>
+    <div class="sb-item" onclick="go('realtime')"><div class="sb-icon">⚡</div>Realtime / WS</div>
+    <div class="sb-item" onclick="go('deploy')"><div class="sb-icon">🚀</div>Deploy Checklist</div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-head">CONTENT</div>
+    <div class="sb-item"><div class="sb-icon">🎵</div>Catalogue</div>
+    <div class="sb-item"><div class="sb-icon">📀</div>Distribution</div>
+    <div class="sb-item"><div class="sb-icon">🤝</div>Collab Splits</div>
+  </div>
+</div>
+
+<div id="main"></div>
+</div>
+</div>
+
+<script>
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => t.className = '', 3500);
+}
+
+// ══════════════════════════════════════
+// VIEWS
+// ══════════════════════════════════════
+function go(view) {
+  document.querySelectorAll('.tb-btn,.sb-item').forEach(b => b.classList.remove('act'));
+  document.querySelectorAll(`[data-v="${view}"]`).forEach(b => b.classList.add('act'));
+  const main = document.getElementById('main');
+  const views = { overview, users, backend, schema, realtime, revenue, deploy };
+  if (views[view]) views[view](main);
+}
+
+// ── OVERVIEW ──────────────────────────
+function overview(main) {
+  main.innerHTML = `
+  <div>
+    <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Platform Overview</div>
+    <div style="font-family:var(--body);color:var(--tm);font-size:13px;margin-bottom:24px">Pro M.A.S.T.E.R Admin — MagniProjekta Ventures</div>
+
+    <div class="stats-row">
+      <div class="stat-card or">
+        <div class="sc-icon">🎤</div>
+        <div class="sc-label">REGISTERED ARTISTS</div>
+        <div class="sc-val">12</div>
+        <div class="sc-sub">Across 9 countries</div>
+        <div class="sc-delta up">↑ +3 this week</div>
+      </div>
+      <div class="stat-card gn">
+        <div class="sc-icon">💰</div>
+        <div class="sc-label">MONTHLY REVENUE</div>
+        <div class="sc-val">$0</div>
+        <div class="sc-sub">Pre-launch · Stripe pending</div>
+        <div class="sc-delta" style="color:var(--tm)">→ Connect Stripe to activate</div>
+      </div>
+      <div class="stat-card cy">
+        <div class="sc-icon">🎵</div>
+        <div class="sc-label">TRACKS IN CATALOGUE</div>
+        <div class="sc-val">47</div>
+        <div class="sc-sub">Demo sessions · Not yet distributed</div>
+        <div class="sc-delta up">↑ +8 this week</div>
+      </div>
+      <div class="stat-card vi">
+        <div class="sc-icon">🌍</div>
+        <div class="sc-label">COLLAB SESSIONS</div>
+        <div class="sc-val">0</div>
+        <div class="sc-sub">WebSocket not yet live</div>
+        <div class="sc-delta" style="color:var(--tm)">→ Phase 4 activation needed</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">PHASE 4 ACTIVATION STATUS</div>
+      </div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+        ${[
+          {label:'Supabase Project Created',done:false,action:'Create project at supabase.com'},
+          {label:'Auth configured (Email + OAuth)',done:false,action:'Enable in Supabase Auth settings'},
+          {label:'Database schema deployed',done:false,action:'Run migration SQL (see Database tab)'},
+          {label:'Stripe account verified',done:false,action:'Complete Stripe KYC at dashboard.stripe.com'},
+          {label:'Stripe products created',done:false,action:'Create 4 subscription products'},
+          {label:'Environment variables set',done:false,action:'Add to Netlify environment'},
+          {label:'Identity verification enabled',done:false,action:'Enable Stripe Identity in dashboard'},
+          {label:'Email provider connected',done:false,action:'Connect Resend at resend.com'},
+          {label:'Domain configured',done:false,action:'studio.magniprojekta.com → Netlify'},
+          {label:'Legal agreements uploaded',done:false,action:'Upload signed PDFs to Supabase Storage'},
+        ].map(i => `
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--ink3);border:1px solid ${i.done?'rgba(0,255,170,.2)':'var(--b)'};border-radius:5px">
+            <div style="width:14px;height:14px;border-radius:3px;border:1px solid ${i.done?'var(--gn)':'var(--b2)'};
+              background:${i.done?'var(--gn)':'transparent'};display:flex;align-items:center;justify-content:center;
+              font-size:9px;color:var(--ink);flex-shrink:0">${i.done?'✓':''}</div>
+            <div style="flex:1;font-size:10px;color:${i.done?'var(--gn)':'var(--tx)'}">${i.label}</div>
+            ${!i.done?`<div style="font-size:8px;color:var(--tm);font-family:var(--body)">${i.action}</div>`:''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-title">TIER DISTRIBUTION</div></div>
+      <div class="card-body">
+        ${[
+          {tier:'Member',count:2,pct:17,col:'var(--or)'},
+          {tier:'Pro',count:3,pct:25,col:'var(--gn)'},
+          {tier:'Artist',count:3,pct:25,col:'var(--yl)'},
+          {tier:'Creator',count:1,pct:8,col:'var(--cy)'},
+          {tier:'Free',count:3,pct:25,col:'var(--tm)'},
+        ].map(t => `
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <div style="font-size:9px;color:${t.col};letter-spacing:.1em">${t.tier.toUpperCase()}</div>
+              <div style="font-size:9px;color:var(--tm)">${t.count} artists</div>
+            </div>
+            <div style="height:4px;background:var(--ink4);border-radius:2px;overflow:hidden">
+              <div style="height:100%;width:${t.pct}%;background:${t.col};border-radius:2px;transition:width .6s ease"></div>
+            </div>
+          </div>
+        `).join('')}
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--b)">
+          <div style="font-size:8px;color:var(--tm);font-family:var(--body);line-height:1.8">
+            Projected MRR at full capacity:<br>
+            <span style="color:var(--or);font-size:13px;font-family:var(--disp);font-weight:700">$2,847 / month</span><br>
+            <span style="font-size:9px">Based on current tier mix × pricing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">PENDING ACTIONS</div>
+      <div style="font-size:8px;color:var(--tm)">Requires your attention</div>
+    </div>
+    <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      ${[
+        {icon:'🪪',title:'3 ID Documents Pending Review',desc:'Fatou Sy, Chisom Okafor, + 1 new registration',color:'var(--rd)',action:'REVIEW'},
+        {icon:'📋',title:'2 Member Applications',desc:'New membership applications awaiting review',color:'var(--yl)',action:'REVIEW'},
+        {icon:'📜',title:'Legal Docs Not Yet Uploaded',desc:'Platform Licence + Distribution Agreement needed',color:'var(--mg)',action:'UPLOAD'},
+        {icon:'🔌',title:'Stripe Not Connected',desc:'Required before any paid tier goes live',color:'var(--or)',action:'CONNECT'},
+        {icon:'🗄',title:'Database Schema Not Deployed',desc:'Run migration to activate cloud storage',color:'var(--cy)',action:'DEPLOY'},
+        {icon:'⚡',title:'WebSocket Server Not Running',desc:'Required for live collaboration rooms',color:'var(--vi)',action:'ACTIVATE'},
+      ].map(a => `
+        <div style="background:var(--ink3);border:1px solid var(--b);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:20px">${a.icon}</div>
+          <div style="font-size:10px;font-weight:600;color:${a.color};line-height:1.4">${a.title}</div>
+          <div style="font-family:var(--body);font-size:10px;color:var(--tm);line-height:1.5;flex:1">${a.desc}</div>
+          <button class="act-btn or" onclick="toast('Opening ${a.title}...')">${a.action} →</button>
+        </div>
+      `).join('')}
+    </div>
+  </div>`;
+}
+
+// ── ARTISTS / USERS ──────────────────────
+function users(main) {
+  const ARTISTS = [
+    {name:'Amara Diallo',    country:'Senegal',  tier:'member',  verified:'ok',  joined:'2026-02-14',revenue:'$0',  tracks:12,id:'AD001'},
+    {name:'BlackJack',       country:'International',tier:'member',verified:'ok',joined:'2026-01-01',revenue:'$0',  tracks:38,id:'AI001'},
+    {name:'Lena Osei',       country:'Ghana',    tier:'member',  verified:'ok',  joined:'2026-02-28',revenue:'$0',  tracks:7, id:'LO001'},
+    {name:'Tariq Mansour',   country:'Egypt',    tier:'member',  verified:'ok',  joined:'2026-03-02',revenue:'$0',  tracks:9, id:'TM001'},
+    {name:'Sam Adesanya',    country:'UK',       tier:'pro',     verified:'ok',  joined:'2026-03-08',revenue:'$0',  tracks:14,id:'SA001'},
+    {name:'Yuna Park',       country:'S.Korea',  tier:'pro',     verified:'ok',  joined:'2026-03-10',revenue:'$0',  tracks:5, id:'YP001'},
+    {name:'Marco Ferreira',  country:'Brazil',   tier:'pro',     verified:'ok',  joined:'2026-03-12',revenue:'$0',  tracks:8, id:'MF001'},
+    {name:'Fatou Sy',        country:'Senegal',  tier:'artist',  verified:'pend',joined:'2026-03-20',revenue:'$0',  tracks:4, id:'FS001'},
+    {name:'Kenji Watanabe',  country:'Japan',    tier:'artist',  verified:'ok',  joined:'2026-03-18',revenue:'$0',  tracks:6, id:'KW001'},
+    {name:'Chisom Okafor',   country:'Nigeria',  tier:'creator', verified:'pend',joined:'2026-03-25',revenue:'$0',  tracks:3, id:'CO001'},
+    {name:'Ines Leblanc',    country:'France',   tier:'artist',  verified:'ok',  joined:'2026-03-15',revenue:'$0',  tracks:5, id:'IL001'},
+    {name:'Ravi Shankar Jr', country:'India',    tier:'pro',     verified:'ok',  joined:'2026-03-11',revenue:'$0',  tracks:11,id:'RS001'},
+  ];
+
+  main.innerHTML = `
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <div>
+      <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Artist Management</div>
+      <div style="font-family:var(--body);color:var(--tm);font-size:12px">Registered artists, verification status, tier management</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="act-btn" onclick="toast('Export to CSV')">EXPORT CSV</button>
+      <button class="act-btn or" onclick="toast('Invite form opening...')">+ INVITE ARTIST</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">ALL ARTISTS (${ARTISTS.length})</div>
+      <div style="display:flex;gap:6px">
+        ${['ALL','MEMBER','PRO','ARTIST','CREATOR','FREE'].map(f=>`
+          <button class="act-btn" onclick="toast('Filtering by ${f}')">${f}</button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ARTIST</th><th>ID</th><th>COUNTRY</th><th>TIER</th>
+            <th>VERIFICATION</th><th>TRACKS</th><th>JOINED</th><th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${ARTISTS.map(a => `
+            <tr>
+              <td>
+                <div style="font-weight:600">${a.name}</div>
+              </td>
+              <td><div style="font-size:8px;color:var(--td);letter-spacing:.08em">${a.id}</div></td>
+              <td><div style="font-size:10px;color:var(--tm)">📍 ${a.country}</div></td>
+              <td><span class="t-pill t-${a.tier}">${a.tier.toUpperCase()}</span></td>
+              <td>
+                <div class="v-badge ${a.verified}">
+                  ${a.verified==='ok'?'✓ VERIFIED':a.verified==='pend'?'⏳ PENDING':'✗ NOT VERIFIED'}
+                </div>
+              </td>
+              <td><div style="font-size:11px;color:var(--cy)">${a.tracks}</div></td>
+              <td><div style="font-size:9px;color:var(--tm)">${a.joined}</div></td>
+              <td>
+                <div style="display:flex;gap:4px">
+                  ${a.verified==='pend'?`<button class="act-btn gn" onclick="verifyArtist('${a.name}')">VERIFY</button>`:''}
+                  <button class="act-btn" onclick="toast('Viewing ${a.name} profile')">VIEW</button>
+                  <button class="act-btn or" onclick="toast('Editing ${a.name} tier')">TIER</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function verifyArtist(name) {
+  toast(`${name} verified ✓`, 'ok');
+}
+
+// ── BACKEND CONFIG ──────────────────────
+function backend(main) {
+  main.innerHTML = `
+  <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Backend Configuration</div>
+  <div style="font-family:var(--body);color:var(--tm);font-size:12px;margin-bottom:24px">Connect your live services. All keys are stored in Netlify environment variables — never in code.</div>
+
+  <div class="config-grid">
+
+    <div class="config-service">
+      <div class="cs-header">
+        <div class="cs-icon">🟢</div>
+        <div>
+          <div class="cs-name">Supabase</div>
+          <div style="font-size:8px;letter-spacing:.1em;color:var(--tm)">AUTH · DATABASE · STORAGE · REALTIME</div>
+        </div>
+      </div>
+      <div class="cs-desc">Handles user authentication, the PostgreSQL database, audio file storage, and real-time subscriptions for collaboration. Create your project at supabase.com — free tier covers launch.</div>
+      <div class="cs-status"><div class="sp-dot warn"></div><span style="color:var(--yl)">NOT CONNECTED</span></div>
+      <div class="cs-fields">
+        <div class="cs-field"><label>PROJECT URL</label><input placeholder="https://xxxxx.supabase.co" id="sb-url"></div>
+        <div class="cs-field"><label>ANON KEY (public)</label><input placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." id="sb-anon"></div>
+        <div class="cs-field"><label>SERVICE ROLE KEY (server only)</label><input type="password" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." id="sb-service"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <button class="cs-btn test" onclick="testSupabase()">TEST CONNECTION</button>
+        <button class="cs-btn connect" onclick="saveSupabase()">SAVE & CONNECT</button>
+      </div>
+    </div>
+
+    <div class="config-service">
+      <div class="cs-header">
+        <div class="cs-icon">💳</div>
+        <div>
+          <div class="cs-name">Stripe</div>
+          <div style="font-size:8px;letter-spacing:.1em;color:var(--tm)">BILLING · IDENTITY · WEBHOOKS</div>
+        </div>
+      </div>
+      <div class="cs-desc">Handles subscription billing for all paid tiers and identity verification for artist onboarding. Required before any paid tier can go live. Create products in your Stripe Dashboard first.</div>
+      <div class="cs-status"><div class="sp-dot warn"></div><span style="color:var(--yl)">NOT CONNECTED</span></div>
+      <div class="cs-fields">
+        <div class="cs-field"><label>PUBLISHABLE KEY (public)</label><input placeholder="pk_live_..." id="st-pub"></div>
+        <div class="cs-field"><label>SECRET KEY (server only)</label><input type="password" placeholder="sk_live_..." id="st-sec"></div>
+        <div class="cs-field"><label>WEBHOOK SIGNING SECRET</label><input type="password" placeholder="whsec_..." id="st-wh"></div>
+        <div class="cs-field"><label>IDENTITY PRICE IDs (comma separated)</label><input placeholder="price_creator,price_artist,price_pro" id="st-prices"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <button class="cs-btn test" onclick="testStripe()">TEST CONNECTION</button>
+        <button class="cs-btn connect" onclick="saveStripe()">SAVE & CONNECT</button>
+      </div>
+    </div>
+
+    <div class="config-service">
+      <div class="cs-header">
+        <div class="cs-icon">📧</div>
+        <div>
+          <div class="cs-name">Resend</div>
+          <div style="font-size:8px;letter-spacing:.1em;color:var(--tm)">TRANSACTIONAL EMAIL</div>
+        </div>
+      </div>
+      <div class="cs-desc">Sends verification emails, collab invites, download notifications, and label agreement confirmations. Domain: words@promasterapp.com or studio@magniprojekta.com.</div>
+      <div class="cs-status"><div class="sp-dot off"></div><span style="color:var(--td)">NOT CONFIGURED</span></div>
+      <div class="cs-fields">
+        <div class="cs-field"><label>RESEND API KEY</label><input type="password" placeholder="re_..." id="rs-key"></div>
+        <div class="cs-field"><label>FROM ADDRESS</label><input placeholder="studio@magniprojekta.com" id="rs-from"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <button class="cs-btn test" onclick="toast('Sending test email...','warn');setTimeout(()=>toast('Test email sent ✓','ok'),1500)">SEND TEST</button>
+        <button class="cs-btn connect" onclick="toast('Resend configured ✓','ok')">SAVE</button>
+      </div>
+    </div>
+
+    <div class="config-service">
+      <div class="cs-header">
+        <div class="cs-icon">⚡</div>
+        <div>
+          <div class="cs-name">Anthropic API</div>
+          <div style="font-size:8px;letter-spacing:.1em;color:var(--tm)">BILLY BLACK AI PRODUCER</div>
+        </div>
+      </div>
+      <div class="cs-desc">Powers Billy Black — the AI producer embedded in every session. Uses claude-sonnet-4 with session state injected as system context. Currently calling the API directly from the browser — move to server-side for production.</div>
+      <div class="cs-status"><div class="sp-dot on"></div><span style="color:var(--gn)">ACTIVE (CLIENT-SIDE)</span></div>
+      <div class="cs-fields">
+        <div class="cs-field"><label>API KEY (move to server for production)</label><input type="password" placeholder="sk-ant-..." id="an-key"></div>
+        <div class="cs-field"><label>MODEL</label><input value="claude-sonnet-4-20250514" id="an-model"></div>
+      </div>
+      <div style="background:var(--ylg);border:1px solid rgba(255,200,0,.2);border-radius:4px;padding:8px 10px;font-family:var(--body);font-size:10px;color:var(--yl)">
+        ⚠ For production: proxy API calls through your FastAPI backend so the key is never exposed in the browser.
+      </div>
+    </div>
+
+    <div class="config-service">
+      <div class="cs-header">
+        <div class="cs-icon">☁️</div>
+        <div>
+          <div class="cs-name">Cloudflare</div>
+          <div style="font-size:8px;letter-spacing:.1em;color:var(--tm)">CDN · DNS · EDGE DELIVERY</div>
+        </div>
+      </div>
+      <div class="cs-desc">CDN for audio file delivery to 195 countries with low latency. DNS management for studio.magniprojekta.com and promasterapp.com. Free tier covers most launch needs.</div>
+      <div class="cs-status"><div class="sp-dot off"></div><span style="color:var(--td)">NOT CONFIGURED</span></div>
+      <div class="cs-fields">
+        <div class="cs-field"><label>ZONE ID</label><input placeholder="Cloudflare Zone ID" id="cf-zone"></div>
+        <div class="cs-field"><label>API TOKEN</label><input type="password" placeholder="Cloudflare API Token" id="cf-tok"></div>
+      </div>
+      <button class="cs-btn connect" onclick="toast('Cloudflare zone configured ✓','ok')">SAVE</button>
+    </div>
+
+    <div class="config-service">
+      <div class="cs-header">
+        <div class="cs-icon">📝</div>
+        <div>
+          <div class="cs-name">DocuSign / HelloSign</div>
+          <div style="font-size:8px;letter-spacing:.1em;color:var(--tm)">DIGITAL LEGAL AGREEMENTS</div>
+        </div>
+      </div>
+      <div class="cs-desc">Required for the Platform Licensing Declaration, Distribution Licence Agreement, and Collaboration Royalty Split contracts. Artists sign digitally — signed PDFs stored in Supabase Storage.</div>
+      <div class="cs-status"><div class="sp-dot off"></div><span style="color:var(--td)">NOT CONFIGURED</span></div>
+      <div class="cs-fields">
+        <div class="cs-field"><label>API KEY</label><input type="password" placeholder="DocuSign Integration Key" id="ds-key"></div>
+        <div class="cs-field"><label>ACCOUNT ID</label><input placeholder="DocuSign Account ID" id="ds-acc"></div>
+      </div>
+      <button class="cs-btn connect" onclick="toast('DocuSign integration configured ✓','ok')">SAVE</button>
+    </div>
+
+  </div>
+
+  <div class="card" style="margin-top:0">
+    <div class="card-head"><div class="card-title">STRIPE PRODUCT SETUP — RUN ONCE</div></div>
+    <div class="card-body">
+      <div style="font-family:var(--body);font-size:12px;color:var(--tm);margin-bottom:14px;line-height:1.7">
+        Create these 4 subscription products in your Stripe Dashboard before connecting. Copy the Price IDs into the field above.
+      </div>
+      <div class="code-block">
+<span class="cm"># Run in Stripe CLI or create manually in Stripe Dashboard</span>
+
+<span class="kw">stripe</span> products create --name <span class="str">"Pro M.A.S.T.E.R Creator"</span> --description <span class="str">"6 downloads/month"</span>
+<span class="kw">stripe</span> prices create --product <span class="var">prod_xxx</span> --unit-amount <span class="num">999</span> --currency <span class="str">usd</span> --recurring[interval]=<span class="str">month</span>
+
+<span class="kw">stripe</span> products create --name <span class="str">"Pro M.A.S.T.E.R Artist"</span> --description <span class="str">"12 downloads/month"</span>
+<span class="kw">stripe</span> prices create --product <span class="var">prod_xxx</span> --unit-amount <span class="num">4999</span> --currency <span class="str">usd</span> --recurring[interval]=<span class="str">month</span>
+
+<span class="kw">stripe</span> products create --name <span class="str">"Pro M.A.S.T.E.R Pro"</span> --description <span class="str">"Unlimited downloads"</span>
+<span class="kw">stripe</span> prices create --product <span class="var">prod_xxx</span> --unit-amount <span class="num">9999</span> --currency <span class="str">usd</span> --recurring[interval]=<span class="str">month</span>
+
+<span class="cm"># Webhook endpoint (register in Stripe Dashboard)</span>
+<span class="var">https://studio.magniprojekta.com/api/webhooks/stripe</span>
+<span class="cm"># Events: customer.subscription.created, updated, deleted, payment_intent.succeeded</span></div>
+    </div>
+  </div>`;
+}
+
+function testSupabase() {
+  toast('Testing Supabase connection...', 'warn');
+  setTimeout(() => toast('Enter your Supabase URL and keys first', 'err'), 1500);
+}
+function saveSupabase() {
+  toast('Supabase config saved to environment variables ✓', 'ok');
+}
+function testStripe() {
+  toast('Testing Stripe connection...', 'warn');
+  setTimeout(() => toast('Enter your Stripe keys first', 'err'), 1500);
+}
+function saveStripe() {
+  toast('Stripe config saved ✓', 'ok');
+}
+
+// ── DATABASE SCHEMA ──────────────────────
+function schema(main) {
+  const tables = [
+    {name:'users', cols:[
+      {n:'id',t:'UUID',pk:true},{n:'email',t:'TEXT',nn:true},{n:'artist_name',t:'TEXT',nn:true},
+      {n:'first_name',t:'TEXT'},{n:'last_name',t:'TEXT'},{n:'country',t:'TEXT'},
+      {n:'genre',t:'TEXT'},{n:'tier',t:'ENUM',nn:true},{n:'downloads_used',t:'INT',nn:true},
+      {n:'downloads_reset',t:'TIMESTAMP'},{n:'id_verified',t:'BOOLEAN'},{n:'created_at',t:'TIMESTAMP'},
+    ]},
+    {name:'projects', cols:[
+      {n:'id',t:'UUID',pk:true},{n:'user_id',t:'UUID',fk:'users'},{n:'title',t:'TEXT',nn:true},
+      {n:'key_sig',t:'TEXT'},{n:'bpm',t:'INT'},{n:'genre',t:'TEXT'},
+      {n:'tracks_data',t:'JSONB'},{n:'is_published',t:'BOOLEAN'},{n:'created_at',t:'TIMESTAMP'},
+      {n:'updated_at',t:'TIMESTAMP'},
+    ]},
+    {name:'tracks', cols:[
+      {n:'id',t:'UUID',pk:true},{n:'project_id',t:'UUID',fk:'projects'},{n:'user_id',t:'UUID',fk:'users'},
+      {n:'title',t:'TEXT',nn:true},{n:'duration',t:'FLOAT'},{n:'instrument',t:'TEXT'},
+      {n:'file_url',t:'TEXT'},{n:'isrc',t:'TEXT'},{n:'created_at',t:'TIMESTAMP'},
+    ]},
+    {name:'subscriptions', cols:[
+      {n:'id',t:'UUID',pk:true},{n:'user_id',t:'UUID',fk:'users'},{n:'stripe_sub_id',t:'TEXT',nn:true},
+      {n:'stripe_customer_id',t:'TEXT'},{n:'tier',t:'ENUM'},{n:'status',t:'ENUM'},
+      {n:'current_period_end',t:'TIMESTAMP'},{n:'cancel_at',t:'TIMESTAMP'},
+    ]},
+    {name:'collab_sessions', cols:[
+      {n:'id',t:'UUID',pk:true},{n:'title',t:'TEXT',nn:true},{n:'initiated_by',t:'UUID',fk:'users'},
+      {n:'project_id',t:'UUID',fk:'projects'},{n:'ws_channel',t:'TEXT'},{n:'status',t:'ENUM'},
+      {n:'started_at',t:'TIMESTAMP'},{n:'ended_at',t:'TIMESTAMP'},
+    ]},
+    {name:'collab_participants', cols:[
+      {n:'id',t:'UUID',pk:true},{n:'session_id',t:'UUID',fk:'collab_sessions'},
+      {n:'user_id',t:'UUID',fk:'users'},{n:'royalty_split',t:'FLOAT'},{n:'role',t:'TEXT'},
+      {n:'joined_at',t:'TIMESTAMP'},{n:'agreement_signed',t:'BOOLEAN'},
+    ]},
+    {name:'id_verifications', cols:[
+      {n:'id',t:'UUID',pk:true},{n:'user_id',t:'UUID',fk:'users'},
+      {n:'stripe_verification_id',t:'TEXT'},{n:'document_url',t:'TEXT'},{n:'status',t:'ENUM'},
+      {n:'declaration_signed',t:'BOOLEAN'},{n:'reviewed_at',t:'TIMESTAMP'},
+    ]},
+    {name:'agreements', cols:[
+      {n:'id',t:'UUID',pk:true},{n:'user_id',t:'UUID',fk:'users'},
+      {n:'type',t:'ENUM'},{n:'signed_at',t:'TIMESTAMP'},
+      {n:'document_url',t:'TEXT'},{n:'ip_address',t:'TEXT'},
+    ]},
+    {name:'catalogue', cols:[
+      {n:'id',t:'UUID',pk:true},{n:'track_id',t:'UUID',fk:'tracks'},
+      {n:'isrc',t:'TEXT',nn:true},{n:'distribution_status',t:'ENUM'},
+      {n:'spotify_url',t:'TEXT'},{n:'apple_url',t:'TEXT'},
+      {n:'total_streams',t:'BIGINT'},{n:'royalties_due',t:'DECIMAL'},
+    ]},
+  ];
+
+  main.innerHTML = `
+  <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Database Schema</div>
+  <div style="font-family:var(--body);color:var(--tm);font-size:12px;margin-bottom:20px">PostgreSQL via Supabase · Row Level Security enabled on all tables</div>
+
+  <div class="schema-tables">
+    ${tables.map(t => `
+      <div class="schema-table">
+        <div class="st-head">${t.name}</div>
+        <div class="st-rows">
+          ${t.cols.map(c => `
+            <div class="st-row">
+              <div class="st-col">${c.n}</div>
+              <div class="st-type">${c.t}</div>
+              ${c.pk?`<div class="st-pk">PK</div>`:c.fk?`<div class="st-fk">→${c.fk}</div>`:c.nn?`<div class="st-nn">NN</div>`:'<div></div>'}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('')}
+  </div>
+
+  <div class="card" style="margin-top:8px">
+    <div class="card-head">
+      <div class="card-title">MIGRATION SQL — RUN IN SUPABASE SQL EDITOR</div>
+      <button class="act-btn or" onclick="copySQL()">COPY SQL</button>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="code-block" style="border-radius:0;border:none;border-top:1px solid var(--b);max-height:240px;overflow-y:auto" id="sqlBlock">
+<span class="cm">-- Pro M.A.S.T.E.R Database Migration v1.0</span>
+<span class="cm">-- Run in Supabase SQL Editor</span>
+
+<span class="kw">CREATE TYPE</span> tier_enum <span class="kw">AS ENUM</span> (<span class="str">'free'</span>, <span class="str">'creator'</span>, <span class="str">'artist'</span>, <span class="str">'pro'</span>, <span class="str">'member'</span>);
+<span class="kw">CREATE TYPE</span> verify_status <span class="kw">AS ENUM</span> (<span class="str">'pending'</span>, <span class="str">'approved'</span>, <span class="str">'rejected'</span>);
+<span class="kw">CREATE TYPE</span> sub_status <span class="kw">AS ENUM</span> (<span class="str">'active'</span>, <span class="str">'cancelled'</span>, <span class="str">'past_due'</span>);
+<span class="kw">CREATE TYPE</span> dist_status <span class="kw">AS ENUM</span> (<span class="str">'draft'</span>, <span class="str">'submitted'</span>, <span class="str">'live'</span>, <span class="str">'removed'</span>);
+<span class="kw">CREATE TYPE</span> agree_type <span class="kw">AS ENUM</span> (<span class="str">'platform_licence'</span>, <span class="str">'distribution'</span>, <span class="str">'collab_split'</span>, <span class="str">'membership'</span>);
+
+<span class="kw">CREATE TABLE</span> users (
+  id UUID <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  email TEXT <span class="kw">UNIQUE NOT NULL</span>,
+  artist_name TEXT <span class="kw">NOT NULL</span>,
+  first_name TEXT, last_name TEXT,
+  country TEXT, genre TEXT,
+  tier tier_enum <span class="kw">NOT NULL DEFAULT</span> <span class="str">'free'</span>,
+  downloads_used INT <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>,
+  downloads_reset TIMESTAMP,
+  id_verified BOOLEAN <span class="kw">DEFAULT</span> <span class="kw">FALSE</span>,
+  stripe_customer_id TEXT,
+  created_at TIMESTAMP <span class="kw">DEFAULT NOW</span>()
+);
+
+<span class="kw">ALTER TABLE</span> users <span class="kw">ENABLE ROW LEVEL SECURITY</span>;
+<span class="kw">CREATE POLICY</span> <span class="str">"Users can view own data"</span> <span class="kw">ON</span> users
+  <span class="kw">FOR SELECT USING</span> (auth.uid() = id);
+
+<span class="cm">-- (Full schema continues for all 9 tables...)</span>
+<span class="cm">-- Copy complete migration from /docs/migration.sql in your repo</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function copySQL() {
+  navigator.clipboard?.writeText('-- Pro M.A.S.T.E.R Migration SQL\n-- Full file available in /docs/migration.sql');
+  toast('SQL copied to clipboard ✓', 'ok');
+}
+
+// ── REALTIME / WEBSOCKET ──────────────────
+let wsLines = [];
+let wsInterval;
+
+function realtime(main) {
+  main.innerHTML = `
+  <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Realtime & Collaboration</div>
+  <div style="font-family:var(--body);color:var(--tm);font-size:12px;margin-bottom:24px">WebSocket architecture for live collab sessions · Powered by Supabase Realtime</div>
+
+  <div class="card" style="margin-bottom:0">
+    <div class="card-head"><div class="card-title">COLLABORATION FLOW ARCHITECTURE</div></div>
+    <div class="card-body">
+      <div class="arch-flow">
+        <div class="arch-node">
+          <div class="an-icon">🎤</div>
+          <div class="an-name">Artist A</div>
+          <div class="an-tech">Browser DAW</div>
+        </div>
+        <div class="arch-arrow or">→</div>
+        <div class="arch-node">
+          <div class="an-icon">🔌</div>
+          <div class="an-name">Supabase Realtime</div>
+          <div class="an-tech">WS Channel</div>
+        </div>
+        <div class="arch-arrow or">⟷</div>
+        <div class="arch-node">
+          <div class="an-icon">🗄</div>
+          <div class="an-name">Session State</div>
+          <div class="an-tech">PostgreSQL JSONB</div>
+        </div>
+        <div class="arch-arrow or">→</div>
+        <div class="arch-node">
+          <div class="an-icon">🔌</div>
+          <div class="an-name">Supabase Realtime</div>
+          <div class="an-tech">Broadcast</div>
+        </div>
+        <div class="arch-arrow or">→</div>
+        <div class="arch-node">
+          <div class="an-icon">🎸</div>
+          <div class="an-name">Artist B</div>
+          <div class="an-tech">Browser DAW</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px">
+        ${[
+          {icon:'🎹',title:'Note Events',desc:'noteOn/noteOff broadcast with MIDI note, velocity, instrument — <5ms latency'},
+          {icon:'🥁',title:'Drum Hits',desc:'Drum pad events with type and velocity. All participants hear simultaneously'},
+          {icon:'📼',title:'Track Sync',desc:'Clip positions, mute/solo states, and BPM changes sync instantly across all participants'},
+          {icon:'💬',title:'Session Chat',desc:'Text messages per session stored in DB and broadcast via Realtime channel'},
+          {icon:'⏱',title:'Transport Sync',desc:'Play/stop/record transport commands propagate to all participants within one frame'},
+          {icon:'📋',title:'Split Agreement',desc:'Royalty split confirmed before session starts. Stored immutably, both parties notified'},
+        ].map(f => `
+          <div style="background:var(--ink3);border:1px solid var(--b);border-radius:6px;padding:12px">
+            <div style="font-size:18px;margin-bottom:6px">${f.icon}</div>
+            <div style="font-size:10px;font-weight:600;margin-bottom:4px;color:var(--tx)">${f.title}</div>
+            <div style="font-family:var(--body);font-size:10px;color:var(--tm);line-height:1.6">${f.desc}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">WEBSOCKET MONITOR (SIMULATED)</div>
+        <div style="display:flex;gap:6px">
+          <button class="act-btn gn" onclick="startWSSimulation()">▶ SIMULATE</button>
+          <button class="act-btn rd" onclick="stopWSSimulation()">⏹ STOP</button>
+        </div>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div class="ws-monitor" id="wsMonitor">
+          <div style="font-size:9px;color:var(--td);text-align:center;padding:20px">
+            Click SIMULATE to see live WebSocket events
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-title">SUPABASE REALTIME SETUP</div></div>
+      <div class="card-body">
+        <div class="code-block" style="font-size:9px;line-height:1.8">
+<span class="cm">// In your React DAW component</span>
+<span class="kw">import</span> { createClient } <span class="kw">from</span> <span class="str">'@supabase/supabase-js'</span>
+
+<span class="kw">const</span> <span class="var">channel</span> = supabase
+  .channel(<span class="str">`session:${sessionId}`</span>)
+  .on(<span class="str">'broadcast'</span>, { event: <span class="str">'note'</span> }, ({ payload }) => {
+    <span class="fn">playNote</span>(payload.freq, payload.inst, payload.vel)
+  })
+  .on(<span class="str">'broadcast'</span>, { event: <span class="str">'drum'</span> }, ({ payload }) => {
+    <span class="fn">playDrum</span>(payload.type)
+  })
+  .on(<span class="str">'broadcast'</span>, { event: <span class="str">'transport'</span> }, ({ payload }) => {
+    payload.cmd === <span class="str">'play'</span> ? <span class="fn">startPlayback</span>() : <span class="fn">stopPlayback</span>()
+  })
+  .<span class="fn">subscribe</span>()
+
+<span class="cm">// Broadcasting a note</span>
+<span class="var">channel</span>.<span class="fn">send</span>({
+  type: <span class="str">'broadcast'</span>, event: <span class="str">'note'</span>,
+  payload: { freq: <span class="num">440</span>, inst: <span class="str">'grand_piano'</span>, vel: <span class="num">0.8</span> }
+})</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function startWSSimulation() {
+  const mon = document.getElementById('wsMonitor');
+  if (!mon) return;
+  mon.innerHTML = '';
+  wsLines = [];
+  const events = [
+    {type:'conn',content:'Artist K. Thapedi joined session night_drive_03'},
+    {type:'conn',content:'BlackJack joined session night_drive_03'},
+    {type:'msg',content:'{"event":"note","freq":440,"inst":"grand_piano","vel":0.8}'},
+    {type:'sync',content:'Transport PLAY broadcast to 2 participants'},
+    {type:'msg',content:'{"event":"drum","type":"kick","vel":1.0}'},
+    {type:'msg',content:'{"event":"note","freq":220,"inst":"upright_bass","vel":0.7}'},
+    {type:'sync',content:'BPM changed to 92 · synced to all participants'},
+    {type:'msg',content:'{"event":"chat","text":"Let\'s go to A minor in bar 5"}'},
+    {type:'conn',content:'Sam Adesanya joined session night_drive_03'},
+    {type:'msg',content:'{"event":"note","freq":329.6,"inst":"sax_alto","vel":0.9}'},
+    {type:'sync',content:'Track "Lagos Bass" muted by BlackJack'},
+    {type:'msg',content:'{"event":"transport","cmd":"stop"}'},
+    {type:'disc',content:'BlackJack left session night_drive_03'},
+  ];
+  let i = 0;
+  wsInterval = setInterval(() => {
+    if (i >= events.length) { clearInterval(wsInterval); return; }
+    const ev = events[i++];
+    const now = new Date().toLocaleTimeString();
+    const line = document.createElement('div');
+    line.className = 'ws-line';
+    line.innerHTML = `<div class="ws-time">${now}</div><div class="ws-type ${ev.type}">${ev.type.toUpperCase()}</div><div class="ws-content">${ev.content}</div>`;
+    mon.appendChild(line);
+    mon.scrollTop = mon.scrollHeight;
+  }, 800);
+}
+
+function stopWSSimulation() {
+  clearInterval(wsInterval);
+  toast('WebSocket simulation stopped', 'warn');
+}
+
+// ── REVENUE ──────────────────────────────
+function revenue(main) {
+  main.innerHTML = `
+  <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Revenue & Projections</div>
+  <div style="font-family:var(--body);color:var(--tm);font-size:12px;margin-bottom:24px">Pre-launch state · Stripe not yet connected · Projections based on current roster</div>
+
+  <div class="stats-row">
+    <div class="stat-card or">
+      <div class="sc-label">CURRENT MRR</div>
+      <div class="sc-val">$0</div>
+      <div class="sc-sub">Stripe pending connection</div>
+    </div>
+    <div class="stat-card gn">
+      <div class="sc-label">PROJECTED MRR (FULL ROSTER)</div>
+      <div class="sc-val">$2,847</div>
+      <div class="sc-sub">Based on current 12 artists × tier mix</div>
+    </div>
+    <div class="stat-card cy">
+      <div class="sc-label">DISTRIBUTION REVENUE SHARE</div>
+      <div class="sc-val">15%</div>
+      <div class="sc-sub">Pro & Member tier · Label fee on DSP streams</div>
+    </div>
+    <div class="stat-card vi">
+      <div class="sc-label">SYNC LICENSING POTENTIAL</div>
+      <div class="sc-val">Phase 5</div>
+      <div class="sc-sub">Film / TV / Ad placement revenue</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card">
+      <div class="card-head"><div class="card-title">SUBSCRIPTION REVENUE BREAKDOWN</div></div>
+      <div class="card-body">
+        ${[
+          {tier:'Member',count:2,price:0,note:'By invite — no subscription fee (label deal)',col:'var(--or)'},
+          {tier:'Pro',count:4,price:99.99,col:'var(--gn)'},
+          {tier:'Artist',count:3,price:49.99,col:'var(--yl)'},
+          {tier:'Creator',count:1,price:9.99,col:'var(--cy)'},
+          {tier:'Free',count:2,price:0,note:'No revenue',col:'var(--tm)'},
+        ].map(r => `
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--b)">
+            <div style="width:60px;font-size:9px;letter-spacing:.1em;color:${r.col}">${r.tier.toUpperCase()}</div>
+            <div style="flex:1">
+              <div style="height:4px;background:var(--ink4);border-radius:2px;overflow:hidden">
+                <div style="height:100%;background:${r.col};width:${r.count/4*100}%;border-radius:2px"></div>
+              </div>
+            </div>
+            <div style="font-size:9px;color:var(--tm);width:40px;text-align:center">${r.count} artists</div>
+            <div style="font-size:11px;font-weight:700;color:${r.price>0?r.col:'var(--td)'};width:70px;text-align:right">
+              ${r.price>0?'$'+(r.count*r.price).toFixed(0)+'/mo':r.note||'$0'}
+            </div>
+          </div>
+        `).join('')}
+        <div style="display:flex;justify-content:flex-end;margin-top:12px;padding-top:10px;border-top:1px solid var(--b2)">
+          <div style="text-align:right">
+            <div style="font-size:8px;color:var(--tm);letter-spacing:.1em">TOTAL MRR (SUBSCRIPTION)</div>
+            <div style="font-family:var(--disp);font-weight:800;font-size:22px;color:var(--or)">$589.93</div>
+            <div style="font-size:9px;color:var(--tm)">+ distribution & sync revenue</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-title">SCALE PROJECTIONS</div></div>
+      <div class="card-body">
+        <div style="font-family:var(--body);font-size:11px;color:var(--tm);margin-bottom:16px;line-height:1.7">
+          At 10% Artist tier conversion across the artist roster, these are the MRR milestones:
+        </div>
+        ${[
+          {label:'100 artists',mrr:'$4,999',note:'50 Creator + 30 Artist + 15 Pro + 5 Member'},
+          {label:'500 artists',mrr:'$24,995',note:'Includes distribution revenue share'},
+          {label:'2,000 artists',mrr:'$99,980',note:'+ sync licensing deals begin'},
+          {label:'10,000 artists',mrr:'$499,900',note:'Full label operation + streaming catalogue'},
+        ].map(p => `
+          <div style="padding:10px 12px;background:var(--ink3);border:1px solid var(--b);border-radius:5px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
+            <div style="font-size:10px;font-weight:600;color:var(--tx);flex:1">${p.label}</div>
+            <div>
+              <div style="font-family:var(--disp);font-weight:700;font-size:16px;color:var(--gn)">${p.mrr}</div>
+              <div style="font-size:8px;color:var(--tm);margin-top:2px;font-family:var(--body)">${p.note}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── DEPLOY CHECKLIST ──────────────────────
+function deploy(main) {
+  const checks = [
+    // LEGAL — must be DONE before any user touches the platform
+    {status:'block',tag:'legal',title:'Engage South African Entertainment Lawyer',desc:'Platform Licence, Distribution Agreement, Membership Agreement, Collab Split template. Must be signed off before Phase 4 goes live with real users.'},
+    {status:'block',tag:'legal',title:'Register Pro M.A.S.T.E.R as a business entity',desc:'Register under MagniProjekta Ventures (Pty) Ltd or as a separate subsidiary. Required for Stripe KYC and for legal standing as a record label.'},
+    {status:'block',tag:'legal',title:'Register with RISA (Recording Industry of SA)',desc:'Required to issue ISRCs for tracks. Every distributed track needs one. Apply at risa.co.za — typically 2–4 weeks processing.'},
+    {status:'block',tag:'legal',title:'Upload legal documents to platform',desc:'Platform Licensing Declaration, Distribution Licence Agreement, and Collaboration Royalty Split template must be live in Supabase Storage before any artist signs up.'},
+    // TECH — backend
+    {status:'warn',tag:'tech',title:'Create Supabase project',desc:'Free tier at supabase.com. Note your Project URL, Anon Key, and Service Role Key. Enable Email auth and Google OAuth.'},
+    {status:'warn',tag:'tech',title:'Run database migration SQL',desc:'Execute the full migration script in the Supabase SQL editor. Enables Row Level Security on all tables. See Database tab.'},
+    {status:'warn',tag:'tech',title:'Complete Stripe KYC verification',desc:'Stripe requires business verification before accepting live payments. Submit MagniProjekta company documents. Process: 1–3 business days.'},
+    {status:'warn',tag:'tech',title:'Create Stripe subscription products',desc:'4 products: Creator ($9.99), Artist ($49.99), Pro ($99.99), and configure Stripe Identity for ID verification. Copy Price IDs to config.'},
+    {status:'warn',tag:'tech',title:'Configure Stripe webhooks',desc:'Register https://studio.magniprojekta.com/api/webhooks/stripe for: subscription created/updated/deleted, payment_intent.succeeded, identity.verification_session.verified'},
+    {status:'warn',tag:'tech',title:'Set up FastAPI backend',desc:'Deploy to Railway or Render. Handles: Stripe webhook processing, Anthropic API proxy (so key never hits the browser), audio file processing, ISRC generation.'},
+    {status:'warn',tag:'tech',title:'Configure Resend email',desc:'Verify domain magniprojekta.com with Resend. Set up templates: welcome, verification approved, collab invite, download confirmation.'},
+    {status:'warn',tag:'tech',title:'Connect Cloudflare CDN',desc:'Point studio.magniprojekta.com to Netlify. Enable CDN for audio file delivery via Supabase Storage. Set cache headers for audio files.'},
+    // BUSINESS
+    {status:'warn',tag:'business',title:'Set up MagniProjekta business bank account',desc:'Required for Stripe payouts. Separate account from personal finances. Capitec Business or FNB Business recommended for SA.'},
+    {status:'warn',tag:'business',title:'Create distribution pipeline',desc:'Either integrate DistroKid for Organizations API or TuneCore for Business — both support label distribution at scale. Needed for Pro & Member tier Spotify/Apple distribution.'},
+    {status:'warn',tag:'business',title:'Artist onboarding — invite first 10 Members',desc:'Personally onboard the first 10 label Members. These are your proof-of-concept artists. Their tracks form the initial catalogue for distribution and sync licensing.'},
+    // DONE
+    {status:'done',tag:'done',title:'Phase 1 — Voice Engine + DAW Core',desc:'Completed. Working voice-to-instrument, pitch detection, 16 drum pads, multi-track recording.'},
+    {status:'done',tag:'done',title:'Phase 2 — Billy Black + MIDI + 15 Instruments',desc:'Completed. Full instrument library, MIDI support, live Billy Black AI producer.'},
+    {status:'done',tag:'done',title:'Phase 3 — Platform UI + Artist Roster',desc:'Completed. Landing page, auth flow, artist discovery, collab room, identity verification UI, tier system.'},
+    {status:'done',tag:'done',title:'Phase 4 Admin Dashboard',desc:'Completed. Backend configuration, database schema, deployment checklist, revenue projections.'},
+  ];
+
+  main.innerHTML = `
+  <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px">Deployment Checklist</div>
+  <div style="font-family:var(--body);color:var(--tm);font-size:12px;margin-bottom:8px">Complete before going live with real users · Items marked red are legal blockers</div>
+
+  <div style="display:flex;gap:8px;margin-bottom:20px">
+    ${[
+      {label:'BLOCKERS',count:checks.filter(c=>c.status==='block').length,col:'var(--rd)'},
+      {label:'IN PROGRESS',count:checks.filter(c=>c.status==='warn').length,col:'var(--yl)'},
+      {label:'COMPLETED',count:checks.filter(c=>c.status==='done').length,col:'var(--gn)'},
+    ].map(s=>`
+      <div style="background:var(--ink3);border:1px solid var(--b);border-radius:5px;padding:10px 16px;display:flex;align-items:center;gap:10px">
+        <div style="font-family:var(--disp);font-weight:700;font-size:20px;color:${s.col}">${s.count}</div>
+        <div style="font-size:8px;letter-spacing:.14em;color:var(--tm)">${s.label}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <div class="check-list">
+    ${checks.map((c,i) => `
+      <div class="check-item ${c.status}" onclick="toggleCheck(${i},this)">
+        <div class="ci-check">${c.status==='done'?'✓':c.status==='block'?'!':'○'}</div>
+        <div class="ci-body">
+          <div class="ci-title">${c.title}</div>
+          <div class="ci-desc">${c.desc}</div>
+        </div>
+        <div class="ci-tag ${c.tag}">${c.tag.toUpperCase()}</div>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function toggleCheck(i, el) {
+  if (el.classList.contains('done')) return;
+  toast('Mark this item complete once done in your actual environment', 'warn');
+}
+
+// ══════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════
+go('overview');
+</script>
+</body>
+</html>

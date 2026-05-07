@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro M.A.S.T.E.R — Complete Your Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0a0806;--ink2:#130e08;--ink3:#1c1610;--ink4:#261e14;
+  --amber:#c87820;--amber2:#e8a030;--amber3:#f0b848;--cream:#f0d898;
+  --teal:#1e3a58;--teal2:#3a6a90;
+  --b:rgba(200,120,32,0.12);--b2:rgba(200,120,32,0.25);--b3:rgba(200,120,32,0.45);
+  --tx:#e8d4a8;--tx2:#b89860;--tx3:#786040;--tx4:#483820;
+  --live:#40e080;--err:#ff5050;
+  --mono:'IBM Plex Mono',monospace;--disp:'Syne',sans-serif;--body:'DM Sans',sans-serif;
+}
+html,body{min-height:100%;background:var(--ink);color:var(--tx);font-family:var(--mono);
+  -webkit-font-smoothing:antialiased;padding:0}
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(200,120,32,0.07),transparent);pointer-events:none}
+
+/* STEPPER HEADER */
+#ob-header{
+  position:sticky;top:0;z-index:20;
+  background:linear-gradient(180deg,var(--ink2),rgba(13,10,6,0.97));
+  border-bottom:1px solid var(--b2);padding:16px 24px;
+  display:flex;align-items:center;gap:16px;
+}
+#ob-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--amber),transparent)}
+.ob-logo{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--amber2);flex-shrink:0}
+.ob-logo em{display:block;font-style:normal;font-size:7px;letter-spacing:.22em;color:var(--tx4);font-weight:400;font-family:var(--mono)}
+.ob-steps{display:flex;gap:0;flex:1;justify-content:center}
+.ob-step{display:flex;align-items:center;gap:0}
+.ob-step-num{width:24px;height:24px;border-radius:50%;border:1px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;
+  color:var(--tx4);background:var(--ink3);transition:.2s;flex-shrink:0}
+.ob-step.done .ob-step-num{background:var(--live);border-color:var(--live);color:var(--ink)}
+.ob-step.active .ob-step-num{background:var(--amber);border-color:var(--amber);
+  color:var(--ink);box-shadow:0 0 10px rgba(200,120,32,.4)}
+.ob-step-lbl{font-size:7px;letter-spacing:.14em;color:var(--tx4);margin:0 8px;
+  transition:.2s;white-space:nowrap}
+.ob-step.active .ob-step-lbl{color:var(--amber2)}
+.ob-step.done .ob-step-lbl{color:var(--live)}
+.ob-connector{width:32px;height:1px;background:var(--b2);flex-shrink:0}
+.ob-step.done + .ob-step .ob-connector,.ob-connector.done{background:var(--live)}
+
+/* MAIN */
+#ob-main{max-width:560px;margin:0 auto;padding:36px 24px 60px;position:relative;z-index:1}
+
+.step-panel{display:none}
+.step-panel.active{display:block;animation:spIn .3s ease}
+@keyframes spIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.step-title{font-family:var(--disp);font-weight:800;font-size:22px;color:var(--tx);margin-bottom:6px}
+.step-sub{font-family:var(--body);font-size:13px;color:var(--tx3);line-height:1.7;margin-bottom:28px}
+
+/* Form elements */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.field label{font-size:7px;letter-spacing:.18em;color:var(--tx4)}
+.field input,.field select,.field textarea{
+  background:var(--ink3);border:1px solid var(--b2);border-radius:4px;
+  padding:10px 13px;color:var(--tx);font-family:var(--mono);font-size:12px;
+  outline:none;transition:.15s;width:100%;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--amber)}
+.field textarea{resize:vertical;height:80px;font-family:var(--body);font-size:12px}
+.field select option{background:var(--ink3)}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* Tier cards */
+.tier-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.tier-card{
+  border:1px solid var(--b2);border-radius:6px;padding:14px;cursor:pointer;
+  transition:all .2s;background:var(--ink3);position:relative;overflow:hidden;
+}
+.tier-card:hover{border-color:var(--b3);background:var(--ink4)}
+.tier-card.sel{border-color:var(--amber2);background:linear-gradient(135deg,rgba(200,120,32,.12),rgba(200,120,32,.06))}
+.tier-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--amber);opacity:0;transition:.2s}
+.tier-card.sel::before{opacity:1}
+.tc-name{font-family:var(--disp);font-weight:700;font-size:12px;color:var(--tx);margin-bottom:4px}
+.tc-price{font-size:16px;font-weight:700;color:var(--amber2);font-family:var(--disp)}
+.tc-period{font-size:8px;color:var(--tx4)}
+.tc-features{margin-top:8px;display:flex;flex-direction:column;gap:3px}
+.tc-feature{font-size:9px;color:var(--tx3);font-family:var(--body);display:flex;align-items:center;gap:5px}
+.tc-feature::before{content:'✓';color:var(--amber);flex-shrink:0;font-size:9px}
+.tc-badge{position:absolute;top:10px;right:10px;font-size:6px;letter-spacing:.12em;
+  padding:2px 6px;border-radius:2px;background:rgba(200,120,32,.2);color:var(--amber2)}
+
+/* Licence box */
+.licence-box{
+  background:var(--ink3);border:1px solid var(--b2);border-radius:5px;
+  padding:14px;font-family:var(--body);font-size:11px;color:var(--tx3);
+  line-height:1.8;max-height:180px;overflow-y:auto;margin-bottom:14px;
+}
+.licence-box::-webkit-scrollbar{width:3px}
+.licence-box::-webkit-scrollbar-thumb{background:var(--amber)}
+.licence-box strong{color:var(--tx)}
+
+/* Checklist */
+.check-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.check-item{display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+.check-item input[type=checkbox]{width:15px;height:15px;accent-color:var(--amber);
+  flex-shrink:0;margin-top:2px;cursor:pointer}
+.check-item label{font-family:var(--body);font-size:11px;color:var(--tx3);line-height:1.5;cursor:pointer}
+.check-item label strong{color:var(--tx)}
+
+/* Social links */
+.social-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.social-icon{width:28px;height:28px;border-radius:4px;background:var(--ink4);
+  border:1px solid var(--b);display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0}
+.social-row input{flex:1;background:var(--ink3);border:1px solid var(--b2);border-radius:4px;
+  padding:8px 11px;color:var(--tx);font-family:var(--mono);font-size:11px;outline:none;transition:.15s}
+.social-row input:focus{border-color:var(--amber)}
+
+/* Navigation buttons */
+.ob-nav{display:flex;gap:10px;margin-top:28px}
+.btn-back{height:42px;padding:0 20px;border-radius:4px;border:1px solid var(--b2);
+  background:var(--ink3);cursor:pointer;font-family:var(--mono);font-size:9px;
+  letter-spacing:.14em;color:var(--tx3);transition:.15s}
+.btn-back:hover{border-color:var(--b3);color:var(--tx)}
+.btn-next{flex:1;height:42px;border-radius:4px;border:none;
+  background:linear-gradient(135deg,var(--amber),var(--amber2));
+  color:var(--ink);font-family:var(--mono);font-size:9px;letter-spacing:.2em;
+  font-weight:700;cursor:pointer;transition:.15s;
+  box-shadow:0 4px 16px rgba(200,120,32,.35)}
+.btn-next:hover{background:linear-gradient(135deg,var(--amber2),var(--amber3))}
+.btn-next:disabled{opacity:.4;cursor:not-allowed}
+
+/* Message */
+.msg{border-radius:4px;padding:10px 13px;font-size:10px;line-height:1.6;
+  font-family:var(--body);display:none;margin-top:-8px;margin-bottom:8px}
+.msg.show{display:block}
+.msg.ok{background:rgba(64,224,128,.1);border:1px solid rgba(64,224,128,.25);color:var(--live)}
+.msg.err{background:rgba(255,80,80,.1);border:1px solid rgba(255,80,80,.25);color:var(--err)}
+
+/* Progress bar */
+#ob-progress{height:2px;background:var(--ink4);position:sticky;top:65px;z-index:19}
+#ob-progress-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--amber2));
+  transition:width .4s ease;box-shadow:0 0 8px rgba(200,120,32,.4)}
+
+/* Completion */
+#completeScreen{display:none;text-align:center;padding:40px 0}
+.cs-icon{font-size:56px;margin-bottom:16px}
+.cs-title{font-family:var(--disp);font-weight:800;font-size:24px;color:var(--amber2);margin-bottom:8px}
+.cs-body{font-family:var(--body);font-size:13px;color:var(--tx3);line-height:1.8;margin-bottom:28px;max-width:400px;margin-left:auto;margin-right:auto}
+.cs-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px}
+.cs-card{background:var(--ink2);border:1px solid var(--b2);border-radius:6px;padding:14px;text-align:center;cursor:pointer;transition:.15s;text-decoration:none;display:block}
+.cs-card:hover{border-color:var(--b3);background:var(--ink3)}
+.cs-card-icon{font-size:22px;margin-bottom:6px}
+.cs-card-name{font-size:9px;letter-spacing:.14em;color:var(--amber2)}
+.cs-card-desc{font-size:8px;color:var(--tx4);margin-top:3px;font-family:var(--body)}
+.btn-go-studio{
+  height:46px;padding:0 32px;border-radius:5px;border:none;
+  background:linear-gradient(135deg,var(--amber),var(--amber2));
+  color:var(--ink);font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  font-weight:700;cursor:pointer;box-shadow:0 6px 24px rgba(200,120,32,.45);
+}
+</style>
+</head>
+<body>
+
+<div id="ob-header">
+  <div class="ob-logo">Pro M.A.S.T.E.R <em>A MAGNIPROJEKTA VENTURE</em></div>
+  <div class="ob-steps" id="obSteps"></div>
+</div>
+<div id="ob-progress"><div id="ob-progress-fill" style="width:0%"></div></div>
+
+<div id="ob-main">
+  <div class="msg" id="msgBox"></div>
+
+  <!-- STEP 1: ARTIST PROFILE -->
+  <div class="step-panel active" id="step1">
+    <div class="step-title">Your Artist Profile</div>
+    <div class="step-sub">This is how Pro M.A.S.T.E.R and your fans will know you. Take your time — you can update this later from your dashboard.</div>
+    <div class="row-2">
+      <div class="field"><label>FIRST NAME</label><input type="text" id="s1First" placeholder="First name"></div>
+      <div class="field"><label>LAST NAME</label><input type="text" id="s1Last" placeholder="Last name"></div>
+    </div>
+    <div class="field"><label>ARTIST NAME *</label><input type="text" id="s1Artist" placeholder="The name on your releases"></div>
+    <div class="field"><label>COUNTRY</label>
+      <select id="s1Country">
+        <option>South Africa</option><option>Nigeria</option><option>Ghana</option>
+        <option>Kenya</option><option>Zimbabwe</option><option>Botswana</option>
+        <option>Namibia</option><option>Zambia</option><option>Tanzania</option>
+        <option>Senegal</option><option>Other Africa</option>
+        <option>United Kingdom</option><option>United States</option><option>Other</option>
+      </select>
+    </div>
+    <div class="field"><label>PRIMARY GENRE</label>
+      <select id="s1Genre">
+        <option>Afrobeat</option><option>Jazz</option><option>Amapiano</option>
+        <option>Kwaito</option><option>Gospel</option><option>R&B / Soul</option>
+        <option>Hip-Hop</option><option>Electronic</option><option>World / Fusion</option>
+        <option>Neo-Soul</option><option>Classical</option><option>Other</option>
+      </select>
+    </div>
+    <div class="field"><label>BIO <span style="color:var(--tx4);font-size:7px">(OPTIONAL — shown on artist roster)</span></label>
+      <textarea id="s1Bio" placeholder="Tell the world about your sound, your story, your vision..."></textarea>
+    </div>
+    <div class="ob-nav">
+      <button class="btn-next" onclick="nextStep(1)">CONTINUE →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: SOCIAL LINKS -->
+  <div class="step-panel" id="step2">
+    <div class="step-title">Your Presence</div>
+    <div class="step-sub">Connect your social platforms and streaming profiles. These appear on your artist page and help the A&R team evaluate your current reach.</div>
+    <div class="social-row"><div class="social-icon">🎵</div><input type="url" id="s2Spotify" placeholder="Spotify artist URL (optional)"></div>
+    <div class="social-row"><div class="social-icon">▶</div><input type="url" id="s2YouTube" placeholder="YouTube channel URL (optional)"></div>
+    <div class="social-row"><div class="social-icon">📸</div><input type="url" id="s2Instagram" placeholder="Instagram profile URL (optional)"></div>
+    <div class="social-row"><div class="social-icon">🐦</div><input type="url" id="s2Twitter" placeholder="Twitter/X profile URL (optional)"></div>
+    <div class="social-row"><div class="social-icon">🎶</div><input type="url" id="s2SoundCloud" placeholder="SoundCloud URL (optional)"></div>
+    <div class="field" style="margin-top:8px"><label>YOUR WEBSITE <span style="color:var(--tx4);font-size:7px">(OPTIONAL)</span></label>
+      <input type="url" id="s2Website" placeholder="https://yoursite.com">
+    </div>
+    <div class="ob-nav">
+      <button class="btn-back" onclick="prevStep(2)">← BACK</button>
+      <button class="btn-next" onclick="nextStep(2)">CONTINUE →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: TIER SELECTION -->
+  <div class="step-panel" id="step3">
+    <div class="step-title">Choose Your Plan</div>
+    <div class="step-sub">Start free and upgrade anytime. All plans include Billy Black AI producer, 24 instruments, voice recording, and ISRC generation. Paid plans unlock distribution and advanced features.</div>
+    <div class="tier-grid" id="tierGrid">
+      <div class="tier-card sel" data-tier="free" onclick="selectTier(this)">
+        <div class="tc-name">Free</div>
+        <div><span class="tc-price">R0</span><span class="tc-period">/month</span></div>
+        <div class="tc-features">
+          <div class="tc-feature">Studio access</div>
+          <div class="tc-feature">Billy Black AI</div>
+          <div class="tc-feature">3 downloads/month</div>
+          <div class="tc-feature">1 active ISRC</div>
+        </div>
+      </div>
+      <div class="tier-card" data-tier="creator" onclick="selectTier(this)">
+        <div class="tc-name">Creator</div>
+        <div><span class="tc-price">R180</span><span class="tc-period">/month</span></div>
+        <div class="tc-features">
+          <div class="tc-feature">6 downloads/month</div>
+          <div class="tc-feature">Cloud save</div>
+          <div class="tc-feature">Verified badge</div>
+          <div class="tc-feature">5 active ISRCs</div>
+        </div>
+      </div>
+      <div class="tier-card" data-tier="artist" onclick="selectTier(this)">
+        <div class="tc-badge">POPULAR</div>
+        <div class="tc-name">Artist</div>
+        <div><span class="tc-price">R900</span><span class="tc-period">/month</span></div>
+        <div class="tc-features">
+          <div class="tc-feature">12 downloads/month</div>
+          <div class="tc-feature">DSP distribution</div>
+          <div class="tc-feature">Mastering FX</div>
+          <div class="tc-feature">20 active ISRCs</div>
+        </div>
+      </div>
+      <div class="tier-card" data-tier="pro" onclick="selectTier(this)">
+        <div class="tc-name">Pro</div>
+        <div><span class="tc-price">R1800</span><span class="tc-period">/month</span></div>
+        <div class="tc-features">
+          <div class="tc-feature">Unlimited downloads</div>
+          <div class="tc-feature">Priority Billy Black</div>
+          <div class="tc-feature">15% label fee</div>
+          <div class="tc-feature">Unlimited ISRCs</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:9px;color:var(--tx4);font-family:var(--body);line-height:1.7;background:var(--ink3);border:1px solid var(--b);border-radius:4px;padding:10px 12px">
+      All paid plans are in South African Rand. Stripe payments coming soon — select your plan now and you'll be notified when billing activates. Start on Free with no commitment.
+    </div>
+    <div class="ob-nav">
+      <button class="btn-back" onclick="prevStep(3)">← BACK</button>
+      <button class="btn-next" onclick="nextStep(3)">CONTINUE →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: PLATFORM LICENCE DECLARATION -->
+  <div class="step-panel" id="step4">
+    <div class="step-title">Platform Licence Declaration</div>
+    <div class="step-sub">Before you can distribute music through Pro M.A.S.T.E.R, you must sign the Platform Licence Agreement. This is a legal requirement under South African copyright law and international distribution standards.</div>
+    <div class="licence-box">
+      <strong>PRO M.A.S.T.E.R PLATFORM LICENCE AGREEMENT</strong><br><br>
+      By completing this declaration, you (the "Artist") hereby agree to the following terms with Pro M.A.S.T.E.R Record Label, a venture under MagniProjekta (Pty) Ltd, Pretoria, South Africa:<br><br>
+      <strong>1. Grant of Licence</strong><br>
+      You grant Pro M.A.S.T.E.R a <strong>non-exclusive, worldwide, royalty-bearing licence</strong> to distribute, reproduce, and make available your master recordings through digital service providers (DSPs) including but not limited to Spotify, Apple Music, YouTube Music, and Boomplay.<br><br>
+      <strong>2. Ownership Warranty</strong><br>
+      You warrant that you own or control 100% of the copyright in all recordings you submit, including the underlying musical compositions. All co-writers and collaborators have been identified and their royalty splits agreed upon prior to submission.<br><br>
+      <strong>3. Royalty Terms</strong><br>
+      Pro M.A.S.T.E.R retains <strong>15%</strong> of net DSP receipts as the label distribution fee. The remaining <strong>85%</strong> is remitted to the Artist monthly via Stripe, subject to a minimum payout threshold of R450.<br><br>
+      <strong>4. ISRC</strong><br>
+      Pro M.A.S.T.E.R will register ISRC codes (prefix ZA-MP1) for all submitted recordings through RISA (Recording Industry of South Africa).<br><br>
+      <strong>5. Term</strong><br>
+      This licence is effective for an initial term of <strong>2 years</strong> from your first distribution submission, automatically renewable unless terminated with 60 days written notice to words@kthapedi.com. On termination, all recordings will be removed from DSPs within 30 days.<br><br>
+      <strong>6. Governing Law</strong><br>
+      This agreement is governed by the laws of the Republic of South Africa.
+    </div>
+    <div class="check-list">
+      <div class="check-item">
+        <input type="checkbox" id="lic1">
+        <label for="lic1">I have read and understood the Platform Licence Agreement above and agree to its terms</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="lic2">
+        <label for="lic2">I confirm I own or control all rights to any music I submit through Pro M.A.S.T.E.R, including master recordings and underlying compositions</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="lic3">
+        <label for="lic3">I confirm I am <strong>not exclusively signed</strong> to any other record label or distributor, and signing this agreement does not breach any existing contract</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="lic4">
+        <label for="lic4">I agree to the <strong>85% Artist / 15% Label</strong> royalty split for all distributed recordings</label>
+      </div>
+    </div>
+    <div class="ob-nav">
+      <button class="btn-back" onclick="prevStep(4)">← BACK</button>
+      <button class="btn-next" onclick="nextStep(4)">SIGN & COMPLETE →</button>
+    </div>
+  </div>
+
+  <!-- COMPLETE -->
+  <div id="completeScreen">
+    <div class="cs-icon">🎵</div>
+    <div class="cs-title">You're in the studio.</div>
+    <div class="cs-body">
+      Your Pro M.A.S.T.E.R artist profile is live. Billy Black is waiting for you.
+      Choose where you want to start:
+    </div>
+    <div class="cs-cards">
+      <a href="/studio" class="cs-card">
+        <div class="cs-card-icon">🎹</div>
+        <div class="cs-card-name">STUDIO</div>
+        <div class="cs-card-desc">Record your first track</div>
+      </a>
+      <a href="/dashboard" class="cs-card">
+        <div class="cs-card-icon">📊</div>
+        <div class="cs-card-name">DASHBOARD</div>
+        <div class="cs-card-desc">Your artist profile</div>
+      </a>
+      <a href="/distribution" class="cs-card">
+        <div class="cs-card-icon">📀</div>
+        <div class="cs-card-name">DISTRIBUTE</div>
+        <div class="cs-card-desc">Submit to DSPs</div>
+      </a>
+    </div>
+    <button class="btn-go-studio" onclick="window.location.href='/studio'">ENTER THE STUDIO →</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SB_URL  = 'https://qaunadbaebbkouxgijbg.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhdW5hZGJhZWJia291eGdpamJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NTU2MzEsImV4cCI6MjA4MzQzMTYzMX0.HPIT_0HuJZ_v1JxmvCgl3sr9MfjHTwnTqZqM4i75-k4';
+const sb = supabase.createClient(SB_URL, SB_ANON);
+
+let currentStep = 1;
+const TOTAL_STEPS = 4;
+let selectedTier = 'free';
+let userProfile = null;
+let userId = null;
+
+const STEPS = [
+  { num: 1, label: 'PROFILE' },
+  { num: 2, label: 'PRESENCE' },
+  { num: 3, label: 'PLAN' },
+  { num: 4, label: 'AGREEMENT' },
+];
+
+// ── Auth check ──
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    window.location.href = '/auth';
+    return;
+  }
+  userId = session.user.id;
+
+  // Load existing profile
+  const { data } = await sb.from('profiles').select('*').eq('id', userId).single();
+  userProfile = data;
+
+  if (data?.onboarding_complete) {
+    window.location.href = '/dashboard';
+    return;
+  }
+
+  // Pre-fill from profile
+  if (data) {
+    if (data.first_name) document.getElementById('s1First').value = data.first_name;
+    if (data.last_name)  document.getElementById('s1Last').value  = data.last_name;
+    if (data.artist_name)document.getElementById('s1Artist').value= data.artist_name;
+    if (data.country)    document.getElementById('s1Country').value= data.country;
+    if (data.genre)      document.getElementById('s1Genre').value  = data.genre;
+    if (data.bio)        document.getElementById('s1Bio').value    = data.bio;
+    if (data.tier)       {
+      selectedTier = data.tier;
+      document.querySelectorAll('.tier-card').forEach(c => {
+        c.classList.toggle('sel', c.dataset.tier === selectedTier);
+      });
+    }
+  }
+
+  renderSteps();
+  updateProgress();
+})();
+
+// ── Stepper ──
+function renderSteps() {
+  const container = document.getElementById('obSteps');
+  container.innerHTML = STEPS.map((s, i) => `
+    <div class="ob-step ${s.num < currentStep ? 'done' : s.num === currentStep ? 'active' : ''}">
+      ${i > 0 ? `<div class="ob-connector ${s.num <= currentStep ? 'done' : ''}"></div>` : ''}
+      <div class="ob-step-num">${s.num < currentStep ? '✓' : s.num}</div>
+      <div class="ob-step-lbl">${s.label}</div>
+    </div>
+  `).join('');
+}
+
+function updateProgress() {
+  const pct = ((currentStep - 1) / TOTAL_STEPS) * 100;
+  document.getElementById('ob-progress-fill').style.width = pct + '%';
+}
+
+// ── Navigation ──
+async function nextStep(from) {
+  // Validate
+  if (from === 1) {
+    if (!document.getElementById('s1Artist').value.trim()) {
+      showMsg('Artist name is required', 'err'); return;
+    }
+  }
+  if (from === 4) {
+    const checks = ['lic1','lic2','lic3','lic4'];
+    if (!checks.every(id => document.getElementById(id).checked)) {
+      showMsg('Please check all agreement items to continue', 'err'); return;
+    }
+    // Save and complete onboarding
+    await saveAndComplete();
+    return;
+  }
+
+  // Save step data
+  await saveStep(from);
+
+  document.getElementById(`step${from}`).classList.remove('active');
+  currentStep = from + 1;
+  document.getElementById(`step${currentStep}`).classList.add('active');
+  renderSteps();
+  updateProgress();
+  clearMsg();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevStep(from) {
+  document.getElementById(`step${from}`).classList.remove('active');
+  currentStep = from - 1;
+  document.getElementById(`step${currentStep}`).classList.add('active');
+  renderSteps();
+  updateProgress();
+  clearMsg();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Save step to Supabase ──
+async function saveStep(stepNum) {
+  if (!userId) return;
+  let updates = {};
+
+  if (stepNum === 1) {
+    updates = {
+      first_name:  document.getElementById('s1First').value.trim(),
+      last_name:   document.getElementById('s1Last').value.trim(),
+      artist_name: document.getElementById('s1Artist').value.trim(),
+      country:     document.getElementById('s1Country').value,
+      genre:       document.getElementById('s1Genre').value,
+      bio:         document.getElementById('s1Bio').value.trim(),
+    };
+  } else if (stepNum === 3) {
+    updates = { tier: selectedTier };
+  }
+
+  if (Object.keys(updates).length) {
+    await sb.from('profiles').update(updates).eq('id', userId);
+  }
+}
+
+// ── Final save ──
+async function saveAndComplete() {
+  if (!userId) return;
+
+  const btn = document.querySelector('#step4 .btn-next');
+  btn.disabled = true; btn.textContent = 'SAVING...';
+
+  const { error } = await sb.from('profiles').update({
+    first_name:          document.getElementById('s1First').value.trim(),
+    last_name:           document.getElementById('s1Last').value.trim(),
+    artist_name:         document.getElementById('s1Artist').value.trim(),
+    country:             document.getElementById('s1Country').value,
+    genre:               document.getElementById('s1Genre').value,
+    bio:                 document.getElementById('s1Bio').value.trim(),
+    tier:                selectedTier,
+    licence_signed:      true,
+    licence_signed_at:   new Date().toISOString(),
+    onboarding_complete: true,
+  }).eq('id', userId);
+
+  if (error) {
+    showMsg('Save failed — ' + error.message, 'err');
+    btn.disabled = false; btn.textContent = 'SIGN & COMPLETE →';
+    return;
+  }
+
+  // Log the agreement
+  await sb.from('agreements').insert({
+    profile_id: userId,
+    type: 'platform_licence',
+    signed_at: new Date().toISOString(),
+    valid_until: new Date(Date.now() + 2*365*24*60*60*1000).toISOString()
+  });
+
+  // Show complete screen
+  document.getElementById('step4').classList.remove('active');
+  document.getElementById('completeScreen').style.display = 'block';
+  document.getElementById('ob-progress-fill').style.width = '100%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Tier selection ──
+function selectTier(card) {
+  document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('sel'));
+  card.classList.add('sel');
+  selectedTier = card.dataset.tier;
+}
+
+// ── Messages ──
+function showMsg(msg, type='ok') {
+  const box = document.getElementById('msgBox');
+  box.textContent = msg; box.className = 'msg show ' + type;
+}
+function clearMsg() {
+  document.getElementById('msgBox').className = 'msg';
+}
+</script>
+</body>
+</html>

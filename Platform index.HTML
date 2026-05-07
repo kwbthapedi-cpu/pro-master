@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro M.A.S.T.E.R — Pro M.A.S.T.E.R Record Label</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg0:#060609;--bg1:#0c0c14;--bg2:#12121c;--bg3:#181824;--bg4:#20202e;--bg5:#2a2a3c;
+  --b:rgba(255,255,255,0.055);--b2:rgba(255,255,255,0.1);--b3:rgba(255,255,255,0.17);
+  --or:#ff5a1a;--or2:#ff7d42;--org:rgba(255,90,26,0.25);
+  --gn:#00ffaa;--gng:rgba(0,255,170,0.13);
+  --cy:#00ccff;--cyg:rgba(0,204,255,0.11);
+  --mg:#ff1a8c;--mgg:rgba(255,26,140,0.11);
+  --yl:#ffc800;--ylg:rgba(255,200,0,0.11);
+  --vi:#9966ff;--vig:rgba(153,102,255,0.11);
+  --tx:#d8d8ec;--tm:#686890;--td:#2e2e48;
+  --mono:'IBM Plex Mono',monospace;--disp:'Syne',sans-serif;--body:'DM Sans',sans-serif;
+  --r:7px;
+}
+html,body{height:100%;background:var(--bg0);color:var(--tx);font-family:var(--mono);overflow:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px}
+
+/* ── PAGES ── */
+.page{position:fixed;inset:0;display:flex;flex-direction:column;z-index:1}
+.page.hidden{display:none!important}
+
+/* ── LANDING ── */
+#landing{background:var(--bg0);overflow-y:auto;align-items:center}
+.land-bg{
+  position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(255,90,26,.12) 0%,transparent 70%),
+             radial-gradient(ellipse 50% 40% at 80% 80%,rgba(0,204,255,.06) 0%,transparent 60%),
+             radial-gradient(ellipse 40% 30% at 20% 70%,rgba(153,102,255,.05) 0%,transparent 60%);
+}
+.land-noise{
+  position:fixed;inset:0;z-index:0;opacity:.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px;
+}
+.land-wrap{position:relative;z-index:1;width:100%;max-width:1100px;margin:0 auto;padding:40px 24px 80px}
+.land-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:80px}
+.nav-logo{font-family:var(--disp);font-weight:800;font-size:18px;color:var(--or);letter-spacing:.02em}
+.nav-logo span{color:var(--tm);font-weight:400;font-size:11px;margin-left:8px;letter-spacing:.2em}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-link{font-size:10px;letter-spacing:.15em;color:var(--tm);cursor:pointer;transition:.15s}
+.nav-link:hover{color:var(--tx)}
+.nav-cta{height:32px;padding:0 16px;border-radius:var(--r);border:1px solid var(--b3);background:var(--bg3);
+  cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--tx);transition:.15s}
+.nav-cta:hover{background:var(--bg4);border-color:var(--or);color:var(--or)}
+.nav-cta.primary{background:var(--or);border-color:var(--or);color:#fff}
+.nav-cta.primary:hover{background:var(--or2)}
+
+/* Hero */
+.hero{text-align:center;margin-bottom:80px}
+.hero-pre{font-size:10px;letter-spacing:.3em;color:var(--or);margin-bottom:20px;
+  display:inline-flex;align-items:center;gap:8px}
+.hero-pre::before,.hero-pre::after{content:'';width:30px;height:1px;background:var(--or);opacity:.5}
+.hero-title{font-family:var(--disp);font-weight:800;font-size:clamp(42px,7vw,88px);
+  line-height:.95;letter-spacing:-.02em;margin-bottom:24px}
+.hero-title .line1{color:var(--tx)}
+.hero-title .line2{
+  background:linear-gradient(135deg,var(--or) 0%,var(--mg) 50%,var(--vi) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.hero-sub{font-family:var(--body);font-size:17px;color:var(--tm);max-width:560px;margin:0 auto 36px;line-height:1.7}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-hero{
+  height:48px;padding:0 28px;border-radius:var(--r);cursor:pointer;
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;transition:all .15s;border:none
+}
+.btn-hero.primary{
+  background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;
+  box-shadow:0 8px 32px var(--org)
+}
+.btn-hero.primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px var(--org)}
+.btn-hero.secondary{background:var(--bg3);border:1px solid var(--b2);color:var(--tx)}
+.btn-hero.secondary:hover{border-color:var(--b3);background:var(--bg4)}
+
+/* Stats bar */
+.stats-bar{
+  display:flex;gap:0;border:1px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:80px
+}
+.stat{flex:1;padding:20px;border-right:1px solid var(--b);text-align:center}
+.stat:last-child{border-right:none}
+.stat-num{font-family:var(--disp);font-weight:800;font-size:28px;color:var(--or)}
+.stat-label{font-size:8px;letter-spacing:.18em;color:var(--tm);margin-top:4px}
+
+/* Tiers section */
+.section-head{text-align:center;margin-bottom:40px}
+.section-eyebrow{font-size:9px;letter-spacing:.25em;color:var(--or);margin-bottom:12px}
+.section-title{font-family:var(--disp);font-weight:800;font-size:32px;color:var(--tx)}
+.section-sub{font-family:var(--body);font-size:15px;color:var(--tm);margin-top:8px}
+
+.tiers-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:80px}
+.tier-card{
+  background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:20px 16px;
+  position:relative;transition:all .2s;cursor:pointer
+}
+.tier-card:hover{border-color:var(--b2);transform:translateY(-3px)}
+.tier-card.featured{border-color:var(--or);background:linear-gradient(180deg,rgba(255,90,26,.06),var(--bg2))}
+.tier-card.featured::before{
+  content:'POPULAR';position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  background:var(--or);color:#fff;font-size:8px;letter-spacing:.2em;padding:3px 10px;border-radius:20px
+}
+.tc-name{font-family:var(--disp);font-weight:700;font-size:14px;margin-bottom:6px}
+.tc-price{font-size:26px;font-weight:800;color:var(--or);line-height:1;margin-bottom:2px}
+.tc-price sub{font-size:11px;font-weight:400;color:var(--tm)}
+.tc-desc{font-size:9px;color:var(--tm);letter-spacing:.06em;margin-bottom:14px;line-height:1.6;font-family:var(--body)}
+.tc-features{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.tc-features li{font-size:9px;color:var(--tm);display:flex;align-items:flex-start;gap:6px;font-family:var(--body)}
+.tc-features li::before{content:'→';color:var(--or);flex-shrink:0;margin-top:1px}
+.tc-btn{
+  width:100%;height:34px;border-radius:5px;border:1px solid var(--b2);background:var(--bg3);
+  cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--tx);
+  transition:.15s
+}
+.tier-card.featured .tc-btn{background:var(--or);border-color:var(--or);color:#fff}
+.tc-btn:hover{border-color:var(--or);color:var(--or)}
+.tier-card.featured .tc-btn:hover{background:var(--or2)}
+
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:80px}
+.feat-card{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:24px}
+.feat-icon{font-size:28px;margin-bottom:12px}
+.feat-title{font-family:var(--disp);font-weight:700;font-size:15px;margin-bottom:8px}
+.feat-desc{font-family:var(--body);font-size:13px;color:var(--tm);line-height:1.7}
+
+/* Footer */
+.land-footer{border-top:1px solid var(--b);padding-top:32px;display:flex;align-items:center;justify-content:space-between}
+.footer-logo{font-family:var(--disp);font-weight:700;font-size:13px;color:var(--or)}
+.footer-txt{font-size:9px;color:var(--td);letter-spacing:.1em}
+
+/* ── PLATFORM APP ── */
+#platform{background:var(--bg0);display:grid;grid-template-rows:52px 1fr}
+
+/* APP TOPBAR */
+#appTop{
+  background:var(--bg1);border-bottom:1px solid var(--b);
+  display:flex;align-items:center;padding:0 20px;gap:16px
+}
+.app-logo{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--or);flex-shrink:0;cursor:pointer}
+.app-logo em{color:var(--tm);font-style:normal;font-weight:400;font-size:9px;margin-left:6px;letter-spacing:.2em}
+.app-nav{display:flex;gap:2px;margin-left:12px}
+.app-nav-btn{
+  height:28px;padding:0 12px;border-radius:5px;border:none;background:none;
+  cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--tm);
+  transition:.12s;display:flex;align-items:center;gap:6px
+}
+.app-nav-btn:hover{background:var(--bg3);color:var(--tx)}
+.app-nav-btn.act{background:var(--bg3);color:var(--or)}
+.app-nav-btn .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.app-sep{width:1px;height:22px;background:var(--b2);flex-shrink:0}
+
+/* session info pills */
+.pill{display:flex;align-items:center;gap:5px;background:var(--bg2);border:1px solid var(--b);
+  border-radius:20px;padding:3px 10px;font-size:8px;letter-spacing:.12em;color:var(--tm)}
+.pill-dot{width:5px;height:5px;border-radius:50%}
+.pill-dot.on{background:var(--gn);box-shadow:0 0 6px var(--gn)}
+.pill-dot.warn{background:var(--yl)}
+.pill-dot.off{background:var(--td)}
+.pill strong{color:var(--tx);font-weight:600}
+
+/* USER */
+.user-zone{margin-left:auto;display:flex;align-items:center;gap:10px}
+.user-card{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--b);
+  border-radius:24px;padding:4px 14px 4px 6px;cursor:pointer;transition:.15s}
+.user-card:hover{border-color:var(--b2)}
+.ua{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.u-name{font-size:10px;font-weight:600}
+.u-tier{font-size:7px;letter-spacing:.14em;padding:2px 6px;border-radius:3px;margin-top:1px}
+.t-free{background:var(--bg4);color:var(--tm)}
+.t-creator{background:var(--cyg);color:var(--cy)}
+.t-artist{background:var(--ylg);color:var(--yl)}
+.t-pro{background:var(--gng);color:var(--gn)}
+.t-member{background:linear-gradient(135deg,var(--org),var(--vig));color:var(--or2)}
+
+/* ── APP VIEWS ── */
+#appBody{overflow-y:auto;overflow-x:hidden}
+
+/* ── DASHBOARD ── */
+.dash{padding:32px;max-width:1200px;margin:0 auto}
+.dash-welcome{margin-bottom:32px}
+.dash-welcome h1{font-family:var(--disp);font-weight:800;font-size:28px;margin-bottom:6px}
+.dash-welcome h1 span{color:var(--or)}
+.dash-welcome p{font-family:var(--body);color:var(--tm);font-size:14px}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:28px}
+.dash-card{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:20px;transition:.15s}
+.dash-card:hover{border-color:var(--b2)}
+.dc-label{font-size:8px;letter-spacing:.18em;color:var(--tm);margin-bottom:10px}
+.dc-val{font-family:var(--disp);font-weight:800;font-size:32px;color:var(--tx)}
+.dc-sub{font-size:9px;color:var(--tm);margin-top:4px;font-family:var(--body)}
+.dc-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:10px;overflow:hidden}
+.dc-fill{height:100%;border-radius:2px;transition:width .5s ease}
+.dash-row{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:28px}
+.dash-section-head{font-size:9px;letter-spacing:.18em;color:var(--tm);margin-bottom:12px;
+  display:flex;align-items:center;justify-content:space-between}
+.ds-link{color:var(--or);cursor:pointer;font-size:8px}
+.ds-link:hover{text-decoration:underline}
+
+/* Recent projects */
+.proj-list{display:flex;flex-direction:column;gap:8px}
+.proj-item{
+  display:flex;align-items:center;gap:12px;background:var(--bg3);border:1px solid var(--b);
+  border-radius:7px;padding:12px 14px;cursor:pointer;transition:.15s
+}
+.proj-item:hover{border-color:var(--b2);background:var(--bg4)}
+.proj-color{width:4px;height:36px;border-radius:2px;flex-shrink:0}
+.proj-info{flex:1}
+.proj-name{font-size:11px;font-weight:600}
+.proj-meta{font-size:8px;color:var(--tm);margin-top:3px;letter-spacing:.06em;font-family:var(--body)}
+.proj-action{font-size:18px;opacity:.4;transition:.15s}
+.proj-item:hover .proj-action{opacity:1}
+
+/* Activity feed */
+.activity-feed{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:16px;height:100%}
+.act-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--b)}
+.act-item:last-child{border-bottom:none}
+.act-icon{font-size:14px;flex-shrink:0;margin-top:2px}
+.act-text{font-family:var(--body);font-size:11px;color:var(--tm);line-height:1.5}
+.act-text strong{color:var(--tx);font-weight:500}
+.act-time{font-size:8px;color:var(--td);margin-top:2px;font-family:var(--mono);letter-spacing:.06em}
+
+/* Collab zone */
+.collab-card{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:20px}
+.collab-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.collab-online{display:flex;align-items:center;gap:-8px}
+.online-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--bg2)}
+.collab-artists{display:flex;flex-direction:column;gap:8px}
+.collab-artist{display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg3);border-radius:6px}
+.ca-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.ca-name{font-size:10px;font-weight:600;flex:1}
+.ca-loc{font-size:8px;color:var(--tm);font-family:var(--body)}
+.ca-status{font-size:7px;letter-spacing:.1em;padding:3px 7px;border-radius:3px}
+.ca-online{background:var(--gng);color:var(--gn)}
+.ca-busy{background:var(--ylg);color:var(--yl)}
+.invite-btn{width:100%;height:34px;border-radius:5px;border:1px solid var(--b2);background:var(--bg3);
+  cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.13em;color:var(--tm);
+  transition:.15s;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.invite-btn:hover{border-color:var(--or);color:var(--or)}
+.member-lock{text-align:center;padding:20px;opacity:.6}
+.member-lock-icon{font-size:32px;margin-bottom:8px}
+.member-lock-txt{font-size:10px;color:var(--tm);font-family:var(--body);line-height:1.6}
+.unlock-btn{height:30px;padding:0 14px;border-radius:4px;border:1px solid var(--or);background:none;
+  cursor:pointer;font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--or);margin-top:10px;transition:.15s}
+.unlock-btn:hover{background:var(--org)}
+
+/* ── PROFILE PAGE ── */
+.profile-page{padding:32px;max-width:900px;margin:0 auto}
+.profile-banner{
+  height:200px;border-radius:12px;margin-bottom:-50px;
+  background:linear-gradient(135deg,var(--bg3),var(--bg4));
+  border:1px solid var(--b);position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:60px;opacity:.5
+}
+.profile-main{display:flex;gap:20px;align-items:flex-end;margin-bottom:24px;padding:0 4px}
+.profile-avatar-wrap{position:relative;flex-shrink:0}
+.profile-avatar{width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:36px;font-weight:700;color:#fff;border:4px solid var(--bg1);position:relative;z-index:1}
+.profile-info{flex:1;padding-bottom:8px}
+.profile-artist{font-family:var(--disp);font-weight:800;font-size:24px}
+.profile-real{font-size:11px;color:var(--tm);margin:2px 0 6px;font-family:var(--body)}
+.profile-country{font-size:9px;color:var(--td);letter-spacing:.1em}
+.profile-tier-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;
+  font-size:9px;letter-spacing:.14em;margin-top:6px}
+.verified-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;color:var(--gn);
+  background:var(--gng);border:1px solid rgba(0,255,170,.2);border-radius:20px;padding:3px 8px;margin-top:4px}
+.profile-stats{display:flex;gap:24px;margin-bottom:24px}
+.ps{text-align:center}
+.ps-num{font-family:var(--disp);font-weight:700;font-size:20px}
+.ps-label{font-size:8px;color:var(--tm);letter-spacing:.12em}
+.profile-tracks{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.track-card{background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:14px;
+  display:flex;align-items:center;gap:12px;cursor:pointer;transition:.15s}
+.track-card:hover{border-color:var(--b2);background:var(--bg3)}
+.track-thumb{width:44px;height:44px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.track-info{flex:1}
+.track-title{font-size:11px;font-weight:600}
+.track-meta{font-size:8px;color:var(--tm);margin-top:3px;font-family:var(--body)}
+.track-play{font-size:18px;opacity:.4;transition:.15s}
+.track-card:hover .track-play{opacity:1}
+
+/* ── IDENTITY VERIFICATION ── */
+.verify-page{padding:32px;max-width:680px;margin:0 auto}
+.verify-steps{display:flex;gap:0;margin-bottom:32px}
+.vstep{flex:1;display:flex;flex-direction:column;align-items:center;position:relative}
+.vstep::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:1px;background:var(--b2)}
+.vstep:last-child::after{display:none}
+.vstep-num{width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;
+  position:relative;z-index:1;transition:.2s}
+.vstep.done .vstep-num{background:var(--gn);border-color:var(--gn);color:var(--bg0)}
+.vstep.active .vstep-num{background:var(--or);border-color:var(--or);color:#fff}
+.vstep-label{font-size:8px;letter-spacing:.1em;color:var(--tm);margin-top:6px;text-align:center}
+
+.verify-card{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:28px;margin-bottom:16px}
+.vc-title{font-family:var(--disp);font-weight:700;font-size:16px;margin-bottom:8px}
+.vc-sub{font-family:var(--body);font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:20px}
+
+.upload-zone{
+  border:2px dashed var(--b2);border-radius:8px;padding:32px;text-align:center;
+  cursor:pointer;transition:.2s;background:var(--bg3)
+}
+.upload-zone:hover{border-color:var(--or);background:rgba(255,90,26,.04)}
+.upload-zone.active-drop{border-color:var(--gn);background:rgba(0,255,170,.04)}
+.uz-icon{font-size:32px;margin-bottom:8px}
+.uz-txt{font-size:11px;color:var(--tm);font-family:var(--body);line-height:1.7}
+.uz-txt strong{color:var(--tx)}
+.uz-types{font-size:9px;color:var(--td);margin-top:6px;letter-spacing:.08em}
+.uz-file-input{display:none}
+
+.id-preview{display:flex;align-items:center;gap:12px;background:var(--gng);border:1px solid rgba(0,255,170,.2);
+  border-radius:6px;padding:12px 14px;margin-top:10px}
+.id-preview-icon{font-size:20px}
+.id-preview-name{font-size:10px;color:var(--gn);flex:1}
+.id-preview-size{font-size:8px;color:var(--tm)}
+
+.declaration-box{background:var(--bg3);border:1px solid var(--b2);border-radius:6px;padding:16px;
+  font-family:var(--body);font-size:11px;color:var(--tm);line-height:1.8;margin-bottom:14px;
+  max-height:160px;overflow-y:auto}
+.declaration-box strong{color:var(--tx)}
+.check-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;cursor:pointer}
+.check-box{width:16px;height:16px;border-radius:3px;border:1px solid var(--b2);background:var(--bg3);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.15s;margin-top:1px}
+.check-box.checked{background:var(--or);border-color:var(--or)}
+.check-label{font-family:var(--body);font-size:11px;color:var(--tm);line-height:1.5}
+
+/* ── COLLABORATION ROOM ── */
+.collab-room{height:100%;display:grid;grid-template-columns:220px 1fr 260px}
+.cr-sidebar{background:var(--bg1);border-right:1px solid var(--b);padding:16px;display:flex;flex-direction:column;gap:14px}
+.cr-main{background:var(--bg0);display:flex;flex-direction:column}
+.cr-right{background:var(--bg1);border-left:1px solid var(--b);display:flex;flex-direction:column}
+
+.cr-session-info{background:var(--bg2);border:1px solid var(--b);border-radius:7px;padding:12px}
+.crs-label{font-size:8px;letter-spacing:.16em;color:var(--tm);margin-bottom:8px}
+.crs-val{font-size:13px;font-weight:700;color:var(--cy)}
+
+.cr-participants{display:flex;flex-direction:column;gap:6px}
+.crp-item{display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg2);border-radius:6px;border:1px solid var(--b)}
+.crp-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.crp-name{flex:1;font-size:10px;font-weight:600}
+.crp-loc{font-size:8px;color:var(--tm);font-family:var(--body)}
+.crp-live{width:6px;height:6px;border-radius:50%;background:var(--gn);box-shadow:0 0 6px var(--gn);animation:lp 2s infinite}
+@keyframes lp{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Shared DAW timeline */
+.cr-daw{flex:1;display:flex;flex-direction:column}
+.cr-daw-head{padding:10px 14px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px}
+.cr-daw-title{font-size:9px;letter-spacing:.16em;color:var(--tm)}
+.cr-tracks{flex:1;overflow-y:auto;padding:8px}
+.cr-track{background:var(--bg2);border:1px solid var(--b);border-radius:6px;margin-bottom:6px;height:52px;
+  display:flex;align-items:center;gap:0;overflow:hidden}
+.crt-label{width:120px;padding:0 12px;font-size:10px;font-weight:600;border-right:1px solid var(--b);
+  height:100%;display:flex;align-items:center;flex-shrink:0}
+.crt-owner{font-size:8px;color:var(--tm);margin-top:2px}
+.crt-wave{flex:1;height:100%;position:relative}
+.crt-wave canvas{display:block;width:100%;height:100%}
+
+/* Chat */
+.cr-chat{display:flex;flex-direction:column;height:100%}
+.cr-chat-head{padding:10px 12px;border-bottom:1px solid var(--b);font-size:9px;letter-spacing:.14em;color:var(--tm)}
+.cr-messages{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+.cr-msg{padding:8px 10px;border-radius:6px;max-width:90%}
+.cr-msg.them{background:var(--bg3);border:1px solid var(--b);border-top-left-radius:2px;font-family:var(--body);font-size:11px}
+.cr-msg.me{background:rgba(255,90,26,.1);border:1px solid rgba(255,90,26,.2);border-top-right-radius:2px;align-self:flex-end;font-family:var(--body);font-size:11px}
+.cr-msg-who{font-size:8px;letter-spacing:.08em;color:var(--tm);margin-bottom:3px}
+.cr-input-row{display:flex;gap:6px;padding:10px}
+.cr-input{flex:1;background:var(--bg2);border:1px solid var(--b);border-radius:5px;
+  padding:8px 10px;color:var(--tx);font-family:var(--body);font-size:11px;outline:none}
+.cr-input:focus{border-color:var(--or)}
+.cr-send{width:32px;border-radius:5px;border:none;background:var(--or);cursor:pointer;color:#fff;font-size:12px}
+.cr-send:hover{background:var(--or2)}
+
+/* ── MODALS ── */
+.overlay{position:fixed;inset:0;background:rgba(6,6,9,.9);z-index:100;
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
+.overlay.hidden{display:none}
+.modal{background:var(--bg2);border:1px solid var(--b3);border-radius:12px;padding:32px;
+  width:500px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 40px 100px rgba(0,0,0,.7)}
+.modal-logo{font-family:var(--disp);font-weight:800;font-size:16px;color:var(--or);margin-bottom:2px}
+.modal-sub{font-size:8px;letter-spacing:.22em;color:var(--tm);margin-bottom:22px}
+.modal-title{font-family:var(--disp);font-size:15px;font-weight:700;margin-bottom:18px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:8px;letter-spacing:.15em;color:var(--tm);margin-bottom:5px}
+.field input,.field select,.field textarea{
+  width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r);
+  padding:10px 12px;color:var(--tx);font-family:var(--mono);font-size:11px;outline:none;
+  transition:.15s;resize:none
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--or)}
+.field select option{background:var(--bg3)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-p{width:100%;height:42px;border-radius:var(--r);border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;transition:.15s;margin-top:4px}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 6px 24px var(--org)}
+.btn-s{width:100%;height:38px;border-radius:var(--r);border:1px solid var(--b2);cursor:pointer;
+  background:var(--bg3);color:var(--tm);font-family:var(--mono);font-size:9px;letter-spacing:.13em;transition:.15s;margin-top:6px}
+.btn-s:hover{border-color:var(--b3);color:var(--tx)}
+.modal-foot{font-size:9px;color:var(--tm);text-align:center;margin-top:12px}
+.modal-foot span{color:var(--or);cursor:pointer}
+
+/* Stripe payment mockup */
+.payment-card{background:var(--bg3);border:1px solid var(--b2);border-radius:8px;padding:16px;margin-bottom:14px}
+.payment-title{font-size:9px;letter-spacing:.15em;color:var(--tm);margin-bottom:12px}
+.card-input{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--b);
+  border-radius:5px;padding:10px 12px}
+.card-icon{font-size:16px}
+.card-num{font-family:var(--mono);font-size:12px;color:var(--tm);flex:1}
+.stripe-badge{font-size:8px;letter-spacing:.1em;color:var(--td);text-align:center;margin-top:8px}
+.stripe-badge span{color:var(--vi)}
+
+/* ── COMMON ── */
+.empty{text-align:center;padding:40px;font-size:9px;color:var(--td);letter-spacing:.12em;line-height:2}
+
+/* Gradient text utility */
+.grad{background:linear-gradient(135deg,var(--or),var(--mg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* Notification toast */
+#toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--bg3);border:1px solid var(--b3);border-radius:8px;
+  padding:12px 20px;font-size:10px;letter-spacing:.1em;color:var(--tx);
+  z-index:200;transition:all .3s;opacity:0;pointer-events:none;white-space:nowrap
+}
+#toast.show{opacity:1}
+#toast.success{border-color:rgba(0,255,170,.3);color:var(--gn)}
+#toast.error{border-color:rgba(255,90,26,.3);color:var(--or)}
+</style>
+</head>
+<body>
+
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+
+<!-- ════════════════════════════════════
+     LANDING PAGE
+════════════════════════════════════ -->
+<div class="page" id="landing">
+  <div class="land-bg"></div>
+  <div class="land-noise"></div>
+  <div class="land-wrap">
+
+    <nav class="land-nav">
+      <div class="nav-logo">Pro M.A.S.T.E.R <span>BY MAGNIPROJEKTA</span></div>
+      <div class="nav-links">
+        <div class="nav-link" onclick="scrollToTiers()">Plans</div>
+        <div class="nav-link">Artists</div>
+        <div class="nav-link">Label</div>
+        <button class="nav-cta" onclick="showModal('login')">SIGN IN</button>
+        <button class="nav-cta primary" onclick="showModal('register')">START FREE</button>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-pre">THE WORLD'S FIRST AI RECORD LABEL STUDIO</div>
+      <h1 class="hero-title">
+        <div class="line1">Create. Own.</div>
+        <div class="line2">Be Heard.</div>
+      </h1>
+      <p class="hero-sub">Pro M.A.S.T.E.R is a fully integrated AI music production studio and record label. Sing into your mic. Choose your instrument. Make your record. Get distributed.</p>
+      <div class="hero-actions">
+        <button class="btn-hero primary" onclick="showModal('register')">CREATE FREE ACCOUNT</button>
+        <button class="btn-hero secondary" onclick="enterPlatform('demo')">EXPLORE THE STUDIO</button>
+      </div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat"><div class="stat-num">15+</div><div class="stat-label">AI INSTRUMENTS</div></div>
+      <div class="stat"><div class="stat-num">195</div><div class="stat-label">COUNTRIES</div></div>
+      <div class="stat"><div class="stat-num">∞</div><div class="stat-label">SONGS IN-PLATFORM</div></div>
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">TIERS + MEMBERSHIP</div></div>
+      <div class="stat"><div class="stat-num">100%</div><div class="stat-label">AI POWERED</div></div>
+    </div>
+
+    <div class="section-head">
+      <div class="section-eyebrow">HOW IT WORKS</div>
+      <h2 class="section-title">Studio. Label. Platform.</h2>
+      <p class="section-sub">One place to create, collaborate, and release music under the Pro M.A.S.T.E.R label.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🎤</div>
+        <div class="feat-title">Voice to Instrument</div>
+        <div class="feat-desc">Hum a melody. Choose Grand Piano, Kora, Sax, or Strings. Your voice becomes the instrument in real time — no musical training needed.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🤖</div>
+        <div class="feat-title">Billy Black AI Producer</div>
+        <div class="feat-desc">Your in-session AI producer analyzes your key, BPM, and recorded tracks. Suggests chord progressions, mix tips, and groove patterns live.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌍</div>
+        <div class="feat-title">Global Collaboration</div>
+        <div class="feat-desc">Members link in real time. London and New York in the same session. Shared timeline, live audio, built-in royalty split agreements.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🎛️</div>
+        <div class="feat-title">Full DAW Inside</div>
+        <div class="feat-desc">Multi-track recording, FX chains, mixer, piano roll, 16-pad drum machine. Everything runs in your browser — no installs, no plugins.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📀</div>
+        <div class="feat-title">Label Distribution</div>
+        <div class="feat-desc">Pro and Member artists get Spotify, Apple Music, and YouTube distribution through MagniProjekta. Your music, on the world's stages.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔐</div>
+        <div class="feat-title">Verified Identity</div>
+        <div class="feat-desc">Every artist is verified. Every collaboration is protected. Every royalty split is documented and legally binding through the platform.</div>
+      </div>
+    </div>
+
+    <div id="tiers-section" class="section-head">
+      <div class="section-eyebrow">MEMBERSHIP PLANS</div>
+      <h2 class="section-title">Choose Your Level</h2>
+    </div>
+
+    <div class="tiers-grid">
+      <div class="tier-card" onclick="showModal('register','free')">
+        <div class="tc-name">Free</div>
+        <div class="tc-price">$0</div>
+        <div class="tc-desc">Start creating. No card needed.</div>
+        <ul class="tc-features">
+          <li>Unlimited in-platform creation</li>
+          <li>3 downloads per month</li>
+          <li>All instruments & AI tools</li>
+          <li>Basic Billy Black access</li>
+        </ul>
+        <button class="tc-btn">START FREE</button>
+      </div>
+      <div class="tier-card" onclick="showModal('register','creator')">
+        <div class="tc-name">Creator</div>
+        <div class="tc-price">$9.99<sub>/mo</sub></div>
+        <div class="tc-desc">More room to release.</div>
+        <ul class="tc-features">
+          <li>6 downloads per month</li>
+          <li>Full Billy Black sessions</li>
+          <li>Project cloud save</li>
+          <li>Artist profile page</li>
+        </ul>
+        <button class="tc-btn">GET CREATOR</button>
+      </div>
+      <div class="tier-card featured" onclick="showModal('register','artist')">
+        <div class="tc-name">Artist</div>
+        <div class="tc-price">$49.99<sub>/mo</sub></div>
+        <div class="tc-desc">Album-level output.</div>
+        <ul class="tc-features">
+          <li>12 downloads per month</li>
+          <li>Priority Billy Black</li>
+          <li>FX mastering chain</li>
+          <li>Verified artist badge</li>
+        </ul>
+        <button class="tc-btn">GET ARTIST</button>
+      </div>
+      <div class="tier-card" onclick="showModal('register','pro')">
+        <div class="tc-name">Pro</div>
+        <div class="tc-price">$99.99<sub>/mo</sub></div>
+        <div class="tc-desc">Unlimited everything.</div>
+        <ul class="tc-features">
+          <li>Unlimited downloads</li>
+          <li>Spotify & Apple Music dist.</li>
+          <li>15% label fee on streams</li>
+          <li>Priority support</li>
+        </ul>
+        <button class="tc-btn">GO PRO</button>
+      </div>
+      <div class="tier-card" onclick="showModal('member-apply')">
+        <div class="tc-name" style="color:var(--or)">Member</div>
+        <div class="tc-price" style="font-size:18px;color:var(--or)">By Invite</div>
+        <div class="tc-desc">Join the label roster.</div>
+        <ul class="tc-features">
+          <li>Everything in Pro</li>
+          <li>Global collab rooms</li>
+          <li>Royalty split contracts</li>
+          <li>Label artist profile</li>
+          <li>Sync licensing access</li>
+        </ul>
+        <button class="tc-btn">APPLY FOR MEMBERSHIP</button>
+      </div>
+    </div>
+
+    <div class="land-footer">
+      <div class="footer-logo">MagniProjekta</div>
+      <div class="footer-txt">© 2026 MAGNIPROJEKTA · PRO M.A.S.T.E.R · ALL RIGHTS RESERVED</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     PLATFORM APP
+════════════════════════════════════ -->
+<div class="page hidden" id="platform">
+  <div id="appTop">
+    <div class="app-logo" onclick="goTo('dashboard')">Pro M.A.S.T.E.R <em>LABEL PLATFORM</em></div>
+    <div class="app-nav">
+      <button class="app-nav-btn act" data-view="dashboard" onclick="goTo('dashboard')"><div class="dot"></div>DASHBOARD</button>
+      <button class="app-nav-btn" data-view="studio" onclick="launchStudio()">🎛 STUDIO</button>
+      <button class="app-nav-btn" data-view="roster" onclick="goTo('roster')"><div class="dot"></div>ARTISTS</button>
+      <button class="app-nav-btn" data-view="profile" onclick="goTo('profile')"><div class="dot"></div>PROFILE</button>
+      <button class="app-nav-btn" data-view="collab" onclick="goTo('collab')"><div class="dot"></div>COLLAB</button>
+      <button class="app-nav-btn" data-view="verify" onclick="goTo('verify')"><div class="dot"></div>VERIFY ID</button>
+    </div>
+    <div class="app-sep"></div>
+    <div class="pill"><div class="pill-dot on"></div>PLATFORM <strong>LIVE</strong></div>
+    <div class="pill"><div class="pill-dot warn" id="verifyDot"></div><span id="verifyPillTxt">ID UNVERIFIED</span></div>
+    <div class="user-zone">
+      <div class="user-card" onclick="showModal('upgrade')">
+        <div class="ua" id="appAvatar" style="background:linear-gradient(135deg,#ff5a1a,#ff1a8c)">W</div>
+        <div>
+          <div class="u-name" id="appName">Artist</div>
+          <div class="u-tier t-free" id="appTier">FREE</div>
+        </div>
+      </div>
+      <button style="height:28px;padding:0 12px;border-radius:5px;border:1px solid var(--b);background:none;cursor:pointer;font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--tm);transition:.15s" onmouseover="this.style.borderColor='var(--or)';this.style.color='var(--or)'" onmouseout="this.style.borderColor='var(--b)';this.style.color='var(--tm)'" onclick="signOut()">SIGN OUT</button>
+    </div>
+  </div>
+  <div id="appBody"></div>
+</div>
+
+<!-- ════════════════════════════════════
+     MODALS
+════════════════════════════════════ -->
+<div class="overlay hidden" id="overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+// ═══════════════════════
+// STATE
+// ═══════════════════════
+let user = null;
+let currentView = 'dashboard';
+let selectedTier = 'free';
+let idVerified = false;
+let checks = {declaration:false, notSigned:false, terms:false};
+
+const TIERS_DATA = {
+  free:    {name:'Free',    price:'$0',      monthly:0,    dl:3,  badge:'t-free',   color:'#686890'},
+  creator: {name:'Creator', price:'$9.99',   monthly:9.99, dl:6,  badge:'t-creator',color:'#00ccff'},
+  artist:  {name:'Artist',  price:'$49.99',  monthly:49.99,dl:12, badge:'t-artist', color:'#ffc800'},
+  pro:     {name:'Pro',     price:'$99.99',  monthly:99.99,dl:999,badge:'t-pro',    color:'#00ffaa'},
+  member:  {name:'Member',  price:'Invite',  monthly:0,    dl:999,badge:'t-member', color:'#ff7d42'},
+};
+
+// ═══════════════════════
+// TOAST
+// ═══════════════════════
+function toast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => t.className = '', 3000);
+}
+
+// ═══════════════════════
+// AUTH
+// ═══════════════════════
+// ═══════════════════════════════════════════════════════
+// SUPABASE INTEGRATION LAYER
+// ═══════════════════════════════════════════════════════
+// ── CONFIG: Replace with your actual Supabase project values ──
+// Get these from: supabase.com → your project → Settings → API
+// ── LIVE CREDENTIALS — Pro MASTER · eu-west-1 ──
+const SUPABASE_URL  = 'https://qaunadbaebbkouxgijbg.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhdW5hZGJhZWJia291eGdpamJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NTU2MzEsImV4cCI6MjA4MzQzMTYzMX0.HPIT_0HuJZ_v1JxmvCgl3sr9MfjHTwnTqZqM4i75-k4';
+// Override with localStorage if you've set custom values via config panel
+const _sbUrl   = localStorage.getItem('sb_url')   || SUPABASE_URL;
+const _sbAnon  = localStorage.getItem('sb_anon')  || SUPABASE_ANON;
+
+// ── Supabase client (loaded via CDN) ──
+let _sb = null;
+function getSB() {
+  if (_sb) return _sb;
+  if (!SUPABASE_URL || !SUPABASE_ANON) return null;
+  // supabase-js v2 loaded from CDN in <head>
+  if (typeof supabase === 'undefined' || !supabase.createClient) return null;
+  _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  return _sb;
+}
+
+// ── Stripe config ──
+const STRIPE_PK = localStorage.getItem('stripe_pk') || '';
+let _stripe = null;
+function getStripe() {
+  if (_stripe) return _stripe;
+  if (!STRIPE_PK || typeof Stripe === 'undefined') return null;
+  _stripe = Stripe(STRIPE_PK);
+  return _stripe;
+}
+
+// ── DETERMINE MODE ──
+// If Supabase is configured → live mode. Otherwise → local demo mode.
+const LIVE_MODE = !!(SUPABASE_URL && SUPABASE_ANON);
+
+// ── LIVE: Supabase auth state listener ──
+async function initSupabaseAuth() {
+  const sb = getSB();
+  if (!sb) return false;
+  // Listen for auth state changes (login, logout, token refresh)
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session?.user) {
+      await hydrateUserFromDB(session.user);
+      enterPlatform();
+    } else if (event === 'SIGNED_OUT') {
+      user = null; idVerified = false;
+      document.getElementById('platform')?.classList.add('hidden');
+      document.getElementById('landing')?.classList.remove('hidden');
+    }
+  });
+  // Check for existing session on load
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user) {
+    await hydrateUserFromDB(session.user);
+    return true;
+  }
+  return false;
+}
+
+// ── Pull full user profile from `users` table ──
+async function hydrateUserFromDB(authUser) {
+  const sb = getSB();
+  if (!sb) return;
+  const { data, error } = await sb
+    .from('users')
+    .select('*')
+    .eq('id', authUser.id)
+    .single();
+  if (data) {
+    user = {
+      id: data.id,
+      email: data.email,
+      artistName: data.artist_name,
+      first: data.first_name,
+      last: data.last_name,
+      country: data.country,
+      genre: data.genre,
+      tier: data.tier || 'free',
+      downloadsUsed: data.downloads_used || 0,
+      idVerified: data.id_verified || false,
+      stripeCustomerId: data.stripe_customer_id,
+      joined: data.created_at,
+    };
+    idVerified = user.idVerified;
+  } else {
+    // Profile doesn't exist yet — create it
+    user = {
+      id: authUser.id,
+      email: authUser.email,
+      artistName: authUser.user_metadata?.artist_name || authUser.email.split('@')[0],
+      tier: 'free', downloadsUsed: 0, idVerified: false,
+    };
+    await sb.from('users').insert({
+      id: authUser.id,
+      email: authUser.email,
+      artist_name: user.artistName,
+      tier: 'free',
+      downloads_used: 0,
+      id_verified: false,
+    });
+  }
+}
+
+// ── LIVE: Sign Up ──
+async function supabaseRegister(email, password, meta) {
+  const sb = getSB();
+  if (!sb) throw new Error('Supabase not configured');
+  const { data, error } = await sb.auth.signUp({
+    email, password,
+    options: {
+      data: { artist_name: meta.artistName, country: meta.country, genre: meta.genre }
+    }
+  });
+  if (error) throw error;
+  // Insert profile row immediately (also fires on SIGNED_IN via onAuthStateChange)
+  if (data.user) {
+    await sb.from('users').upsert({
+      id: data.user.id,
+      email,
+      artist_name: meta.artistName,
+      first_name: meta.first,
+      last_name: meta.last,
+      country: meta.country,
+      genre: meta.genre,
+      tier: meta.tier || 'free',
+      downloads_used: 0,
+      id_verified: false,
+    });
+  }
+  return data;
+}
+
+// ── LIVE: Sign In ──
+async function supabaseLogin(email, password) {
+  const sb = getSB();
+  if (!sb) throw new Error('Supabase not configured');
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+  return data;
+}
+
+// ── LIVE: Sign Out ──
+async function supabaseSignOut() {
+  const sb = getSB();
+  if (sb) await sb.auth.signOut();
+}
+
+// ── LIVE: Update user profile in DB ──
+async function saveUserToDB(updates) {
+  const sb = getSB();
+  if (!sb || !user?.id) return;
+  await sb.from('users').update({
+    artist_name: updates.artistName || user.artistName,
+    country: updates.country || user.country,
+    downloads_used: updates.downloadsUsed ?? user.downloadsUsed,
+    id_verified: updates.idVerified ?? user.idVerified,
+    tier: updates.tier || user.tier,
+  }).eq('id', user.id);
+}
+
+// ── LIVE: Save project ──
+async function saveProjectToDB(project) {
+  const sb = getSB();
+  if (!sb || !user?.id) return null;
+  const { data, error } = await sb.from('projects').upsert({
+    id: project.id,
+    user_id: user.id,
+    title: project.title || 'Untitled',
+    key_sig: project.key,
+    bpm: project.bpm,
+    genre: project.genre,
+    tracks_data: project.tracks || [],
+    is_published: false,
+    updated_at: new Date().toISOString(),
+  }).select().single();
+  return data;
+}
+
+// ── LIVE: Load user's projects ──
+async function loadProjectsFromDB() {
+  const sb = getSB();
+  if (!sb || !user?.id) return [];
+  const { data } = await sb.from('projects')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('updated_at', { ascending: false });
+  return data || [];
+}
+
+// ── LIVE: Stripe subscription checkout ──
+async function startStripeCheckout(tier) {
+  const PRICE_IDS = {
+    creator: localStorage.getItem('stripe_price_creator') || '',
+    artist:  localStorage.getItem('stripe_price_artist')  || '',
+    pro:     localStorage.getItem('stripe_price_pro')     || '',
+  };
+  const priceId = PRICE_IDS[tier];
+  if (!priceId) { toast('Stripe not configured — set price IDs in admin panel', 'err'); return; }
+  const stripe = getStripe();
+  if (!stripe) { toast('Stripe not loaded', 'err'); return; }
+  // In production: call your FastAPI backend to create a checkout session
+  // Then redirect: stripe.redirectToCheckout({ sessionId })
+  toast('Redirecting to Stripe checkout...', 'warn');
+}
+
+// ── LIVE: Download quota enforcement ──
+async function checkDownloadQuota() {
+  const sb = getSB();
+  const tier = TIERS_DATA[user?.tier || 'free'];
+  if (tier.dl === 999) return true; // unlimited
+  if ((user?.downloadsUsed || 0) >= tier.dl) {
+    toast(`Download limit reached (${tier.dl}/month). Upgrade your plan.`, 'err');
+    return false;
+  }
+  // Increment in DB
+  const newCount = (user?.downloadsUsed || 0) + 1;
+  user.downloadsUsed = newCount;
+  if (sb && user?.id) {
+    await sb.from('users').update({ downloads_used: newCount }).eq('id', user.id);
+  }
+  return true;
+}
+
+// ── LIVE: Real-time collab channel ──
+let collabChannel = null;
+async function joinCollabChannel(sessionId, onEvent) {
+  const sb = getSB();
+  if (!sb) return null;
+  collabChannel = sb.channel(`session:${sessionId}`)
+    .on('broadcast', { event: 'note' }, ({ payload }) => onEvent('note', payload))
+    .on('broadcast', { event: 'drum' }, ({ payload }) => onEvent('drum', payload))
+    .on('broadcast', { event: 'transport' }, ({ payload }) => onEvent('transport', payload))
+    .on('broadcast', { event: 'chat' }, ({ payload }) => onEvent('chat', payload))
+    .subscribe();
+  return collabChannel;
+}
+
+async function broadcastCollabEvent(event, payload) {
+  if (!collabChannel) return;
+  await collabChannel.send({ type: 'broadcast', event, payload });
+}
+
+// ── FALLBACK: localStorage (demo mode) ──
+function saveUserLocal() { localStorage.setItem('pm3_user', JSON.stringify(user)); }
+function loadUserLocal() {
+  const s = localStorage.getItem('pm3_user');
+  if (s) { try { user = JSON.parse(s); return true; } catch(e){} }
+  return false;
+}
+
+// ── UNIFIED SAVE: hits DB if live, localStorage if demo ──
+async function saveUser(updates={}) {
+  Object.assign(user, updates);
+  if (LIVE_MODE) await saveUserToDB(updates);
+  else saveUserLocal();
+}
+
+function signOut() {
+  if (LIVE_MODE) supabaseSignOut();
+  else { localStorage.removeItem('pm3_user'); }
+  user = null; idVerified = false;
+  document.getElementById('platform').classList.add('hidden');
+  document.getElementById('landing').classList.remove('hidden');
+  toast('Signed out');
+}
+
+function enterPlatform(mode='normal') {
+  if (mode === 'demo') {
+    user = { artistName:'Demo Artist', email:'demo@promasterapp.com', tier:'creator',
+      country:'South Africa', joined:new Date().toISOString(), downloadsUsed:2,
+      projects:[], idVerified:false };
+    saveUserLocal();
+  }
+  if (!user) { showModal('login'); return; }
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('platform').classList.remove('hidden');
+  updateAppUI();
+  goTo('dashboard');
+}
+
+// ── CONNECTION STATUS INDICATOR ──
+function showConnectionStatus() {
+  const existing = document.getElementById('connStatus');
+  if (existing) existing.remove();
+  const pill = document.createElement('div');
+  pill.id = 'connStatus';
+  pill.style.cssText = `position:fixed;bottom:20px;right:20px;z-index:500;background:var(--bg2);border:1px solid var(--b);border-radius:20px;padding:6px 14px;font-size:8px;letter-spacing:.14em;display:flex;align-items:center;gap:6px;font-family:var(--mono)`;
+  pill.innerHTML = LIVE_MODE
+    ? `<div style="width:6px;height:6px;border-radius:50%;background:var(--gn);box-shadow:0 0 6px var(--gn)"></div><span style="color:var(--gn)">SUPABASE LIVE</span>`
+    : `<div style="width:6px;height:6px;border-radius:50%;background:var(--yl);box-shadow:0 0 5px var(--yl)"></div><span style="color:var(--yl)">DEMO MODE</span><span style="color:var(--td)"> · Add Supabase keys to go live</span>`;
+  document.body.appendChild(pill);
+}
+
+function updateAppUI() {
+  if (!user) return;
+  const t = TIERS_DATA[user.tier] || TIERS_DATA.free;
+  const init = user.artistName[0].toUpperCase();
+  document.getElementById('appAvatar').textContent = init;
+  document.getElementById('appName').textContent = user.artistName;
+  document.getElementById('appTier').textContent = t.name.toUpperCase();
+  document.getElementById('appTier').className = `u-tier ${t.badge}`;
+  idVerified = user.idVerified || false;
+  document.getElementById('verifyDot').className = `pill-dot ${idVerified ? 'on' : 'warn'}`;
+  document.getElementById('verifyPillTxt').textContent = idVerified ? 'ID VERIFIED ✓' : 'ID UNVERIFIED';
+}
+
+// ═══════════════════════
+// NAVIGATION
+// ═══════════════════════
+function goTo(view) {
+  currentView = view;
+  document.querySelectorAll('.app-nav-btn').forEach(b => b.classList.toggle('act', b.dataset.view === view));
+  const body = document.getElementById('appBody');
+  if (view === 'dashboard') renderDashboard(body);
+  else if (view === 'roster') renderRoster(body);
+  else if (view === 'profile') renderProfile(body);
+  else if (view === 'collab') renderCollab(body);
+  else if (view === 'verify') renderVerify(body);
+}
+
+function launchStudio() {
+  // Opens Phase 2 in new tab in production; for now, toast
+  toast('Studio launching... (open pro-master-phase2.html in your browser)', '');
+  // In production: window.open('/studio', '_blank')
+}
+
+function scrollToTiers() {
+  document.getElementById('tiers-section')?.scrollIntoView({behavior:'smooth'});
+}
+
+// ═══════════════════════
+// DASHBOARD
+// ═══════════════════════
+function renderDashboard(body) {
+  if (!user) return;
+  const t = TIERS_DATA[user.tier];
+  const dlPct = t.dl === 999 ? 20 : Math.min(((user.downloadsUsed||0) / t.dl) * 100, 100);
+  const projects = user.projects || sampleProjects();
+
+  body.innerHTML = `
+  <div class="dash">
+    <div class="dash-welcome">
+      <h1>Welcome back, <span>${user.artistName}</span> 👋</h1>
+      <p>Your studio is ready. Billy Black is online. Let's make something.</p>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="dc-label">DOWNLOADS THIS MONTH</div>
+        <div class="dc-val">${user.downloadsUsed||0}<span style="font-size:16px;color:var(--tm)">/${t.dl===999?'∞':t.dl}</span></div>
+        <div class="dc-sub">${t.dl===999?'Unlimited plan':'Resets 1st of month'}</div>
+        <div class="dc-bar"><div class="dc-fill" style="width:${dlPct}%;background:${dlPct>80?'var(--or)':'var(--gn)'}"></div></div>
+      </div>
+      <div class="dash-card">
+        <div class="dc-label">PROJECTS CREATED</div>
+        <div class="dc-val">${projects.length}</div>
+        <div class="dc-sub">In-platform (unlimited)</div>
+        <div class="dc-bar"><div class="dc-fill" style="width:${Math.min(projects.length*10,100)}%;background:var(--cy)"></div></div>
+      </div>
+      <div class="dash-card" onclick="showModal('upgrade')" style="cursor:pointer">
+        <div class="dc-label">CURRENT PLAN</div>
+        <div class="dc-val" style="font-size:20px;color:${t.color}">${t.name.toUpperCase()}</div>
+        <div class="dc-sub" style="color:var(--or);cursor:pointer">Upgrade plan →</div>
+        ${!idVerified?`<div style="font-size:8px;color:var(--yl);margin-top:8px;letter-spacing:.1em">⚠ IDENTITY NOT VERIFIED</div>`:''}
+      </div>
+    </div>
+
+    <div class="dash-row">
+      <div>
+        <div class="dash-section-head">
+          <span>RECENT PROJECTS</span>
+          <span class="ds-link" onclick="launchStudio()">+ NEW PROJECT</span>
+        </div>
+        <div class="proj-list">
+          ${projects.map(p=>`
+            <div class="proj-item" onclick="launchStudio()">
+              <div class="proj-color" style="background:${p.color}"></div>
+              <div class="proj-info">
+                <div class="proj-name">${p.name}</div>
+                <div class="proj-meta">${p.key} · ${p.bpm} BPM · ${p.tracks} tracks · ${p.date}</div>
+              </div>
+              <div class="proj-action">▶</div>
+            </div>
+          `).join('')}
+          ${!projects.length ? '<div class="empty">NO PROJECTS YET<br>OPEN THE STUDIO TO START</div>' : ''}
+        </div>
+      </div>
+      <div>
+        <div class="dash-section-head"><span>ACTIVITY</span></div>
+        <div class="activity-feed">
+          ${activityFeed().map(a=>`
+            <div class="act-item">
+              <div class="act-icon">${a.icon}</div>
+              <div>
+                <div class="act-text">${a.text}</div>
+                <div class="act-time">${a.time}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-section-head"><span>COLLABORATION</span><span class="ds-link" onclick="goTo('roster')">BROWSE ARTISTS →</span></div>
+    <div class="collab-card">
+      ${user.tier === 'member' ? memberCollabUI() : lockedCollabUI()}
+    </div>
+  </div>`;
+}
+
+function sampleProjects() {
+  return [
+    {name:'Night Drive — Session 03', key:'A Min', bpm:92, tracks:6, date:'Today', color:'#00ccff'},
+    {name:'Kora Dreams', key:'G Maj', bpm:115, tracks:4, date:'2 days ago', color:'#ffc800'},
+    {name:'Bass Loop Experiment', key:'D Min', bpm:128, tracks:3, date:'Last week', color:'#ff5a1a'},
+  ];
+}
+
+function activityFeed() {
+  return [
+    {icon:'🎵', text:`<strong>Billy Black</strong> analyzed your "Night Drive" session`, time:'2 HOURS AGO'},
+    {icon:'📀', text:`Account upgraded to <strong>${TIERS_DATA[user?.tier||'free'].name}</strong>`, time:'TODAY'},
+    {icon:'🎹', text:`New project created: <strong>Kora Dreams</strong>`, time:'2 DAYS AGO'},
+    {icon:'🌍', text:`Artist <strong>BlackJack</strong> sent a collab invite`, time:'3 DAYS AGO'},
+    {icon:'✅', text:`Session exported: <strong>Bass Loop Experiment.wav</strong>`, time:'LAST WEEK'},
+  ];
+}
+
+function memberCollabUI() {
+  return `
+    <div class="collab-header">
+      <div style="font-size:10px;font-weight:600">ARTISTS ONLINE NOW</div>
+      <div style="font-size:8px;color:var(--gn);letter-spacing:.1em">● 3 ONLINE</div>
+    </div>
+    <div class="collab-artists">
+      <div class="collab-artist">
+        <div class="ca-avatar" style="background:linear-gradient(135deg,#00ccff,#9966ff)">DJ</div>
+        <div><div class="ca-name">BlackJack</div><div class="ca-loc">📍 International</div></div>
+        <div class="ca-status ca-online">ONLINE</div>
+      </div>
+      <div class="collab-artist">
+        <div class="ca-avatar" style="background:linear-gradient(135deg,#ff1a8c,#ff5a1a)">SA</div>
+        <div><div class="ca-name">Sam Adesanya</div><div class="ca-loc">📍 London, UK</div></div>
+        <div class="ca-status ca-online">ONLINE</div>
+      </div>
+      <div class="collab-artist">
+        <div class="ca-avatar" style="background:linear-gradient(135deg,#ffc800,#ff5a1a)">EL</div>
+        <div><div class="ca-name">Ellen Morais</div><div class="ca-loc">📍 São Paulo, Brazil</div></div>
+        <div class="ca-status ca-busy">IN SESSION</div>
+      </div>
+    </div>
+    <button class="invite-btn" onclick="goTo('collab')">🎵 JOIN OR START A COLLAB SESSION</button>`;
+}
+
+function lockedCollabUI() {
+  return `
+    <div class="member-lock">
+      <div class="member-lock-icon">🔒</div>
+      <div class="member-lock-txt">Global collaboration is a <strong>Member</strong> feature.<br>Browse the artist roster to listen to work. Apply to join the Pro M.A.S.T.E.R label roster to invite artists and build records together worldwide.</div>
+      <button class="unlock-btn" onclick="goTo('roster')" style="margin-right:8px">BROWSE ARTISTS</button>
+      <button class="unlock-btn" onclick="showModal('member-apply')">APPLY FOR MEMBERSHIP</button>
+    </div>`;
+}
+
+// ═══════════════════════
+// PROFILE
+// ═══════════════════════
+function renderProfile(body) {
+  const t = TIERS_DATA[user?.tier||'free'];
+  const gradColors = ['#ff5a1a,#ff1a8c','#00ccff,#9966ff','#ffc800,#ff5a1a','#00ffaa,#00ccff'];
+  const grad = gradColors[Math.floor(Math.random()*gradColors.length)];
+  body.innerHTML = `
+  <div class="profile-page">
+    <div class="profile-banner">🎵</div>
+    <div class="profile-main">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar" style="background:linear-gradient(135deg,${grad})">${user.artistName[0].toUpperCase()}</div>
+      </div>
+      <div class="profile-info">
+        <div class="profile-artist">${user.artistName}</div>
+        <div class="profile-real">${user.first||''} ${user.last||''}${user.email?' · '+user.email:''}</div>
+        <div class="profile-country">📍 ${user.country||'South Africa'}</div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <div class="profile-tier-badge ${t.badge}" style="border:1px solid currentColor;font-size:8px;letter-spacing:.14em">${t.name.toUpperCase()} MEMBER</div>
+          ${idVerified?`<div class="verified-badge">✓ IDENTITY VERIFIED</div>`:`<div style="font-size:9px;color:var(--yl);cursor:pointer" onclick="goTo('verify')">⚠ Verify your identity →</div>`}
+        </div>
+      </div>
+      <button class="nav-cta primary" onclick="launchStudio()" style="margin-left:auto;align-self:center">OPEN STUDIO</button>
+    </div>
+
+    <div class="profile-stats">
+      <div class="ps"><div class="ps-num">7</div><div class="ps-label">TRACKS</div></div>
+      <div class="ps"><div class="ps-num">3</div><div class="ps-label">PROJECTS</div></div>
+      <div class="ps"><div class="ps-num">${user.downloadsUsed||0}</div><div class="ps-label">DOWNLOADS</div></div>
+      <div class="ps"><div class="ps-num">0</div><div class="ps-label">COLLABS</div></div>
+    </div>
+
+    <div class="dash-section-head" style="margin-bottom:12px"><span>RELEASED TRACKS</span></div>
+    <div class="profile-tracks">
+      ${[
+        {title:'Night Drive', meta:'A Min · 92 BPM · 4:12', color:'#00ccff', e:'🌙'},
+        {title:'Kora Dreams', meta:'G Maj · 115 BPM · 3:44', color:'#ffc800', e:'🪘'},
+        {title:'Bass Experiment 01', meta:'D Min · 128 BPM · 2:58', color:'#ff5a1a', e:'🎸'},
+        {title:'Vocal Sketch', meta:'E Min · 80 BPM · 1:33', color:'#9966ff', e:'🎤'},
+      ].map(tr=>`
+        <div class="track-card">
+          <div class="track-thumb" style="background:${tr.color}22;border:1px solid ${tr.color}44">${tr.e}</div>
+          <div class="track-info">
+            <div class="track-title">${tr.title}</div>
+            <div class="track-meta">${tr.meta}</div>
+          </div>
+          <div class="track-play">▶</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div style="margin-top:24px;background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:20px">
+      <div class="dash-section-head" style="margin-bottom:14px"><span>ACCOUNT SETTINGS</span></div>
+      <div class="frow" style="gap:12px">
+        <div class="field"><label>ARTIST NAME</label><input value="${user.artistName}" oninput="user.artistName=this.value;saveUser()"></div>
+        <div class="field"><label>COUNTRY</label>
+          <select onchange="user.country=this.value;saveUser()">
+            ${['South Africa','United States','United Kingdom','Nigeria','Kenya','Ghana','France','Germany','Brazil','Other'].map(c=>`<option${c===user.country?' selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <button class="btn-s" style="width:auto;padding:0 20px;margin-top:0" onclick="toast('Profile saved','success')">SAVE CHANGES</button>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════
+// IDENTITY VERIFICATION
+// ═══════════════════════
+let verifyStep = 1;
+let uploadedFile = null;
+
+function renderVerify(body) {
+  body.innerHTML = `
+  <div class="verify-page">
+    <div style="margin-bottom:28px">
+      <div style="font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:6px">Identity Verification</div>
+      <div style="font-family:var(--body);color:var(--tm);font-size:13px;line-height:1.6">
+        MagniProjekta verifies every artist to protect the catalogue, enforce licensing agreements, and ensure royalties reach the right people. This is a once-off process.
+      </div>
+    </div>
+
+    <div class="verify-steps">
+      ${['UPLOAD ID','DECLARATION','CONFIRM'].map((s,i)=>`
+        <div class="vstep ${verifyStep>i+1?'done':verifyStep===i+1?'active':''}">
+          <div class="vstep-num">${verifyStep>i+1?'✓':i+1}</div>
+          <div class="vstep-label">${s}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div id="verifyContent"></div>
+  </div>`;
+  renderVerifyStep();
+}
+
+function renderVerifyStep() {
+  const c = document.getElementById('verifyContent');
+  if (!c) return;
+  if (verifyStep === 1) {
+    c.innerHTML = `
+      <div class="verify-card">
+        <div class="vc-title">Upload Government-Issued ID</div>
+        <div class="vc-sub">We accept passports, national identity documents, and driver's licences. Your document is encrypted and used only for verification — never shared.</div>
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()"
+          ondragover="event.preventDefault();this.classList.add('active-drop')"
+          ondragleave="this.classList.remove('active-drop')"
+          ondrop="handleFileDrop(event)">
+          <div class="uz-icon">🪪</div>
+          <div class="uz-txt"><strong>Click to upload</strong> or drag and drop your ID document</div>
+          <div class="uz-types">PDF, JPG, PNG · Max 10MB</div>
+        </div>
+        <input type="file" id="fileInput" class="uz-file-input" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileSelect(this.files[0])">
+        <div id="filePreview"></div>
+      </div>
+      <button class="btn-p" id="step1Next" style="opacity:.4;pointer-events:none" onclick="verifyStep=2;renderVerify(document.getElementById('appBody'))">CONTINUE →</button>`;
+    if (uploadedFile) {
+      showFilePreview(uploadedFile);
+      document.getElementById('step1Next').style.opacity = '1';
+      document.getElementById('step1Next').style.pointerEvents = 'auto';
+    }
+  } else if (verifyStep === 2) {
+    c.innerHTML = `
+      <div class="verify-card">
+        <div class="vc-title">Artist Declaration</div>
+        <div class="vc-sub">Please read and sign the following declaration. This forms part of your MagniProjekta Platform Agreement.</div>
+        <div class="declaration-box">
+          <strong>PLATFORM LICENSING DECLARATION</strong><br><br>
+          I, the undersigned artist, hereby declare that:<br><br>
+          1. I am the sole or joint creator of the music I submit to the Pro M.A.S.T.E.R platform;<br>
+          2. I am <strong>not exclusively signed</strong> to any other record label, distributor, or music publisher that would restrict my ability to licence music through MagniProjekta;<br>
+          3. I grant MagniProjekta a <strong>non-exclusive licence</strong> to feature, promote, and distribute music I create on this platform, subject to the Platform Terms of Service;<br>
+          4. All royalties arising from distribution shall be split according to the rates agreed at time of release, with MagniProjekta retaining the platform's standard distribution fee;<br>
+          5. I understand that this declaration is a legally binding document and that misrepresentation may result in account termination and legal action;<br>
+          6. This agreement is governed by the laws of <strong>South Africa</strong> and applicable international copyright conventions.
+        </div>
+        <div class="check-row" onclick="toggleCheck('declaration')">
+          <div class="check-box${checks.declaration?' checked':''}" id="chk-declaration">${checks.declaration?'✓':''}</div>
+          <div class="check-label">I have read and agree to the Platform Licensing Declaration above</div>
+        </div>
+        <div class="check-row" onclick="toggleCheck('notSigned')">
+          <div class="check-box${checks.notSigned?' checked':''}" id="chk-notSigned">${checks.notSigned?'✓':''}</div>
+          <div class="check-label">I confirm I am not exclusively signed to another record label</div>
+        </div>
+        <div class="check-row" onclick="toggleCheck('terms')">
+          <div class="check-box${checks.terms?' checked':''}" id="chk-terms">${checks.terms?'✓':''}</div>
+          <div class="check-label">I agree to the MagniProjekta Platform Terms of Service and Privacy Policy</div>
+        </div>
+      </div>
+      <button class="btn-p" id="step2Next" style="${allChecked()?'':'opacity:.4;pointer-events:none'}" onclick="verifyStep=3;renderVerify(document.getElementById('appBody'))">SIGN & CONTINUE →</button>
+      <button class="btn-s" onclick="verifyStep=1;renderVerify(document.getElementById('appBody'))">← BACK</button>`;
+  } else if (verifyStep === 3) {
+    c.innerHTML = `
+      <div class="verify-card" style="text-align:center">
+        <div style="font-size:48px;margin-bottom:16px">🎉</div>
+        <div class="vc-title">Verification Submitted</div>
+        <div class="vc-sub">Your identity document and declaration have been received. MagniProjekta will review and verify your account within 24–48 hours. You'll receive an email confirmation once approved.<br><br>Your artist profile is now live. You can continue creating in the studio while verification is processed.</div>
+        <div style="background:var(--gng);border:1px solid rgba(0,255,170,.2);border-radius:8px;padding:16px;margin:16px 0;text-align:left">
+          <div style="font-size:8px;letter-spacing:.15em;color:var(--gn);margin-bottom:8px">SUBMISSION DETAILS</div>
+          <div style="font-size:10px;color:var(--tm);line-height:2;font-family:var(--body)">
+            Artist: <strong style="color:var(--tx)">${user.artistName}</strong><br>
+            Document: <strong style="color:var(--tx)">${uploadedFile?.name||'ID Document'}</strong><br>
+            Declaration signed: <strong style="color:var(--tx)">✓</strong><br>
+            Submitted: <strong style="color:var(--tx)">${new Date().toLocaleString()}</strong>
+          </div>
+        </div>
+      </div>
+      <button class="btn-p" onclick="completeVerification()">DONE — GO TO DASHBOARD</button>`;
+  }
+}
+
+function handleFileSelect(file) {
+  if (!file) return;
+  uploadedFile = file;
+  showFilePreview(file);
+  const next = document.getElementById('step1Next');
+  if (next) { next.style.opacity='1'; next.style.pointerEvents='auto'; }
+}
+
+function handleFileDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone')?.classList.remove('active-drop');
+  const file = e.dataTransfer.files[0];
+  if (file) handleFileSelect(file);
+}
+
+function showFilePreview(file) {
+  const prev = document.getElementById('filePreview');
+  if (!prev) return;
+  prev.innerHTML = `
+    <div class="id-preview">
+      <div class="id-preview-icon">🪪</div>
+      <div class="id-preview-name">${file.name}</div>
+      <div class="id-preview-size">${(file.size/1024).toFixed(0)} KB</div>
+    </div>`;
+}
+
+function toggleCheck(key) {
+  checks[key] = !checks[key];
+  const el = document.getElementById(`chk-${key}`);
+  if (el) { el.className = `check-box${checks[key]?' checked':''}`; el.textContent = checks[key]?'✓':''; }
+  const next = document.getElementById('step2Next');
+  if (next) { const ok=allChecked(); next.style.opacity=ok?'1':'.4'; next.style.pointerEvents=ok?'auto':'none'; }
+}
+
+function allChecked() { return checks.declaration && checks.notSigned && checks.terms; }
+
+async function completeVerification() {
+  user.idVerified = true;
+  await saveUser({ idVerified: true });
+  idVerified = true;
+  // Also write to id_verifications table if live
+  if (LIVE_MODE) {
+    const sb = getSB();
+    if (sb && user?.id) {
+      await sb.from('id_verifications').upsert({
+        user_id: user.id,
+        status: 'pending', // becomes 'approved' after admin review
+        declaration_signed: true,
+        document_url: uploadedFile?.name || 'pending',
+        reviewed_at: null,
+      });
+    }
+  }
+  document.getElementById('verifyDot').className = 'pill-dot on';
+  document.getElementById('verifyPillTxt').textContent = 'ID SUBMITTED ✓';
+  toast('Identity submitted! Verification pending admin review.', 'success');
+  goTo('dashboard');
+}
+
+// ═══════════════════════
+// COLLABORATION ROOM
+// ═══════════════════════
+let collabMessages = [
+  {who:'BlackJack', msg:"Yo, I'm in. What key are we working in?", time:'2 min ago'},
+  {who:'Sam Adesanya', msg:"A Minor for me. Let me lay the bass first.", time:'1 min ago'},
+];
+
+function renderCollab(body) {
+  if (!user || user.tier !== 'member') {
+    body.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:16px;padding:40px;text-align:center">
+        <div style="font-size:48px">🔒</div>
+        <div style="font-family:var(--disp);font-weight:700;font-size:20px">Member Feature</div>
+        <div style="font-family:var(--body);color:var(--tm);max-width:400px;line-height:1.7">Global collaboration rooms are available to Pro M.A.S.T.E.R Label Members. Apply to join the roster to link with artists across the world in real time.</div>
+        <button class="btn-hero primary" onclick="showModal('member-apply')" style="font-size:10px">APPLY FOR MEMBERSHIP</button>
+        <div style="font-size:9px;color:var(--td)">Current plan: ${TIERS_DATA[user.tier||'free'].name} · <span style="color:var(--or);cursor:pointer" onclick="showModal('upgrade')">Upgrade</span></div>
+      </div>`;
+    return;
+  }
+
+  body.innerHTML = `
+  <div class="collab-room" style="height:calc(100vh - 52px)">
+    <div class="cr-sidebar">
+      <div class="cr-session-info">
+        <div class="crs-label">ACTIVE SESSION</div>
+        <div class="crs-val">NIGHT DRIVE — 03</div>
+        <div style="font-size:8px;color:var(--tm);margin-top:4px;font-family:var(--body)">A Minor · 92 BPM · Live</div>
+      </div>
+      <div>
+        <div style="font-size:8px;letter-spacing:.14em;color:var(--tm);margin-bottom:8px">PARTICIPANTS (3)</div>
+        <div class="cr-participants">
+          ${[
+            {n:user.artistName, loc:'Pretoria, SA', c:'linear-gradient(135deg,#ff5a1a,#ff1a8c)', you:true},
+            {n:'BlackJack', loc:'International', c:'linear-gradient(135deg,#00ccff,#9966ff)'},
+            {n:'Sam Adesanya', loc:'London, UK', c:'linear-gradient(135deg,#ff1a8c,#ff5a1a)'},
+          ].map(p=>`
+            <div class="crp-item">
+              <div class="crp-av" style="background:${p.c}">${p.n[0]}</div>
+              <div>
+                <div class="crp-name">${p.n}${p.you?' (you)':''}</div>
+                <div class="crp-loc">📍 ${p.loc}</div>
+              </div>
+              <div class="crp-live"></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div style="margin-top:auto">
+        <button class="invite-btn" onclick="toast('Invite link copied to clipboard','success')">+ INVITE ARTIST</button>
+        <button class="invite-btn" style="margin-top:6px;border-color:rgba(255,90,26,.3);color:var(--or)" onclick="toast('Royalty split agreement opened','')">📋 SPLIT AGREEMENT</button>
+      </div>
+    </div>
+
+    <div class="cr-main">
+      <div class="cr-daw-head">
+        <div class="cr-daw-title">SHARED SESSION TIMELINE</div>
+        <div class="pill" style="margin-left:auto"><div class="pill-dot on"></div>SYNC ACTIVE</div>
+        <button style="height:24px;padding:0 10px;border-radius:4px;border:1px solid var(--b);background:none;cursor:pointer;font-family:var(--mono);font-size:8px;color:var(--tm);margin-left:8px" onclick="launchStudio()">OPEN IN STUDIO ↗</button>
+      </div>
+      <div class="cr-tracks" style="flex:1;overflow-y:auto">
+        ${[
+          {name:'Night Drive', owner:user.artistName, color:'#00ccff', fill:60},
+          {name:'Lagos Bass', owner:'BlackJack', color:'#9966ff', fill:45},
+          {name:'London Vocals', owner:'Sam Adesanya', color:'#ff1a8c', fill:30},
+        ].map(tr=>`
+          <div class="cr-track">
+            <div class="crt-label" style="border-left:3px solid ${tr.color}">
+              <div>
+                <div>${tr.name}</div>
+                <div class="crt-owner">${tr.owner}</div>
+              </div>
+            </div>
+            <div class="crt-wave">
+              <canvas id="crwc${tr.name.replace(/\s/g,'')}" style="width:100%;height:52px"></canvas>
+            </div>
+          </div>
+        `).join('')}
+        <div style="border:1px dashed var(--b);border-radius:6px;height:52px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--td);letter-spacing:.1em;cursor:pointer;margin-bottom:6px" onclick="toast('Add your track in the Studio, then sync here','')">
+          + ADD YOUR TRACK
+        </div>
+      </div>
+    </div>
+
+    <div class="cr-right">
+      <div class="cr-chat">
+        <div class="cr-chat-head">SESSION CHAT</div>
+        <div class="cr-messages" id="crMessages">
+          ${collabMessages.map(m=>`
+            <div class="cr-msg ${m.who===user.artistName?'me':'them'}">
+              <div class="cr-msg-who">${m.who} · ${m.time}</div>
+              ${m.msg}
+            </div>
+          `).join('')}
+        </div>
+        <div class="cr-input-row">
+          <input class="cr-input" id="crInput" placeholder="Message..." onkeydown="if(event.key==='Enter')sendCrMsg()">
+          <button class="cr-send" onclick="sendCrMsg()">↑</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // Draw collab waveforms
+  requestAnimationFrame(drawCollabWaves);
+}
+
+function drawCollabWaves() {
+  [['NightDrive','#00ccff',60],['LagosBass','#9966ff',45],['LondonVocals','#ff1a8c',30]].forEach(([id,col,fill])=>{
+    const c = document.getElementById(`crwc${id}`); if(!c) return;
+    c.width=c.offsetWidth; c.height=c.offsetHeight;
+    const ctx=c.getContext('2d'),W=c.width,H=c.height;
+    ctx.fillStyle='#12121c'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle=col; ctx.lineWidth=1.5; ctx.shadowColor=col; ctx.shadowBlur=4;
+    ctx.beginPath();
+    for(let x=0;x<W*fill/100;x++){
+      const seed=id.charCodeAt(0)*x*.02;
+      const y=H/2+Math.sin(x*.08+seed)*H*.35*(Math.random()*.3+.7);
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke(); ctx.shadowBlur=0;
+  });
+}
+
+function sendCrMsg() {
+  const inp = document.getElementById('crInput'); if(!inp||!inp.value.trim()) return;
+  collabMessages.push({who:user.artistName, msg:inp.value.trim(), time:'Just now'});
+  inp.value='';
+  const msgs = document.getElementById('crMessages');
+  if(msgs){
+    msgs.innerHTML = collabMessages.map(m=>`
+      <div class="cr-msg ${m.who===user.artistName?'me':'them'}">
+        <div class="cr-msg-who">${m.who} · ${m.time}</div>
+        ${m.msg}
+      </div>`).join('');
+    msgs.scrollTop=msgs.scrollHeight;
+  }
+}
+
+// ═══════════════════════
+// MODALS
+// ═══════════════════════
+function showModal(type, tierPreset) {
+  if (tierPreset) selectedTier = tierPreset;
+  const overlay = document.getElementById('overlay');
+  const modal = document.getElementById('modal');
+  overlay.classList.remove('hidden');
+
+  if (type === 'login') {
+    modal.innerHTML = `
+      <div class="modal-logo">Pro M.A.S.T.E.R</div>
+      <div class="modal-sub">PRO M.A.S.T.E.R RECORD LABEL</div>
+      <div class="modal-title">Sign In to Your Studio</div>
+      <div class="field"><label>EMAIL</label><input type="email" id="li-email" placeholder="artist@email.com"></div>
+      <div class="field"><label>PASSWORD</label><input type="password" id="li-pw" placeholder="••••••••"></div>
+      <button class="btn-p" onclick="handleLogin()">SIGN IN</button>
+      <button class="btn-s" onclick="closeModal()">CANCEL</button>
+      <div class="modal-foot">No account? <span onclick="showModal('register')">Register free</span></div>`;
+  } else if (type === 'register') {
+    modal.innerHTML = `
+      <div class="modal-logo">Pro M.A.S.T.E.R</div>
+      <div class="modal-sub">PRO M.A.S.T.E.R RECORD LABEL</div>
+      <div class="modal-title">Create Your Artist Account</div>
+      <div class="frow">
+        <div class="field"><label>FIRST NAME</label><input id="rg-first" placeholder="First"></div>
+        <div class="field"><label>LAST NAME</label><input id="rg-last" placeholder="Last"></div>
+      </div>
+      <div class="field"><label>ARTIST / STAGE NAME</label><input id="rg-artist" placeholder="What the world calls you"></div>
+      <div class="field"><label>EMAIL</label><input type="email" id="rg-email" placeholder="you@example.com"></div>
+      <div class="field"><label>PASSWORD</label><input type="password" id="rg-pw" placeholder="Min 8 characters"></div>
+      <div class="frow">
+        <div class="field"><label>COUNTRY</label>
+          <select id="rg-country">
+            ${['South Africa','United States','United Kingdom','Nigeria','Kenya','Ghana','France','Germany','Brazil','Japan','Other'].map(c=>`<option>${c}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field"><label>GENRE</label>
+          <select id="rg-genre">
+            ${['Jazz','Hip-Hop','Afrobeats','Electronic','R&B / Soul','Classical','Gospel','Kwaito','Amapiano','Pop','Other'].map(g=>`<option>${g}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div style="font-size:9px;color:var(--tm);line-height:1.8;margin-bottom:12px;font-family:var(--body);background:var(--bg3);border-radius:5px;padding:10px">
+        By registering, you confirm you are not exclusively signed to another label and agree to MagniProjekta's Platform Terms. A non-exclusive licence is granted to feature your work on this platform.
+      </div>
+      <button class="btn-p" onclick="handleRegister()">CREATE FREE ACCOUNT</button>
+      <button class="btn-s" onclick="closeModal()">CANCEL</button>
+      <div class="modal-foot">Already have an account? <span onclick="showModal('login')">Sign in</span></div>`;
+  } else if (type === 'upgrade') {
+    modal.innerHTML = `
+      <div class="modal-logo">Upgrade Plan</div>
+      <div class="modal-sub">PRO M.A.S.T.E.R RECORD LABEL</div>
+      <div class="modal-title">Choose Your Membership Level</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+        ${Object.entries(TIERS_DATA).filter(([k])=>k!=='member').map(([key,t])=>`
+          <div class="tier-card${key===user?.tier?' selected featured':''}" data-utier="${key}" onclick="document.querySelectorAll('[data-utier]').forEach(c=>c.classList.remove('selected','featured'));this.classList.add('selected','featured');selectedTier=this.dataset.utier" style="padding:14px">
+            <div class="tc-name" style="font-size:12px">${t.name}</div>
+            <div class="tc-price" style="font-size:20px">${t.price}${t.monthly>0?'<sub style="font-size:10px">/mo</sub>':''}</div>
+            <div class="tc-desc">${t.dl===999?'Unlimited':'Up to '+t.dl} downloads/mo</div>
+          </div>
+        `).join('')}
+      </div>
+      ${selectedTier!=='free'?`
+      <div class="payment-card">
+        <div class="payment-title">PAYMENT METHOD</div>
+        <div class="card-input"><div class="card-icon">💳</div><div class="card-num">•••• •••• •••• 4242</div><div style="font-size:10px;color:var(--tm)">12/27</div></div>
+        <div class="stripe-badge">Secured by <span>Stripe</span> · Payments processed via Stripe Billing</div>
+      </div>`:''}
+      <button class="btn-p" onclick="confirmUpgrade()">CONFIRM PLAN</button>
+      <button class="btn-s" onclick="closeModal()">CANCEL</button>`;
+  } else if (type === 'member-apply') {
+    modal.innerHTML = `
+      <div class="modal-logo">Label Membership</div>
+      <div class="modal-sub">PRO M.A.S.T.E.R RECORD LABEL</div>
+      <div class="modal-title">Apply to Join the Roster</div>
+      <div style="font-family:var(--body);font-size:12px;color:var(--tm);line-height:1.8;margin-bottom:18px;background:var(--bg3);border-radius:6px;padding:14px">
+        Pro M.A.S.T.E.R Label Membership is by application. Members get unlimited access, global collaboration, distribution to Spotify & Apple Music, royalty tracking, and a verified label profile. We review every application personally.
+      </div>
+      <div class="field"><label>ARTIST NAME</label><input value="${user?.artistName||''}" id="ma-name"></div>
+      <div class="field"><label>GENRE / STYLE</label><input placeholder="e.g. Afrobeats, Jazz, Electronic" id="ma-genre"></div>
+      <div class="field"><label>LINKS (SoundCloud, Spotify, YouTube)</label><input placeholder="https://" id="ma-links"></div>
+      <div class="field"><label>WHY DO YOU WANT TO JOIN MAGNIPROJEKTA?</label>
+        <textarea rows="3" id="ma-why" placeholder="Tell us about your music and what you want to build..."></textarea>
+      </div>
+      <div class="field"><label>CURRENT LABEL STATUS</label>
+        <select id="ma-status">
+          <option>Independent (no label)</option>
+          <option>Distributor only (TuneCore, DistroKid, etc.)</option>
+          <option>Leaving a previous label</option>
+        </select>
+      </div>
+      <button class="btn-p" onclick="submitMemberApp()">SUBMIT APPLICATION</button>
+      <button class="btn-s" onclick="closeModal()">CANCEL</button>`;
+  }
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.add('hidden');
+}
+
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay')) closeModal();
+});
+
+// ═══════════════════════
+// AUTH HANDLERS
+// ═══════════════════════
+async function handleLogin() {
+  const email = document.getElementById('li-email')?.value?.trim();
+  const pw    = document.getElementById('li-pw')?.value;
+  if (!email) { toast('Enter your email address', 'error'); return; }
+
+  const btn = document.querySelector('#modal .btn-p');
+  if (btn) { btn.textContent = 'SIGNING IN...'; btn.style.opacity = '.7'; btn.style.pointerEvents = 'none'; }
+
+  if (LIVE_MODE) {
+    try {
+      await supabaseLogin(email, pw || '');
+      // onAuthStateChange fires → hydrateUserFromDB → enterPlatform
+      closeModal();
+      toast(`Welcome back! Loading your studio...`, 'success');
+    } catch(err) {
+      if (btn) { btn.textContent = 'SIGN IN'; btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
+      toast(err.message || 'Login failed. Check your credentials.', 'error');
+    }
+  } else {
+    // Demo mode — localStorage
+    const stored = localStorage.getItem('pm3_user');
+    if (stored) { try { user = JSON.parse(stored); } catch(e){} }
+    if (!user) {
+      user = { artistName: email.split('@')[0], email, tier:'free', country:'South Africa',
+               genre:'Other', downloadsUsed:0, joined:new Date().toISOString(), idVerified:false };
+      saveUserLocal();
+    }
+    closeModal();
+    enterPlatform();
+    toast(`Welcome back, ${user.artistName}`, 'success');
+  }
+}
+
+async function handleRegister() {
+  const first  = document.getElementById('rg-first')?.value?.trim();
+  const last   = document.getElementById('rg-last')?.value?.trim();
+  const artist = document.getElementById('rg-artist')?.value?.trim();
+  const email  = document.getElementById('rg-email')?.value?.trim();
+  const pw     = document.getElementById('rg-pw')?.value;
+  const country= document.getElementById('rg-country')?.value;
+  const genre  = document.getElementById('rg-genre')?.value;
+  if (!first||!artist||!email) { toast('Please fill all required fields', 'error'); return; }
+  if (LIVE_MODE && (!pw || pw.length < 8)) { toast('Password must be at least 8 characters', 'error'); return; }
+
+  const btn = document.querySelector('#modal .btn-p');
+  if (btn) { btn.textContent = 'CREATING ACCOUNT...'; btn.style.opacity='.7'; btn.style.pointerEvents='none'; }
+
+  const meta = { first, last, artistName:artist, email, country, genre, tier:selectedTier||'free' };
+
+  if (LIVE_MODE) {
+    try {
+      await supabaseRegister(email, pw, meta);
+      closeModal();
+      toast(`Welcome to Pro M.A.S.T.E.R, ${artist}! Check your email to confirm your account. 🎵`, 'success');
+      // onAuthStateChange will fire when email confirmed (or immediately if email confirm disabled)
+    } catch(err) {
+      if (btn) { btn.textContent = 'CREATE ACCOUNT'; btn.style.opacity='1'; btn.style.pointerEvents='auto'; }
+      toast(err.message || 'Registration failed. Please try again.', 'error');
+    }
+  } else {
+    // Demo mode
+    user = { ...meta, downloadsUsed:0, joined:new Date().toISOString(), idVerified:false };
+    saveUserLocal();
+    closeModal();
+    enterPlatform();
+    toast(`Welcome to Pro M.A.S.T.E.R, ${artist}! 🎵`, 'success');
+    setTimeout(() => { if (!user.idVerified) toast('→ Verify your identity to unlock all features', ''); }, 3000);
+  }
+}
+
+async function confirmUpgrade() {
+  if (!user) return;
+  const sel = document.querySelector('#upgradeTierGrid .tier-card.selected');
+  const tier = sel?.dataset.tier || selectedTier;
+  if (LIVE_MODE) {
+    await startStripeCheckout(tier);
+    // Stripe webhook updates DB tier on successful payment
+  } else {
+    user.tier = tier;
+    await saveUser({ tier });
+    updateAppUI();
+    closeModal();
+    toast(`Upgraded to ${TIERS_DATA[tier].name}!`, 'success');
+    if (currentView === 'dashboard') goTo('dashboard');
+  }
+}
+
+async function submitMemberApp() {
+  const why = document.getElementById('ma-why')?.value;
+  if (!why) { toast('Tell us about yourself', 'error'); return; }
+  if (LIVE_MODE) {
+    const sb = getSB();
+    if (sb && user?.id) {
+      await sb.from('member_applications').insert({
+        user_id: user.id,
+        artist_name: document.getElementById('ma-name')?.value || user.artistName,
+        genre: document.getElementById('ma-genre')?.value,
+        links: document.getElementById('ma-links')?.value,
+        why_statement: why,
+        status: 'pending',
+        submitted_at: new Date().toISOString(),
+      });
+    }
+  }
+  closeModal();
+  toast('Application submitted! We\'ll review and contact you within 5 business days.', 'success');
+}
+
+// ═══════════════════════
+// ARTIST ROSTER / DISCOVERY
+// ═══════════════════════
+
+const ROSTER_ARTISTS = [
+  { id:1,  name:'Amara Diallo',    initials:'AD', country:'Senegal',        genre:'Afrobeat / Jazz',     tier:'member',  tracks:12, plays:4820,  verified:true,  online:true,  bio:'Kora player and composer weaving West African traditions into modern jazz textures.',   grad:'#c87820,#8a4a10', samples:['Dawn Ritual','Kora Suite No.3','River Hymn'] },
+  { id:2,  name:'BlackJack',       initials:'BJ', country:'International',  genre:'Electronic / AI DJ',  tier:'member',  tracks:38, plays:92100, verified:true,  online:true,  bio:'Pro M.A.S.T.E.R resident AI DJ. Architect of sound. Always in session.',              grad:'#3a1a6a,#6a2a9a', samples:['Midnight Protocol','Binary Soul','The Drop'] },
+  { id:3,  name:'Lena Osei',       initials:'LO', country:'Ghana',          genre:'Highlife / R&B',      tier:'member',  tracks:7,  plays:2310,  verified:true,  online:false, bio:'Vocalist and songwriter. Highlife roots, contemporary soul. Based in Accra.',        grad:'#1a5a2a,#2a9a4a', samples:['Golden Hour','Nkosua','Sweet Return'] },
+  { id:4,  name:'Tariq Mansour',   initials:'TM', country:'Egypt',          genre:'Oud / Neo-Classical', tier:'member',  tracks:9,  plays:3670,  verified:true,  online:true,  bio:'Oud virtuoso and arranger. Bridging Cairo classical tradition and electronic production.', grad:'#5a2a1a,#9a4a2a', samples:['Alexandria','Desert Frequency','Al Nil'] },
+  { id:5,  name:'Sam Adesanya',    initials:'SA', country:'United Kingdom', genre:'Grime / Electronic',  tier:'member',  tracks:14, plays:6200,  verified:true,  online:false, bio:'Producer and MC from South London. Grime architecture with jazz-influenced sampling.', grad:'#1a3a5a,#2a5a8a', samples:['Concrete Garden','143 BPM','Late Shift'] },
+  { id:6,  name:'Yuna Park',       initials:'YP', country:'South Korea',    genre:'K-Indie / Synth',     tier:'pro',     tracks:5,  plays:1890,  verified:true,  online:true,  bio:'Synth and piano composer exploring the space between K-indie and ambient electronic.',  grad:'#4a1a5a,#8a2a9a', samples:['Hangang Bridge','Static','Seoul 3AM'] },
+  { id:7,  name:'Marco Ferreira',  initials:'MF', country:'Brazil',         genre:'Bossa / Electronic',  tier:'pro',     tracks:8,  plays:3100,  verified:true,  online:false, bio:'Rio-born beatmaker. Bossa Nova DNA in a contemporary electronic frame.',              grad:'#1a4a2a,#2a7a3a', samples:['Carioca','Ipanema Rework','Mangueira'] },
+  { id:8,  name:'Fatou Sy',        initials:'FS', country:'Senegal',        genre:'Mbalax / Fusion',     tier:'artist',  tracks:4,  plays:980,   verified:false, online:true,  bio:'Percussionist and vocalist. Mbalax rhythms meeting global fusion influences.',        grad:'#5a3a1a,#9a6a2a', samples:['Dakar Nights','Sabar','Teranga'] },
+  { id:9,  name:'Kenji Watanabe',  initials:'KW', country:'Japan',          genre:'Jazz / Ambient',      tier:'artist',  tracks:6,  plays:1540,  verified:true,  online:false, bio:'Jazz pianist and ambient composer from Osaka. Studied at Berklee, returned to Japan.', grad:'#1a2a5a,#2a3a8a', samples:['Sakura Protocol','Midnight Kyoto','Wabi'] },
+  { id:10, name:'Chisom Okafor',   initials:'CO', country:'Nigeria',        genre:'Afrobeats / Trap',    tier:'creator', tracks:3,  plays:720,   verified:false, online:true,  bio:'Lagos beatmaker. Afrobeats and trap fusion. Every beat tells a Lagos story.',          grad:'#4a2a1a,#8a4a2a', samples:['Lagos Wave','Eko','Hustle Season'] },
+  { id:11, name:'Ines Leblanc',    initials:'IL', country:'France',         genre:'French House / Soul', tier:'artist',  tracks:5,  plays:2200,  verified:true,  online:false, bio:'Paris-based producer. French house filtered through deep soul and neo-classic harmony.', grad:'#1a1a4a,#2a2a7a', samples:['Minuit','Versailles Low','Chanson 2.0'] },
+  { id:12, name:'Ravi Shankar Jr', initials:'RS', country:'India',          genre:'Fusion / Classical',  tier:'pro',     tracks:11, plays:4100,  verified:true,  online:true,  bio:'Sitar and production. Indian classical tradition in conversation with global electronic.', grad:'#5a1a1a,#9a2a2a', samples:['Raga Electric','Monsoon','Delhi Flow'] },
+];
+
+let rosterFilter = 'all'; // all, member, online, genre
+let playingArtist = null;
+let playingTrack = null;
+
+function renderRoster(body) {
+  const isMember = user?.tier === 'member';
+  body.innerHTML = `
+  <div style="padding:28px 32px;max-width:1200px;margin:0 auto">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px">
+      <div>
+        <div style="font-family:var(--disp);font-weight:800;font-size:26px;margin-bottom:6px">Artist Roster</div>
+        <div style="font-family:var(--body);color:var(--tm);font-size:13px">
+          ${isMember
+            ? 'Browse the roster, listen to tracks, and invite artists to collaborate.'
+            : 'Listen to artists on the roster. <span style="color:var(--or);cursor:pointer" onclick="showModal(\'upgrade\')">Become a Member</span> to collaborate.'}
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="rosterFilters">
+        ${['ALL','MEMBERS','ONLINE NOW','VERIFIED'].map(f=>`
+          <button onclick="setRosterFilter('${f.toLowerCase().replace(' ','_')}')"
+            style="height:28px;padding:0 12px;border-radius:4px;border:1px solid ${rosterFilter===f.toLowerCase().replace(' ','_')?'var(--or)':'var(--b2)'};
+            background:${rosterFilter===f.toLowerCase().replace(' ','_')?'rgba(255,95,31,.1)':'var(--bg2)'};
+            cursor:pointer;font-family:var(--mono);font-size:8px;letter-spacing:.14em;
+            color:${rosterFilter===f.toLowerCase().replace(' ','_')?'var(--or)':'var(--tm)'};transition:.15s">
+            ${f}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- NOW PLAYING BAR -->
+    <div id="nowPlayingBar" style="display:none;background:var(--bg2);border:1px solid var(--b2);border-radius:8px;
+      padding:12px 16px;margin-bottom:20px;display:none;align-items:center;gap:14px">
+      <div style="font-size:16px">🎵</div>
+      <div style="flex:1">
+        <div style="font-size:10px;font-weight:600" id="npTrack">—</div>
+        <div style="font-size:8px;color:var(--tm);margin-top:2px" id="npArtist">—</div>
+      </div>
+      <canvas id="npWave" style="width:120px;height:28px;border-radius:3px"></canvas>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--gn);box-shadow:0 0 6px var(--gn);animation:lp 1.5s infinite"></div>
+        <div style="font-size:8px;letter-spacing:.12em;color:var(--gn)">PLAYING</div>
+      </div>
+      <button onclick="stopPlayingTrack()" style="height:24px;padding:0 10px;border-radius:3px;border:1px solid var(--b);background:none;cursor:pointer;font-family:var(--mono);font-size:8px;color:var(--tm);transition:.15s">⏹ STOP</button>
+    </div>
+
+    <!-- ARTIST GRID -->
+    <div id="rosterGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+    </div>
+  </div>`;
+
+  renderRosterGrid();
+  animateNpWave();
+}
+
+function setRosterFilter(f) {
+  rosterFilter = f;
+  renderRoster(document.getElementById('appBody'));
+  document.querySelectorAll('.app-nav-btn').forEach(b => b.classList.toggle('act', b.dataset.view === 'roster'));
+}
+
+function renderRosterGrid() {
+  const grid = document.getElementById('rosterGrid');
+  if (!grid) return;
+  let artists = [...ROSTER_ARTISTS];
+  if (rosterFilter === 'members') artists = artists.filter(a => a.tier === 'member');
+  if (rosterFilter === 'online_now') artists = artists.filter(a => a.online);
+  if (rosterFilter === 'verified') artists = artists.filter(a => a.verified);
+
+  const TIER_BADGE = { member:'var(--or)', pro:'var(--gn)', artist:'var(--yl)', creator:'var(--cy)' };
+  const isMember = user?.tier === 'member';
+
+  grid.innerHTML = artists.map(a => `
+    <div style="background:var(--bg2);border:1px solid var(--b);border-radius:10px;overflow:hidden;transition:all .2s;cursor:default"
+      onmouseover="this.style.borderColor='var(--b2)';this.style.transform='translateY(-2px)'"
+      onmouseout="this.style.borderColor='var(--b)';this.style.transform='none'">
+
+      <!-- Card header -->
+      <div style="height:72px;background:linear-gradient(135deg,#${a.grad.split(',')[0].replace('#','')},#${a.grad.split(',')[1].replace('#','')});position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;opacity:.15;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,255,255,.05) 10px,rgba(255,255,255,.05) 11px)"></div>
+        ${a.online ? `<div style="position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.4);border-radius:20px;padding:3px 8px">
+          <div style="width:5px;height:5px;border-radius:50%;background:var(--gn);box-shadow:0 0 5px var(--gn);animation:lp 1.5s infinite"></div>
+          <div style="font-size:7px;letter-spacing:.12em;color:var(--gn)">ONLINE</div>
+        </div>` : ''}
+        <div style="position:absolute;bottom:-20px;left:16px;width:44px;height:44px;border-radius:50%;
+          background:linear-gradient(135deg,${a.grad});
+          border:3px solid var(--bg2);display:flex;align-items:center;justify-content:center;
+          font-size:16px;font-weight:700;color:#fff;z-index:2">${a.initials}</div>
+      </div>
+
+      <div style="padding:28px 16px 16px">
+        <!-- Name + badges -->
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--tx)">${a.name}</div>
+            <div style="font-size:9px;color:var(--tm);margin-top:1px;font-family:var(--body)">📍 ${a.country}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+            <div style="font-size:7px;letter-spacing:.14em;padding:2px 7px;border-radius:3px;
+              background:rgba(255,255,255,.05);color:${TIER_BADGE[a.tier]||'var(--tm)'};
+              border:1px solid ${TIER_BADGE[a.tier]||'var(--tm)'}44">
+              ${a.tier.toUpperCase()}
+            </div>
+            ${a.verified ? `<div style="font-size:7px;color:var(--gn);letter-spacing:.1em">✓ VERIFIED</div>` : ''}
+          </div>
+        </div>
+
+        <!-- Genre -->
+        <div style="font-size:8px;letter-spacing:.12em;color:var(--or);margin-bottom:8px">${a.genre.toUpperCase()}</div>
+
+        <!-- Bio -->
+        <div style="font-family:var(--body);font-size:11px;color:var(--tm);line-height:1.6;margin-bottom:12px;
+          display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">
+          ${a.bio}
+        </div>
+
+        <!-- Stats -->
+        <div style="display:flex;gap:16px;margin-bottom:12px;border-top:1px solid var(--b);padding-top:10px">
+          <div style="text-align:center">
+            <div style="font-family:var(--disp);font-weight:700;font-size:14px;color:var(--tx)">${a.tracks}</div>
+            <div style="font-size:7px;color:var(--tm);letter-spacing:.1em">TRACKS</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:var(--disp);font-weight:700;font-size:14px;color:var(--tx)">${a.plays >= 1000 ? (a.plays/1000).toFixed(1)+'K' : a.plays}</div>
+            <div style="font-size:7px;color:var(--tm);letter-spacing:.1em">PLAYS</div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="display:flex;align-items:center;gap:3px">
+            ${a.samples.map(s => `
+              <button onclick="playTrack(${a.id},'${s}')"
+                title="Play: ${s}"
+                style="width:22px;height:22px;border-radius:50%;border:1px solid var(--b2);
+                background:var(--bg3);cursor:pointer;font-size:9px;transition:.15s;display:flex;align-items:center;justify-content:center;color:var(--tm)"
+                onmouseover="this.style.background='var(--or)';this.style.borderColor='var(--or)';this.style.color='var(--ink)'"
+                onmouseout="this.style.background='var(--bg3)';this.style.borderColor='var(--b2)';this.style.color='var(--tm)'">
+                ▶
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Track names -->
+        <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px">
+          ${a.samples.map(s => `
+            <div onclick="playTrack(${a.id},'${s}')"
+              style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:4px;
+              cursor:pointer;transition:.12s;border:1px solid transparent"
+              onmouseover="this.style.background='var(--bg3)';this.style.borderColor='var(--b)'"
+              onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
+              <div style="font-size:9px">🎵</div>
+              <div style="font-size:10px;color:var(--tx);flex:1">${s}</div>
+              <div style="font-size:8px;color:var(--tm)">${Math.floor(Math.random()*3)+2}:${String(Math.floor(Math.random()*59)+1).padStart(2,'0')}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:6px">
+          ${isMember && a.name !== user?.artistName ? `
+            <button onclick="sendCollabInvite(${a.id},'${a.name}')"
+              style="flex:1;height:32px;border-radius:4px;border:1px solid var(--or);background:rgba(255,95,31,.08);
+              cursor:pointer;font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--or);
+              transition:.15s;font-weight:700"
+              onmouseover="this.style.background='var(--or)';this.style.color='var(--bg0)'"
+              onmouseout="this.style.background='rgba(255,95,31,.08)';this.style.color='var(--or)'">
+              + INVITE TO COLLAB
+            </button>
+          ` : !isMember ? `
+            <button onclick="showModal('upgrade')"
+              style="flex:1;height:32px;border-radius:4px;border:1px solid var(--b);background:var(--bg3);
+              cursor:pointer;font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--tm);transition:.15s"
+              title="Member feature">
+              🔒 MEMBER ONLY
+            </button>
+          ` : `<div style="flex:1;height:32px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--td)">YOU</div>`}
+          <button onclick="viewArtistProfile(${a.id})"
+            style="height:32px;padding:0 12px;border-radius:4px;border:1px solid var(--b);background:var(--bg3);
+            cursor:pointer;font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--tm);transition:.15s"
+            onmouseover="this.style.borderColor='var(--b2)';this.style.color='var(--tx)'"
+            onmouseout="this.style.borderColor='var(--b)';this.style.color='var(--tm)'">
+            VIEW
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── AUDIO PLAYBACK (simulated via Web Audio) ──
+let rosterAC = null;
+let rosterOsc = null, rosterGain = null;
+let npWavePhase = 0;
+
+function playTrack(artistId, trackName) {
+  stopPlayingTrack();
+  const artist = ROSTER_ARTISTS.find(a => a.id === artistId);
+  if (!artist) return;
+
+  playingArtist = artist;
+  playingTrack = trackName;
+
+  // Simulated playback via Web Audio
+  if (!rosterAC) rosterAC = new AudioContext();
+  if (rosterAC.state === 'suspended') rosterAC.resume();
+
+  rosterGain = rosterAC.createGain();
+  rosterGain.gain.value = 0.18;
+  rosterGain.connect(rosterAC.destination);
+
+  // Create a simple ambient tone to simulate music playing
+  const freqs = [220, 277, 330, 440, 554];
+  freqs.forEach((f, i) => {
+    const osc = rosterAC.createOscillator();
+    const g = rosterAC.createGain();
+    osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+    osc.frequency.value = f;
+    g.gain.value = 0.03 + (i * 0.01);
+    osc.connect(g); g.connect(rosterGain);
+    osc.start();
+    setTimeout(() => { try { osc.stop(); } catch(e){} }, 30000);
+  });
+
+  // Show now playing bar
+  const bar = document.getElementById('nowPlayingBar');
+  if (bar) {
+    bar.style.display = 'flex';
+    document.getElementById('npTrack').textContent = trackName;
+    document.getElementById('npArtist').textContent = `${artist.name} · ${artist.country}`;
+  }
+}
+
+function stopPlayingTrack() {
+  if (rosterGain) {
+    try { rosterGain.gain.linearRampToValueAtTime(0, rosterAC.currentTime + 0.3); } catch(e){}
+    setTimeout(() => { try { rosterGain.disconnect(); } catch(e){} }, 400);
+  }
+  playingArtist = null; playingTrack = null;
+  const bar = document.getElementById('nowPlayingBar');
+  if (bar) bar.style.display = 'none';
+}
+
+function animateNpWave() {
+  requestAnimationFrame(animateNpWave);
+  const c = document.getElementById('npWave');
+  if (!c || !playingTrack) return;
+  c.width = c.offsetWidth || 120; c.height = 28;
+  const ctx = c.getContext('2d'), W = c.width, H = c.height;
+  ctx.fillStyle = '#13131e'; ctx.fillRect(0,0,W,H);
+  npWavePhase += 0.06;
+  ctx.strokeStyle = 'var(--gn)'; ctx.lineWidth = 1.5;
+  ctx.shadowColor = 'var(--gn)'; ctx.shadowBlur = 4;
+  ctx.beginPath();
+  for (let x = 0; x < W; x++) {
+    const y = H/2 + Math.sin(x * 0.15 + npWavePhase) * H * 0.3
+                   + Math.sin(x * 0.08 + npWavePhase * 1.3) * H * 0.15;
+    x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke(); ctx.shadowBlur = 0;
+}
+
+function sendCollabInvite(artistId, artistName) {
+  const artist = ROSTER_ARTISTS.find(a => a.id === artistId);
+  if (!artist) return;
+  // Show confirmation toast then open collab room
+  const bar = document.getElementById('nowPlayingBar');
+  if (bar) bar.style.display = 'none';
+  // Inject notification into activity
+  const toast = document.getElementById('toast');
+  if (toast) {
+    toast.textContent = `Collab invite sent to ${artistName} ✓`;
+    toast.className = 'show success';
+    setTimeout(() => toast.className = '', 3500);
+  }
+  // If member, go to collab room
+  if (user?.tier === 'member') {
+    setTimeout(() => goTo('collab'), 1200);
+  }
+}
+
+function viewArtistProfile(artistId) {
+  const artist = ROSTER_ARTISTS.find(a => a.id === artistId);
+  if (!artist) return;
+  // In full platform this opens the artist's public profile
+  // For now show a toast with their bio
+  const toast = document.getElementById('toast');
+  if (toast) {
+    toast.textContent = `${artist.name} — ${artist.bio.substring(0, 60)}...`;
+    toast.className = 'show';
+    setTimeout(() => toast.className = '', 4000);
+  }
+}
+
+// ═══════════════════════
+// SUPABASE CONFIG PANEL
+// ═══════════════════════
+// Shown when Supabase keys are not yet set — lets you enter them without editing code
+function showConfigPanel() {
+  const existing = document.getElementById('configPanel');
+  if (existing) { existing.remove(); return; }
+  const panel = document.createElement('div');
+  panel.id = 'configPanel';
+  panel.style.cssText = `position:fixed;bottom:60px;right:20px;z-index:500;background:var(--bg2);border:1px solid var(--b3);border-radius:10px;padding:20px;width:380px;box-shadow:0 20px 60px rgba(0,0,0,.7);font-family:var(--mono)`;
+  panel.innerHTML = `
+    <div style="font-family:var(--disp);font-weight:700;font-size:13px;color:var(--or);margin-bottom:4px">Connect Supabase</div>
+    <div style="font-size:8px;letter-spacing:.12em;color:var(--tm);margin-bottom:16px">Enter your project credentials to go live</div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:8px;letter-spacing:.14em;color:var(--tm);margin-bottom:5px">SUPABASE PROJECT URL</div>
+      <input id="cfg-url" placeholder="https://xxxxx.supabase.co" value="${SUPABASE_URL}"
+        style="width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:4px;padding:8px 10px;color:var(--tx);font-family:var(--mono);font-size:10px;outline:none">
+    </div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:8px;letter-spacing:.14em;color:var(--tm);margin-bottom:5px">SUPABASE ANON KEY</div>
+      <input id="cfg-anon" placeholder="eyJhbGci..." value="${SUPABASE_ANON}"
+        style="width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:4px;padding:8px 10px;color:var(--tx);font-family:var(--mono);font-size:10px;outline:none">
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:8px;letter-spacing:.14em;color:var(--tm);margin-bottom:5px">STRIPE PUBLISHABLE KEY</div>
+      <input id="cfg-stripe" placeholder="pk_live_..." value="${STRIPE_PK}"
+        style="width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:4px;padding:8px 10px;color:var(--tx);font-family:var(--mono);font-size:10px;outline:none">
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onclick="saveConfig()" style="flex:1;height:36px;border-radius:4px;border:none;background:linear-gradient(135deg,var(--or),var(--or2));color:var(--ink);cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.16em;font-weight:700">SAVE & RELOAD</button>
+      <button onclick="document.getElementById('configPanel').remove()" style="height:36px;padding:0 14px;border-radius:4px;border:1px solid var(--b);background:var(--bg3);color:var(--tm);cursor:pointer;font-family:var(--mono);font-size:9px">✕</button>
+    </div>
+    <div style="font-size:8px;color:var(--td);margin-top:10px;font-family:var(--body);line-height:1.6">Keys saved to localStorage · Move to environment variables for production deployment</div>
+  `;
+  document.body.appendChild(panel);
+}
+
+function saveConfig() {
+  const url    = document.getElementById('cfg-url')?.value?.trim();
+  const anon   = document.getElementById('cfg-anon')?.value?.trim();
+  const stripe = document.getElementById('cfg-stripe')?.value?.trim();
+  if (url)    localStorage.setItem('sb_url', url);
+  if (anon)   localStorage.setItem('sb_anon', anon);
+  if (stripe) localStorage.setItem('stripe_pk', stripe);
+  toast('Config saved · Reloading...', 'success');
+  setTimeout(() => location.reload(), 1000);
+}
+
+// Expose config panel toggle via connection status pill click
+window.__showConfigPanel = showConfigPanel;
+
+// ═══════════════════════
+// ADD SUPABASE CDN TO HEAD
+// ═══════════════════════
+(function loadSupabaseCDN() {
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+  script.onload = () => { console.log('[Pro M.A.S.T.E.R] Supabase JS loaded'); bootPlatform(); };
+  script.onerror = () => { console.warn('[Pro M.A.S.T.E.R] Supabase CDN failed — running in demo mode'); bootPlatform(); };
+  document.head.appendChild(script);
+  // Also load Stripe.js
+  if (STRIPE_PK) {
+    const stripeScript = document.createElement('script');
+    stripeScript.src = 'https://js.stripe.com/v3/';
+    document.head.appendChild(stripeScript);
+  }
+})();
+
+// ═══════════════════════
+// BOOT
+// ═══════════════════════
+async function bootPlatform() {
+  showConnectionStatus();
+
+  // Add click handler to connection pill to open config
+  const pill = document.getElementById('connStatus');
+  if (pill) { pill.style.cursor = 'pointer'; pill.onclick = showConfigPanel; pill.title = 'Click to configure Supabase'; }
+
+  if (LIVE_MODE) {
+    // Try to restore existing Supabase session
+    const hasSession = await initSupabaseAuth();
+    if (hasSession) {
+      enterPlatform();
+    }
+    // Landing page stays visible if no session — user signs in normally
+  } else {
+    // Demo mode — check localStorage
+    if (loadUserLocal()) {
+      // Has a demo session — show landing first, user clicks in
+    }
+  }
+}
+// Note: bootPlatform() is called by the Supabase CDN onload above
+</script>
+</body>
+</html>
